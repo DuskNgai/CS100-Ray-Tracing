@@ -26,7 +26,7 @@ import numpy as np
 if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Invalid arguments. Usage python image.py <ppm_name>")
-        exit(-1)
+        exit(1)
 
     with open(sys.argv[1], encoding="utf-8") as f:
         # Read out ppm type.

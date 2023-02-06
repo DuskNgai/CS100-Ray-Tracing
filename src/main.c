@@ -34,16 +34,17 @@ int main() {
     fprintf(stderr, "Image width you want: ");
     if (scanf("%u", &image_width) != 1) {
         fprintf(stderr, "Invalid image_width, process terminate.\n");
-        return -1;
+        return 1;
     }
     fprintf(stderr, "Image height you want: ");
     if (scanf("%u", &image_height) != 1) {
         fprintf(stderr, "Invalid image_width, process terminate.\n");
-        return -1;
+        return 1;
     }
     fprintf(stderr, "The image size is %u x %u pixels.\n", image_width, image_height);
     if (image_width > 2048 || image_height > 2048) {
         fprintf(stderr, "The image is too large to create, process terminate.\n");
+        return 1;
     }
 
     // Render the image.
