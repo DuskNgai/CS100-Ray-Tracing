@@ -1,4 +1,6 @@
 # Directories.
+.vs
+.vscode
 result
 linux-build
 windows-build

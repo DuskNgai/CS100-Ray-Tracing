@@ -17,14 +17,18 @@ function run() {
 }
 
 # Create a directory that contains the binary files.
-bin_dir_name=`pwd`/../linux-build/Debug
+bin_dir_name="../linux-build/Debug"
 mkdir -p "$bin_dir_name"
 
+# Create a directory that contains the result files.
+result_dir_name="../result"
+mkdir -p "$result_dir_name"
+
 info "[script] Compling..."
-run gcc ../src/main.c -o ../linux-build/Debug/CS100-Ray-Tracing -g -Wall -Wextra -Wpedantic -Werror -std=c11
+run gcc "../src/main.c" -o "../linux-build/Debug/CS100-Ray-Tracing" -g -Wall -Wextra -Wpedantic -Werror -std=c11
 
 info "[script] Generating image.ppm..."
-run ./../linux-build/Debug/CS100-Ray-Tracing > ../result/image.ppm
+run ./"../linux-build/Debug/CS100-Ray-Tracing" > "../result/image.ppm"
 
 info "[script] Converting image.ppm to image.png..."
-run python ppm-to-png.py ../result/image.ppm
+run python "ppm-to-png.py" "../result/image.ppm"
