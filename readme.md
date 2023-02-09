@@ -8,6 +8,17 @@ This project is intended for recitation of Introduction to Programming (CS100) a
 
 1. Choosing the recitation class.
 
+### Week 2
+
+1. Introduction to C and C++.
+2. Compiling and running a program through VS2022/GCC/Clang.
+3. Introduction to the project.
+4. Establishing the project environment.
+
 ## References
 
 1. [Ray Tracing in One Weekend](https://raytracing.github.io/)
+2. [cppreference](https://en.cppreference.com/w/)
+3. 21st Century C
+4. C++ Primer
+5. C++ Template: The Complete Guide
