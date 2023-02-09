@@ -4,7 +4,11 @@
 # This is free software, and you are welcome to redistribute it
 # under certain conditions.
 
-echo "[script] Generating image.ppm..."
-.\..\windows-build\x64\Debug\CS100-Ray-Tracing.exe | out-file ..\result\image.ppm -encoding utf8
-echo "[script] Converting image.ppm to image.png..."
-python ppm-to-png.py ../result/image.ppm
+function info() {
+    Write-Host "$args" -ForegroundColor Blue
+}
+
+info "[script] Generating image.ppm..."
+".\..\windows-build\x64\Debug\CS100-Ray-Tracing.exe" | out-file "..\result\image.ppm" -encoding utf8
+info "[script] Converting image.ppm to image.png..."
+python "ppm-to-png.py" "../result/image.ppm"
