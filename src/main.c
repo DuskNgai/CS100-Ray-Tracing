@@ -33,29 +33,29 @@ int main() {
     uint32_t image_width = 0, image_height = 0;
     fprintf(stderr, "Image width you want: ");
     if (scanf("%u", &image_width) != 1) {
-        fprintf(stderr, "Invalid image_width, process terminate.\n");
+        fprintf(stderr, "[Error] Invalid image_width, process terminate.\n");
         return 1;
     }
     fprintf(stderr, "Image height you want: ");
     if (scanf("%u", &image_height) != 1) {
-        fprintf(stderr, "Invalid image_width, process terminate.\n");
+        fprintf(stderr, "[Error] Invalid image_height, process terminate.\n");
         return 1;
     }
     fprintf(stderr, "The image size is %u x %u pixels.\n", image_width, image_height);
     if (image_width > 2048 || image_height > 2048) {
-        fprintf(stderr, "The image is too large to create, process terminate.\n");
+        fprintf(stderr, "[Error] The image is too large to create, process terminate.\n");
         return 1;
     }
 
     // Render the image.
     printf("P3\n%u %u\n255\n", image_width, image_height);
     for (uint32_t j = 0; j < image_height; ++j) {
-        for (uint32_t i = 0; i < image_width; ++i) {
-            fprintf(stderr, "\rScanlines remaining: %u ", image_height - j - 1); fflush(stderr);
+        fprintf(stderr, "\rScanlines remaining: %u ", image_height - j - 1); fflush(stderr);
 
+        for (uint32_t i = 0; i < image_width; ++i) {
             Float r = (Float)i / (Float)(image_width - 1);
             Float g = (Float)(image_height - j - 1) / (Float)(image_height - 1);
-            Float b = 0.25f;
+            Float b = (Float)0.25;
 
             uint32_t ur = (uint32_t)((Float)255.999 * r);
             uint32_t ug = (uint32_t)((Float)255.999 * g);
