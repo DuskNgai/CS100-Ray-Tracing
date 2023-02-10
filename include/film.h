@@ -44,12 +44,19 @@ Film* film_create(uint32_t width, uint32_t height);
 /// @param film The film to destroy.
 void film_destroy(Film* film);
 
+/// @brief Get the color of a pixel.
+/// @param film The film to get the pixel of.
+/// @param x The x coordinate of the pixel.
+/// @param y The y coordinate of the pixel.
+/// @return The color of the pixel.
+Color3 film_get_pixel_color3(Film const* film, uint32_t x, uint32_t y);
+
 /// @brief Set the color of a pixel.
 /// @param film The film to set the pixel of.
 /// @param x The x coordinate of the pixel.
 /// @param y The y coordinate of the pixel.
 /// @param color The color of the pixel.
-void film_set_pixel_color3(Film* film, uint32_t x, uint32_t y, Color3 const* color);
+void film_set_pixel_color3(Film* film, uint32_t x, uint32_t y, Color3 color);
 
 /// @brief Set the color of a pixel.
 /// @param film The film to set the pixel of.
@@ -62,7 +69,6 @@ void film_set_pixel_3f(Film* film, uint32_t x, uint32_t y, Float r, Float g, Flo
 
 /// @brief Save a film to a file.
 /// @param film The film to save.
-/// @param filename The name of the file to save to.
 void film_save(Film const* film);
 
 #endif // !_CS100_RAY_TRACING_FILM_H_

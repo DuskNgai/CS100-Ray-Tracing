@@ -46,12 +46,20 @@ void film_destroy(Film* film) {
     free(film);
 }
 
-void film_set_pixel_color3(Film* film, uint32_t x, uint32_t y, Color3 const* color) {
-    film->pixels[y * film->width + x] = *color;
+static uint32_t film_get_pixel_index(Film const* film, uint32_t x, uint32_t y) {
+    return y * film->width + x;
+}
+
+Color3 film_get_pixel_color3(Film const* film, uint32_t x, uint32_t y) {
+    return film->pixels[film_get_pixel_index(film, x, y)];
+}
+
+void film_set_pixel_color3(Film* film, uint32_t x, uint32_t y, Color3 color) {
+    film->pixels[film_get_pixel_index(film, x, y)] = color;
 }
 
 void film_set_pixel_3f(Film* film, uint32_t x, uint32_t y, Float r, Float g, Float b) {
-    film_set_pixel_color3(film, x, y, &(Color3){r, g, b});
+    film_set_pixel_color3(film, x, y, (Color3){r, g, b});
 }
 
 static uint8_t film_gamma_correction(Float x) {
@@ -63,9 +71,10 @@ static uint8_t film_gamma_correction(Float x) {
 void film_save(Film const* film) {
     for (uint32_t j = 0; j < film->height; ++j) {
         for (uint32_t i = 0; i < film->width; ++i) {
-            uint8_t r = film_gamma_correction(film->pixels[j * film->width + i].x);
-            uint8_t g = film_gamma_correction(film->pixels[j * film->width + i].y);
-            uint8_t b = film_gamma_correction(film->pixels[j * film->width + i].z);
+            Color3 color = film_get_pixel_color3(film, i, j);
+            uint8_t r = film_gamma_correction(color.x);
+            uint8_t g = film_gamma_correction(color.y);
+            uint8_t b = film_gamma_correction(color.z);
 
             printf("%u %u %u\n", r, g, b);
         }
