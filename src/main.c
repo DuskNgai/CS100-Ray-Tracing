@@ -26,7 +26,8 @@
 #include <stdio.h>
 #include <stdint.h>
 
-typedef float Float;
+#include "vec3.h"
+#include "film.h"
 
 int main() {
     // TODO: replace by parsing command line arguments/configuration files.
@@ -49,22 +50,18 @@ int main() {
 
     // Render the image.
     printf("P3\n%u %u\n255\n", image_width, image_height);
+    Film* film = film_create(image_width, image_height);
     for (uint32_t j = 0; j < image_height; ++j) {
         for (uint32_t i = 0; i < image_width; ++i) {
             fprintf(stderr, "\rScanlines remaining: %u ", image_height - j - 1); fflush(stderr);
 
-            Float r = (Float)i / (Float)(image_width - 1);
-            Float g = (Float)(image_height - j - 1) / (Float)(image_height - 1);
-            Float b = 0.25f;
-
-            uint32_t ur = (uint32_t)((Float)255.999 * r);
-            uint32_t ug = (uint32_t)((Float)255.999 * g);
-            uint32_t ub = (uint32_t)((Float)255.999 * b);
-
-            printf("%u %u %u\n", ur, ug, ub);
+            Color3 pixel_color = { (Float)i / (Float)(image_width - 1), (Float)(image_height - j - 1) / (Float)(image_height - 1), (Float)0.25 };
+            film_set_pixel_color3(film, i, j, &pixel_color);
         }
     }
-    fprintf(stderr, "\nDone!\n");
+    fprintf(stderr, "\nRendering done, outputing image.\n");
+    film_save(film);
+    fprintf(stderr, "Done!\n");
 
     return 0;
 }

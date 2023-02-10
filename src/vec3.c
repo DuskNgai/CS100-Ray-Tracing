@@ -70,7 +70,7 @@ Vec3 vec3_scale_mul(Vec3 const* u, Float a) {
 }
 
 Vec3 vec3_scale_div(Vec3 const* u, Float a) {
-    return vec3_scale_mul(u, 1.0 / a);
+    return vec3_scale_mul(u, (Float)1.0 / a);
 }
 
 Float vec3_dot(Vec3 const* u, Vec3 const* v) {

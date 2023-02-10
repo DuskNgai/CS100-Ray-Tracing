@@ -73,7 +73,6 @@ MaxEmptyLinesToKeep: 5
 
 NamespaceIndentation: All
 
-SortIncludes: Never
 SortUsingDeclarations: true
 SpaceAfterCStyleCast: false
 SpaceAfterLogicalNot: false

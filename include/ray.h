@@ -23,7 +23,6 @@
 #ifndef _CS100_RAY_TRACING_RAY_H_
 #define _CS100_RAY_TRACING_RAY_H_
 
-#include "common.h"
 #include "vec3.h"
 
 /// @brief A ray is a line segment with a starting point and a direction.
