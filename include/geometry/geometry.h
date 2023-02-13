@@ -1,6 +1,6 @@
 /*
  * CS100-Ray-Tracing for course recitation.
- * The implementation of a ray.
+ * The common header file for all geometry objects.
  *
  * Copyright (C) 2023
  * Author: Haizhao Dai
@@ -20,8 +20,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef _CS100_RAY_TRACING_GEOMETRY_H_
+#define _CS100_RAY_TRACING_GEOMETRY_H_
+
+#include <stdbool.h>
+
 #include "ray.h"
 
-Point3 ray_at(Ray const* r, Float t) {
-    return vec3_add(r->origin, vec3_scale_mul(r->direction, t));
-}
+typedef bool (*HitFunc)(void* object, Ray const* ray, Float t_min, Float t_max);
+
+#endif // !_CS100_RAY_TRACING_GEOMETRY_H_

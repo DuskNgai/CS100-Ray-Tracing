@@ -20,18 +20,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-
 #include "film.h"
 
-#define pow(x, y)         \
-    _Generic((x),         \
-        float: powf,      \
-        double: pow,      \
-        long double: powl \
-    )(x, y)
+#include <stdio.h>
+#include <stdlib.h>
 
 Film* film_create(uint32_t width, uint32_t height) {
     Film* film = (Film*)malloc(sizeof(Film));
@@ -59,7 +51,7 @@ void film_set_pixel_color3(Film* film, uint32_t x, uint32_t y, Color3 color) {
 }
 
 void film_set_pixel_3f(Film* film, uint32_t x, uint32_t y, Float r, Float g, Float b) {
-    film_set_pixel_color3(film, x, y, (Color3){r, g, b});
+    film_set_pixel_color3(film, x, y, (Color3){ r, g, b });
 }
 
 static uint8_t film_gamma_correction(Float x) {

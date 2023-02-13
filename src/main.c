@@ -23,11 +23,12 @@
 // TODO: remove this after introducing CMake.
 #define _CRT_SECURE_NO_WARNINGS
 
-#include <stdio.h>
 #include <stdint.h>
+#include <stdio.h>
 
-#include "vec3.h"
 #include "film.h"
+#include "integrator.h"
+#include "vec3.h"
 
 int main() {
     // TODO: replace by parsing command line arguments/configuration files.
@@ -52,10 +53,12 @@ int main() {
     printf("P3\n%u %u\n255\n", image_width, image_height);
     Film* film = film_create(image_width, image_height);
     for (uint32_t j = 0; j < image_height; ++j) {
-        fprintf(stderr, "\rScanlines remaining: %u ", image_height - j - 1); fflush(stderr);
+        fprintf(stderr, "\rScanlines remaining: %u ", image_height - j - 1);
+        fflush(stderr);
 
         for (uint32_t i = 0; i < image_width; ++i) {
-            Color3 pixel_color = { (Float)i / (Float)(image_width - 1), (Float)(image_height - j - 1) / (Float)(image_height - 1), (Float)0.25 };
+            Ray ray = { (Point3){ 0.0, 0.0, 0.0 }, (Vec3){ (Float)i / (Float)(image_width - 1), (Float)(image_height - j - 1) / (Float)(image_height - 1), (Float)0.0 } };
+            Color3 pixel_color = radiance(&ray);
             film_set_pixel_color3(film, i, j, pixel_color);
         }
     }

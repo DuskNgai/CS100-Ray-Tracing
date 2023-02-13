@@ -23,7 +23,7 @@
 #ifndef _CS100_RAY_TRACING_VEC3_H_
 #define _CS100_RAY_TRACING_VEC3_H_
 
-#include "common.h"
+#include "math-utils.h"
 
 /// @brief u 3D vector.
 typedef struct Vec3 {
@@ -33,36 +33,39 @@ typedef struct Vec3 {
 // Operations on Vec3.
 
 /// @brief u + v.
-Vec3 vec3_add(Vec3 const* u, Vec3 const* v);
+Vec3 vec3_add(Vec3 u, Vec3 v);
 
 /// @brief u - v.
-Vec3 vec3_sub(Vec3 const* u, Vec3 const* v);
+Vec3 vec3_sub(Vec3 u, Vec3 v);
 
 /// @brief -u.
-Vec3 vec3_neg(Vec3 const* u);
+Vec3 vec3_neg(Vec3 u);
 
 /// @brief u * a.
-Vec3 vec3_scale_mul(Vec3 const* u, Float a);
+Vec3 vec3_scale_mul(Vec3 u, Float a);
 
 /// @brief u / a.
-Vec3 vec3_scale_div(Vec3 const* u, Float a);
+Vec3 vec3_scale_div(Vec3 u, Float a);
 
 // Properties of Vec3.
 
 /// @brief <u, v>.
-Float vec3_dot(Vec3 const* u, Vec3 const* v);
+Float vec3_dot(Vec3 u, Vec3 v);
 
 /// @brief u x v.
-Vec3 vec3_cross(Vec3 const* u, Vec3 const* v);
+Vec3 vec3_cross(Vec3 u, Vec3 v);
 
 /// @brief |u|.
-Float vec3_norm(Vec3 const* u);
+Float vec3_norm(Vec3 u);
 
 /// @brief |u|^2.
-Float vec3_square_norm(Vec3 const* u);
+Float vec3_square_norm(Vec3 u);
 
 /// @brief u / |u|.
-Vec3 vec3_unit(Vec3 const* u);
+Vec3 vec3_unit(Vec3 u);
+
+/// @brief u * (1 - t) + v * t.
+Vec3 vec3_lerp(Vec3 u, Vec3 v, Float t);
 
 typedef Vec3 Color3;
 typedef Vec3 Point3;

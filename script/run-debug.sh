@@ -25,7 +25,11 @@ result_dir_name="../result"
 mkdir -p "$result_dir_name"
 
 info "[script] Compling..."
-run gcc "../src/main.c" -o "../linux-build/Debug/CS100-Ray-Tracing" -g -Wall -Wextra -Wpedantic -Werror -std=c17
+run gcc "../src/"*.c \
+    -o "../linux-build/Debug/CS100-Ray-Tracing"  \
+    -I "../include"                              \
+    -g -std=c17 -Wall -Wextra -Wpedantic -Werror \
+    -lm
 
 info "[script] Generating image.ppm..."
 run ./"../linux-build/Debug/CS100-Ray-Tracing" > "../result/image.ppm"

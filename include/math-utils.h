@@ -1,6 +1,6 @@
 /*
  * CS100-Ray-Tracing for course recitation.
- * The implementation of a ray.
+ * A header file for math utilities.
  *
  * Copyright (C) 2023
  * Author: Haizhao Dai
@@ -20,8 +20,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "ray.h"
+#ifndef _CS100_RAY_TRACING_MATH_UTILS_H_
+#define _CS100_RAY_TRACING_MATH_UTILS_H_
 
-Point3 ray_at(Ray const* r, Float t) {
-    return vec3_add(r->origin, vec3_scale_mul(r->direction, t));
-}
+#include <math.h>
+
+typedef float Float;
+
+#define INF HUGE_VAL
+
+// Generic selection, a c11 standard feature.
+// https://en.cppreference.com/w/c/language/generic
+// clang-format off
+#define sqrt(x)            \
+    _Generic((x),          \
+        float: sqrtf,      \
+        double: sqrt,      \
+        long double: sqrtl \
+    )(x)
+
+#define pow(x, y)         \
+    _Generic((x),         \
+        float: powf,      \
+        double: pow,      \
+        long double: powl \
+    )(x, y)
+// clang-format on
+
+#endif // !_CS100_RAY_TRACING_MATH_UTILS_H_

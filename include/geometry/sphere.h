@@ -1,6 +1,6 @@
 /*
  * CS100-Ray-Tracing for course recitation.
- * A common header file.
+ * The definition of a sphere.
  *
  * Copyright (C) 2023
  * Author: Haizhao Dai
@@ -20,9 +20,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _CS100_RAY_TRACING_COMMON_H_
-#define _CS100_RAY_TRACING_COMMON_H_
+#ifndef _CS100_RAY_TRACING_SPHERE_H_
+#define _CS100_RAY_TRACING_SPHERE_H_
 
-typedef float Float;
+#include "geometry/geometry.h"
 
-#endif // !_CS100_RAY_TRACING_COMMON_H_
+typedef struct Sphere {
+    Point3 center;
+    Float radius;
+    HitFunc hit;
+} Sphere;
+
+/// @brief Create a Sphere object.
+/// @param center The center of the sphere.
+/// @param radius The radius of the sphere.
+/// @return A Sphere object.
+Sphere sphere_create(Point3 center, Float radius);
+
+bool sphere_hit(void* object, Ray const* ray, Float t_min, Float t_max);
+
+#endif // !_CS100_RAY_TRACING_SPHERE_H_

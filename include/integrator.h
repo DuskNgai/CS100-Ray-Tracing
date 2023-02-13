@@ -1,6 +1,6 @@
 /*
  * CS100-Ray-Tracing for course recitation.
- * The implementation of a ray.
+ * The definition of the integrator.
  *
  * Copyright (C) 2023
  * Author: Haizhao Dai
@@ -20,8 +20,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef _CS100_RAY_TRACING_INTEGRATOR_H_
+#define _CS100_RAY_TRACING_INTEGRATOR_H_
+
 #include "ray.h"
 
-Point3 ray_at(Ray const* r, Float t) {
-    return vec3_add(r->origin, vec3_scale_mul(r->direction, t));
-}
+/// @brief The integrator is responsible for computing the radiance along a ray.
+/// @param ray The ray to be traced.
+/// @return The radiance along the ray.
+Color3 radiance(const Ray* ray);
+
+#endif // !_CS100_RAY_TRACING_INTEGRATOR_H_

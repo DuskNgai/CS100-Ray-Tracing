@@ -1,6 +1,6 @@
 /*
  * CS100-Ray-Tracing for course recitation.
- * The implementation of a ray.
+ * The implementation of the integrator.
  *
  * Copyright (C) 2023
  * Author: Haizhao Dai
@@ -20,8 +20,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "ray.h"
+#include "integrator.h"
 
-Point3 ray_at(Ray const* r, Float t) {
-    return vec3_add(r->origin, vec3_scale_mul(r->direction, t));
+#include "geometry/sphere.h"
+
+Color3 radiance(const Ray* ray) {
+    Sphere s = sphere_create((Point3){ 0.0, 0.0, -1.0 }, 0.5);
+    if (s.hit(&s, ray, 0.0, INF)) {
+        return (Color3){ 1.0, 0.0, 0.0 };
+    }
+    Vec3 unit_dir = vec3_unit(ray->direction);
+    Float t = (Float)0.5 * (unit_dir.y + (Float)1.0);
+    return vec3_lerp((Color3){ 1, 1, 1 }, (Color3){ 0.5, 0.7, 1.0 }, t);
 }
