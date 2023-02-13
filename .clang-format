@@ -6,7 +6,11 @@
 BasedOnStyle: Google
 AccessModifierOffset: -4
 
-AlignConsecutiveAssignments: None
+AlignConsecutiveMacros:
+    Enabled: true
+    AcrossEmptyLines: false
+    AcrossComments: false
+    AlignCompound: false
 AlignConsecutiveBitFields: None
 AlignConsecutiveDeclarations: None
 AlignConsecutiveMacros: None
@@ -54,7 +58,7 @@ BreakStringLiterals: false
 ColumnLimit: 0
 CommentPragmas: '^ Comment pragma:'
 CompactNamespaces: false
-Cpp11BracedListStyle: true
+Cpp11BracedListStyle: false
 
 EmptyLineBeforeAccessModifier: Always
 
@@ -67,7 +71,7 @@ IndentWrappedFunctionNames: false
 
 KeepEmptyLinesAtTheStartOfBlocks: false
 
-Language: Cpp 
+Language: Cpp
 
 MaxEmptyLinesToKeep: 5
 

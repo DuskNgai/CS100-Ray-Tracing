@@ -23,8 +23,8 @@
 // TODO: remove this after introducing CMake.
 #define _CRT_SECURE_NO_WARNINGS
 
-#include <stdio.h>
 #include <stdint.h>
+#include <stdio.h>
 
 typedef float Float;
 
@@ -50,12 +50,14 @@ int main() {
     // Render the image.
     printf("P3\n%u %u\n255\n", image_width, image_height);
     for (uint32_t j = 0; j < image_height; ++j) {
-        fprintf(stderr, "\rScanlines remaining: %u ", image_height - j - 1); fflush(stderr);
+        for (uint32_t i = 0; i < image_width; ++i) {
+            fprintf(stderr, "\rScanlines remaining: %u ", image_height - j - 1);
+            fflush(stderr);
 
         for (uint32_t i = 0; i < image_width; ++i) {
             Float r = (Float)i / (Float)(image_width - 1);
             Float g = (Float)(image_height - j - 1) / (Float)(image_height - 1);
-            Float b = (Float)0.25;
+            Float b = 0.25;
 
             uint32_t ur = (uint32_t)((Float)255.999 * r);
             uint32_t ug = (uint32_t)((Float)255.999 * g);
