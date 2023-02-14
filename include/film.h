@@ -44,28 +44,33 @@ Film* film_create(uint32_t width, uint32_t height);
 /// @param film The film to destroy.
 void film_destroy(Film* film);
 
+/// @brief Get the aspect ratio of a film.
+/// @param film The film to get the aspect ratio of.
+/// @return The aspect ratio of the film.
+Float film_get_aspect_ratio(Film const* film);
+
 /// @brief Get the color of a pixel.
 /// @param film The film to get the pixel of.
-/// @param x The x coordinate of the pixel.
-/// @param y The y coordinate of the pixel.
+/// @param i The i coordinate of the pixel.
+/// @param j The j coordinate of the pixel.
 /// @return The color of the pixel.
-Color3 film_get_pixel_color3(Film const* film, uint32_t x, uint32_t y);
+Color3 film_get_pixel_color3(Film const* film, uint32_t i, uint32_t j);
 
 /// @brief Set the color of a pixel.
 /// @param film The film to set the pixel of.
-/// @param x The x coordinate of the pixel.
-/// @param y The y coordinate of the pixel.
+/// @param i The i coordinate of the pixel.
+/// @param j The j coordinate of the pixel.
 /// @param color The color of the pixel.
-void film_set_pixel_color3(Film* film, uint32_t x, uint32_t y, Color3 color);
+void film_set_pixel_color3(Film* film, uint32_t i, uint32_t j, Color3 color);
 
 /// @brief Set the color of a pixel.
 /// @param film The film to set the pixel of.
-/// @param x The x coordinate of the pixel.
-/// @param y The y coordinate of the pixel.
+/// @param i The i coordinate of the pixel.
+/// @param j The j coordinate of the pixel.
 /// @param r The red component of the pixel.
 /// @param g The green component of the pixel.
 /// @param b The blue component of the pixel.
-void film_set_pixel_3f(Film* film, uint32_t x, uint32_t y, Float r, Float g, Float b);
+void film_set_pixel_3f(Film* film, uint32_t i, uint32_t j, Float r, Float g, Float b);
 
 /// @brief Save a film to a file.
 /// @param film The film to save.

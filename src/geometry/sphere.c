@@ -22,16 +22,22 @@
 
 #include "geometry/sphere.h"
 
+GeometryVTable sphere_vtable = {
+    .hit = sphere_hit,
+};
+
 Sphere sphere_create(Vec3 center, Float radius) {
     Sphere res = {
+        .super = {
+            .vtable = &sphere_vtable,
+        },
         .center = center,
         .radius = radius,
-        .hit = sphere_hit
     };
     return res;
 }
 
-bool sphere_hit(void* object, Ray const* ray, Float t_min, Float t_max) {
+bool sphere_hit(void* object, Ray const* ray, Float t_min, Float t_max, Interaction* interaction) {
     Sphere* sphere = (Sphere*)object;
     Vec3 oc = vec3_sub(ray->origin, sphere->center);
 
@@ -43,14 +49,17 @@ bool sphere_hit(void* object, Ray const* ray, Float t_min, Float t_max) {
     if (discriminant < 0) {
         return false;
     }
-    else {
-        Float t = (-b_half - sqrt(discriminant)) / a;
+
+    Float t = (-b_half - sqrt(discriminant)) / a;
+    if (t < t_min || t > t_max) {
+        t = (-b_half + sqrt(discriminant)) / a;
         if (t < t_min || t > t_max) {
-            t = (-b_half + sqrt(discriminant)) / a;
-            if (t < t_min || t > t_max) {
-                return false;
-            }
+            return false;
         }
-        return true;
     }
+
+    interaction->t = t;
+    interaction->hit_point = ray_at(ray, t);
+    interaction->normal = vec3_scalar_div(vec3_sub(interaction->hit_point, sphere->center), sphere->radius);
+    return true;
 }

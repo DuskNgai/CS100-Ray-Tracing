@@ -25,7 +25,7 @@
 
 #include "math-utils.h"
 
-/// @brief u 3D vector.
+/// @brief A 3D vector.
 typedef struct Vec3 {
     Float x, y, z;
 } Vec3;
@@ -42,10 +42,10 @@ Vec3 vec3_sub(Vec3 u, Vec3 v);
 Vec3 vec3_neg(Vec3 u);
 
 /// @brief u * a.
-Vec3 vec3_scale_mul(Vec3 u, Float a);
+Vec3 vec3_scalar_mul(Vec3 u, Float a);
 
 /// @brief u / a.
-Vec3 vec3_scale_div(Vec3 u, Float a);
+Vec3 vec3_scalar_div(Vec3 u, Float a);
 
 // Properties of Vec3.
 

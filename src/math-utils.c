@@ -1,6 +1,6 @@
 /*
  * CS100-Ray-Tracing for course recitation.
- * The implementation of the integrator, which calculate the radiance of a ray.
+ * A header file for math utilities.
  *
  * Copyright (C) 2023
  * Author: Haizhao Dai
@@ -20,18 +20,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "integrator.h"
+#include "math-utils.h"
 
-#include "geometry/sphere.h"
-
-Color3 radiance(const Ray* ray) {
-    Sphere s = sphere_create((Point3){ 0.0, 0.0, -1.0 }, 0.5);
-    Interaction interaction;
-    if (s.super.vtable->hit(&s, ray, 0.0, INF, &interaction)) {
-        return vec3_scalar_mul(vec3_add(interaction.normal, (Vec3){ 1.0, 1.0, 1.0 }), (Float)0.5);
-    }
-
-    Vec3 unit_dir = vec3_unit(ray->direction);
-    Float t = (Float)0.5 * (unit_dir.y + (Float)1.0);
-    return vec3_lerp((Color3){ 1, 1, 1 }, (Color3){ 0.5, 0.7, 1.0 }, t);
+Float deg_to_rad(Float deg) {
+    return deg * PI / (Float)180.0;
 }

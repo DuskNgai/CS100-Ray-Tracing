@@ -28,6 +28,7 @@
 typedef float Float;
 
 #define INF HUGE_VAL
+#define PI ((Float)3.14159265358979323846)
 
 // Generic selection, a c11 standard feature.
 // https://en.cppreference.com/w/c/language/generic
@@ -46,5 +47,10 @@ typedef float Float;
         long double: powl \
     )(x, y)
 // clang-format on
+
+/// @brief Convert degrees to radians.
+/// @param deg The degrees.
+/// @return The radians.
+Float deg_to_rad(Float deg);
 
 #endif // !_CS100_RAY_TRACING_MATH_UTILS_H_

@@ -25,8 +25,18 @@
 
 #include <stdbool.h>
 
+#include "geometry/interaction.h"
 #include "ray.h"
 
-typedef bool (*HitFunc)(void* object, Ray const* ray, Float t_min, Float t_max);
+/// The function pointer type for ray-object intersection test.
+typedef bool (*HitFunc)(void* object, Ray const* ray, Float t_min, Float t_max, Interaction* interaction);
+
+typedef struct GeometryVTable {
+    HitFunc hit;
+} GeometryVTable;
+
+typedef struct Geometry {
+    GeometryVTable* vtable;
+} Geometry;
 
 #endif // !_CS100_RAY_TRACING_GEOMETRY_H_

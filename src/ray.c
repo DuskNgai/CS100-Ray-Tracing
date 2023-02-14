@@ -23,5 +23,5 @@
 #include "ray.h"
 
 Point3 ray_at(Ray const* r, Float t) {
-    return vec3_add(r->origin, vec3_scale_mul(r->direction, t));
+    return vec3_add(r->origin, vec3_scalar_mul(r->direction, t));
 }

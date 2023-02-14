@@ -41,6 +41,7 @@ if __name__ == "__main__":
             map(lambda x: x.split(' '), f.readlines())
         ))
     image = np.array(data).reshape((height, width, 3)).astype(np.uint8)
+    image = np.flipud(image)
 
     output = sys.argv[1].replace(".ppm", ".png")
     Image.fromarray(image).save(output)

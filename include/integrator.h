@@ -1,6 +1,6 @@
 /*
  * CS100-Ray-Tracing for course recitation.
- * The definition of the integrator.
+ * The definition of the integrator, which calculate the radiance of a ray.
  *
  * Copyright (C) 2023
  * Author: Haizhao Dai

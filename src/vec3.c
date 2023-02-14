@@ -49,7 +49,7 @@ Vec3 vec3_neg(Vec3 u) {
     return res;
 }
 
-Vec3 vec3_scale_mul(Vec3 u, Float a) {
+Vec3 vec3_scalar_mul(Vec3 u, Float a) {
     Vec3 res = {
         .x = u.x * a,
         .y = u.y * a,
@@ -58,8 +58,8 @@ Vec3 vec3_scale_mul(Vec3 u, Float a) {
     return res;
 }
 
-Vec3 vec3_scale_div(Vec3 u, Float a) {
-    return vec3_scale_mul(u, (Float)1.0 / a);
+Vec3 vec3_scalar_div(Vec3 u, Float a) {
+    return vec3_scalar_mul(u, (Float)1.0 / a);
 }
 
 Float vec3_dot(Vec3 u, Vec3 v) {
@@ -84,9 +84,9 @@ Float vec3_square_norm(Vec3 u) {
 }
 
 Vec3 vec3_unit(Vec3 u) {
-    return vec3_scale_div(u, vec3_norm(u));
+    return vec3_scalar_div(u, vec3_norm(u));
 }
 
 Vec3 vec3_lerp(Vec3 u, Vec3 v, Float t) {
-    return vec3_add(vec3_scale_mul(u, (Float)1.0 - t), vec3_scale_mul(v, t));
+    return vec3_add(vec3_scalar_mul(u, (Float)1.0 - t), vec3_scalar_mul(v, t));
 }

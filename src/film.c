@@ -38,35 +38,33 @@ void film_destroy(Film* film) {
     free(film);
 }
 
-static uint32_t film_get_pixel_index(Film const* film, uint32_t x, uint32_t y) {
-    return y * film->width + x;
+Float film_get_aspect_ratio(Film const* film) {
+    return (Float)film->width / (Float)film->height;
 }
 
-Color3 film_get_pixel_color3(Film const* film, uint32_t x, uint32_t y) {
-    return film->pixels[film_get_pixel_index(film, x, y)];
+static uint32_t film_get_pixel_index(Film const* film, uint32_t i, uint32_t j) {
+    return j * film->width + i;
 }
 
-void film_set_pixel_color3(Film* film, uint32_t x, uint32_t y, Color3 color) {
-    film->pixels[film_get_pixel_index(film, x, y)] = color;
+Color3 film_get_pixel_color3(Film const* film, uint32_t i, uint32_t j) {
+    return film->pixels[film_get_pixel_index(film, i, j)];
 }
 
-void film_set_pixel_3f(Film* film, uint32_t x, uint32_t y, Float r, Float g, Float b) {
-    film_set_pixel_color3(film, x, y, (Color3){ r, g, b });
+void film_set_pixel_color3(Film* film, uint32_t i, uint32_t j, Color3 color) {
+    film->pixels[film_get_pixel_index(film, i, j)] = color;
 }
 
-static uint8_t film_gamma_correction(Float x) {
-    if (x > (Float)1.0) x = (Float)1.0;
-    if (x < (Float)0.0) x = (Float)0.0;
-    return (uint8_t)(pow(x, (Float)1.0 / (Float)2.2) * (Float)255.0);
+void film_set_pixel_3f(Film* film, uint32_t i, uint32_t j, Float r, Float g, Float b) {
+    film_set_pixel_color3(film, i, j, (Color3){ r, g, b });
 }
 
 void film_save(Film const* film) {
     for (uint32_t j = 0; j < film->height; ++j) {
         for (uint32_t i = 0; i < film->width; ++i) {
             Color3 color = film_get_pixel_color3(film, i, j);
-            uint8_t r = film_gamma_correction(color.x);
-            uint8_t g = film_gamma_correction(color.y);
-            uint8_t b = film_gamma_correction(color.z);
+            uint8_t r = (uint8_t)(color.x * 255.0);
+            uint8_t g = (uint8_t)(color.y * 255.0);
+            uint8_t b = (uint8_t)(color.z * 255.0);
 
             printf("%u %u %u\n", r, g, b);
         }

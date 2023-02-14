@@ -25,10 +25,11 @@
 
 #include "geometry/geometry.h"
 
+/// @brief The definition of a sphere.
 typedef struct Sphere {
+    Geometry super;
     Point3 center;
     Float radius;
-    HitFunc hit;
 } Sphere;
 
 /// @brief Create a Sphere object.
@@ -37,6 +38,13 @@ typedef struct Sphere {
 /// @return A Sphere object.
 Sphere sphere_create(Point3 center, Float radius);
 
-bool sphere_hit(void* object, Ray const* ray, Float t_min, Float t_max);
+/// @brief Test if a ray intersects with a sphere.
+/// @param object The sphere object.
+/// @param ray The ray.
+/// @param t_min The minimum t value.
+/// @param t_max The maximum t value.
+/// @param interaction The interaction record.
+/// @return True if the ray intersects with the sphere.
+bool sphere_hit(void* object, Ray const* ray, Float t_min, Float t_max, Interaction* interaction);
 
 #endif // !_CS100_RAY_TRACING_SPHERE_H_
