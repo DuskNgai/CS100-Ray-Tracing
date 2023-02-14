@@ -23,28 +23,24 @@
 #ifndef _CS100_RAY_TRACING_SPHERE_H_
 #define _CS100_RAY_TRACING_SPHERE_H_
 
-#include "geometry/geometry.h"
+#include <stdbool.h>
+
+#include "geometry/interaction.h"
+#include "ray.h"
 
 /// @brief The definition of a sphere.
 typedef struct Sphere {
-    Geometry super;
     Point3 center;
     Float radius;
 } Sphere;
 
-/// @brief Create a Sphere object.
-/// @param center The center of the sphere.
-/// @param radius The radius of the sphere.
-/// @return A Sphere object.
-Sphere sphere_create(Point3 center, Float radius);
-
 /// @brief Test if a ray intersects with a sphere.
-/// @param object The sphere object.
+/// @param sphere The sphere object.
 /// @param ray The ray.
 /// @param t_min The minimum t value.
 /// @param t_max The maximum t value.
 /// @param interaction The interaction record.
 /// @return True if the ray intersects with the sphere.
-bool sphere_hit(void* object, Ray const* ray, Float t_min, Float t_max, Interaction* interaction);
+bool sphere_hit(Sphere const* sphere, Ray const* ray, Float t_min, Float t_max, Interaction* interaction);
 
 #endif // !_CS100_RAY_TRACING_SPHERE_H_

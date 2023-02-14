@@ -25,9 +25,9 @@
 #include "geometry/sphere.h"
 
 Color3 radiance(const Ray* ray) {
-    Sphere s = sphere_create((Point3){ 0.0, 0.0, -1.0 }, 0.5);
+    Sphere s = { (Point3){ 0.0, 0.0, -1.0 }, 0.5 };
     Interaction interaction;
-    if (s.super.vtable->hit(&s, ray, 0.0, INF, &interaction)) {
+    if (sphere_hit(&s, ray, 0.0, INF, &interaction)) {
         return vec3_scalar_mul(vec3_add(interaction.normal, (Vec3){ 1.0, 1.0, 1.0 }), (Float)0.5);
     }
 

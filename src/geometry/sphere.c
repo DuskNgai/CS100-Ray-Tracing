@@ -22,25 +22,10 @@
 
 #include "geometry/sphere.h"
 
-GeometryVTable sphere_vtable = {
-    .hit = sphere_hit,
-};
-
-Sphere sphere_create(Vec3 center, Float radius) {
-    Sphere res = {
-        .super = {
-            .vtable = &sphere_vtable,
-        },
-        .center = center,
-        .radius = radius,
-    };
-    return res;
-}
-
-bool sphere_hit(void* object, Ray const* ray, Float t_min, Float t_max, Interaction* interaction) {
-    Sphere* sphere = (Sphere*)object;
+bool sphere_hit(Sphere const* sphere, Ray const* ray, Float t_min, Float t_max, Interaction* interaction) {
     Vec3 oc = vec3_sub(ray->origin, sphere->center);
 
+    // Convert to a quadratic equation.
     Float a = vec3_square_norm(ray->direction);
     Float b_half = vec3_dot(oc, ray->direction);
     Float c = vec3_square_norm(oc) - sphere->radius * sphere->radius;
@@ -50,6 +35,7 @@ bool sphere_hit(void* object, Ray const* ray, Float t_min, Float t_max, Interact
         return false;
     }
 
+    // Find and check the root.
     Float t = (-b_half - sqrt(discriminant)) / a;
     if (t < t_min || t > t_max) {
         t = (-b_half + sqrt(discriminant)) / a;
@@ -58,6 +44,7 @@ bool sphere_hit(void* object, Ray const* ray, Float t_min, Float t_max, Interact
         }
     }
 
+    // Record this interaction.
     interaction->t = t;
     interaction->hit_point = ray_at(ray, t);
     interaction->normal = vec3_scalar_div(vec3_sub(interaction->hit_point, sphere->center), sphere->radius);
