@@ -26,7 +26,7 @@
 #include <stdint.h>
 #include <stdio.h>
 
-typedef float Float;
+#include "vec3.h"
 
 int main() {
     // TODO: replace by parsing command line arguments/configuration files.
@@ -50,18 +50,19 @@ int main() {
     // Render the image.
     printf("P3\n%u %u\n255\n", image_width, image_height);
     for (uint32_t j = 0; j < image_height; ++j) {
-        for (uint32_t i = 0; i < image_width; ++i) {
-            fprintf(stderr, "\rScanlines remaining: %u ", image_height - j - 1);
-            fflush(stderr);
+        fprintf(stderr, "\rScanlines remaining: %u ", image_height - j - 1);
+        fflush(stderr);
 
         for (uint32_t i = 0; i < image_width; ++i) {
-            Float r = (Float)i / (Float)(image_width - 1);
-            Float g = (Float)(image_height - j - 1) / (Float)(image_height - 1);
-            Float b = 0.25;
+            Color3 color = {
+                .x = (Float)i / (Float)(image_width - 1),
+                .y = (Float)j / (Float)(image_height - 1),
+                .z = (Float)0.25
+            };
 
-            uint32_t ur = (uint32_t)((Float)255.999 * r);
-            uint32_t ug = (uint32_t)((Float)255.999 * g);
-            uint32_t ub = (uint32_t)((Float)255.999 * b);
+            uint8_t ur = (uint8_t)((Float)255.0 * color.x);
+            uint8_t ug = (uint8_t)((Float)255.0 * color.y);
+            uint8_t ub = (uint8_t)((Float)255.0 * color.z);
 
             printf("%u %u %u\n", ur, ug, ub);
         }
