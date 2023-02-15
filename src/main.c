@@ -25,6 +25,24 @@
 #include <stdio.h>
 
 int main() {
-    printf("Hello World!");
-    return 0;
+	int image_width = 256, image_height = 256;
+
+	printf("P3\n%d %d\n255\n", image_width, image_height);
+
+	for (int j = 0; j < image_height; ++j) {
+		for (int i = 0; i < image_width; ++i) {
+			// [0, W - 1] -> [0.0, 1.0]
+			double r = (double)i / (double)(image_width - 1);
+			double g = (double)j / (double)(image_height - 1);
+			double b = 0.25;
+
+			// [0.0, 1.0] -> [0, 255]
+			int ir = (int)(255.0 * r);
+			int ig = (int)(255.0 * g);
+			int ib = (int)(255.0 * b);
+
+			printf("%d %d %d\n", ir, ig, ib);
+		}
+	}
+	return 0;
 }
