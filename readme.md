@@ -15,6 +15,47 @@ This project is intended for recitation of Introduction to Programming (CS100) a
 3. Introduction to the project.
 4. Establishing the project environment.
 
+### Week 3
+
+1. `Vec3`
+
+### Week 4
+
+1. `Ray`, `Film`
+
+### Week 5
+
+1. `Sphere`, `Camera`, `Interaction`, `Integrator`
+
+### Week 6
+
+1. `LinkedList`
+
+### Week 7
+
+1. Introduction to `c++`.
+2. `RandomNumberGenerator`
+
+### Week 8
+
+1. `Material`, `Lamberian`, `Metal`
+
+### Week 9
+
+1. `Dielectric`, `SharedPtr`
+
+### Week 10
+
+1. `Scene`, `Json`
+
+### Week 11
+
+1. CMake, `std::thread`
+
+### Week 12
+
+1. `Eigen`
+
 ## References
 
 1. [Ray Tracing in One Weekend](https://raytracing.github.io/)

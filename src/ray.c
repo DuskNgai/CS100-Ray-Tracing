@@ -22,6 +22,10 @@
 
 #include "ray.h"
 
+#include <assert.h>
+
 Point3 ray_at(Ray const* r, Float t) {
+    ASSERT(r != NULL);
+
     return vec3_add(r->origin, vec3_scalar_mul(r->direction, t));
 }

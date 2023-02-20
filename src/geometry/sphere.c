@@ -22,7 +22,12 @@
 
 #include "geometry/sphere.h"
 
+#include <assert.h>
+
 bool sphere_hit(Sphere const* sphere, Ray const* ray, Float t_min, Float t_max, Interaction* interaction) {
+    assert(sphere != NULL);
+    assert(ray != NULL);
+
     Vec3 oc = vec3_sub(ray->origin, sphere->center);
 
     // Convert to a quadratic equation.
