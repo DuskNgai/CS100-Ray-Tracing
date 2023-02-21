@@ -25,7 +25,7 @@ result_dir_name="../result"
 mkdir -p "$result_dir_name"
 
 info "[script] Compiling..."
-run gcc "../src/"*.c \
+run gcc "../src/"*.c "../src/geometry/"*.c \
     -o "../linux-build/Release/CS100-Ray-Tracing" \
     -I "../include"                               \
     -O3 -std=c17 -Wall -Wextra -Wpedantic -Werror \

@@ -8,6 +8,61 @@ This project is intended for recitation of Introduction to Programming (CS100) a
 
 1. Choosing the recitation class.
 
+### Week 2
+
+1. Introduction to C and C++.
+2. Compiling and running a program through VS2022/GCC/Clang.
+3. Introduction to the project.
+4. Establishing the project environment.
+
+### Week 3
+
+1. `Vec3`
+
+### Week 4
+
+1. `Ray`, `Film`
+
+### Week 5
+
+1. `Sphere`, `Camera`, `Interaction`, `Integrator`
+
+### Week 6
+
+1. `LinkedList`
+
+### Week 7
+
+1. Introduction to `c++`.
+
+### Week 8
+
+1. `Timer`, `RandomNumberGenerator`
+
+### Week 9
+
+1. `Material`, `Lamberian`, `Metal`
+
+### Week 10
+
+1. `Dielectric`, `SharedPtr`
+
+### Week 11
+
+1. `Scene`, `Json`
+
+### Week 12
+
+1. `std::thread`
+
+### Week 13
+
+1. CMake, `Eigen`
+
 ## References
 
 1. [Ray Tracing in One Weekend](https://raytracing.github.io/)
+2. [cppreference](https://en.cppreference.com/w/)
+3. 21st Century C
+4. C++ Primer
+5. C++ Template: The Complete Guide

@@ -26,7 +26,8 @@
 #include <stdint.h>
 #include <stdio.h>
 
-#include "vec3.h"
+#include "camera.h"
+#include "integrator.h"
 
 int main() {
     // TODO: replace by parsing command line arguments/configuration files.
@@ -47,6 +48,16 @@ int main() {
         return 1;
     }
 
+    // Create the camera.
+    Film* film = film_create(image_width, image_height);
+    Camera* camera = camera_create(
+        (Point3){ 0.0, 0.0, 0.0 },
+        (Point3){ 0.0, 0.0, -1.0 },
+        (Vec3){ 0.0, 1.0, 0.0 },
+        (Float)90.0,
+        (Float)1.0);
+    camera_set_film(camera, film);
+
     // Render the image.
     printf("P3\n%u %u\n255\n", image_width, image_height);
     for (uint32_t j = 0; j < image_height; ++j) {
@@ -54,20 +65,16 @@ int main() {
         fflush(stderr);
 
         for (uint32_t i = 0; i < image_width; ++i) {
-            Color3 color = {
-                .x = (Float)i / (Float)(image_width - 1),
-                .y = (Float)j / (Float)(image_height - 1),
-                .z = (Float)0.25
-            };
-
-            uint8_t ur = (uint8_t)((Float)255.0 * color.x);
-            uint8_t ug = (uint8_t)((Float)255.0 * color.y);
-            uint8_t ub = (uint8_t)((Float)255.0 * color.z);
-
-            printf("%u %u %u\n", ur, ug, ub);
+            Ray ray = camera_generate_ray(camera, i, j);
+            Color3 color = radiance(&ray);
+            camera_set_pixel_color3(camera, i, j, color);
         }
     }
-    fprintf(stderr, "\nDone!\n");
+    fprintf(stderr, "\nRendering done, outputing image.\n");
+    film_save(film);
+    fprintf(stderr, "Done!\n");
 
+    film_destroy(film);
+    camera_destroy(camera);
     return 0;
 }
