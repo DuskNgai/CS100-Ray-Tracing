@@ -23,11 +23,12 @@
 #include "integrator.h"
 
 #include <assert.h>
+#include <stddef.h>
 
 #include "geometry/sphere.h"
 
 Color3 radiance(const Ray* ray) {
-    ASSERT(ray != NULL);
+    assert(ray != NULL);
 
     Sphere s = { (Point3){ 0.0, 0.0, -1.0 }, 0.5 };
     Interaction interaction;

@@ -48,14 +48,14 @@ Camera* camera_create(Point3 look_from, Point3 look_to, Vec3 ref_up, Float y_fie
 }
 
 void camera_destroy(Camera* camera) {
-    ASSERT(camera != NULL);
+    assert(camera != NULL);
 
     free(camera);
 }
 
 void camera_set_film(Camera* camera, Film* film) {
-    ASSERT(camera != NULL);
-    ASSERT(film != NULL);
+    assert(camera != NULL);
+    assert(film != NULL);
 
     camera->film = film;
     Float aspect_ratio = film_get_aspect_ratio(film);
@@ -63,13 +63,13 @@ void camera_set_film(Camera* camera, Film* film) {
 }
 
 void camera_set_pixel_color3(Camera* camera, uint32_t i, uint32_t j, Color3 color) {
-    ASSERT(camera->film != NULL);
+    assert(camera->film != NULL);
 
     film_set_pixel_color3(camera->film, i, j, color);
 }
 
 Ray camera_generate_ray(Camera* camera, uint32_t i, uint32_t j) {
-    ASSERT(camera->film != NULL);
+    assert(camera->film != NULL);
 
     Float u = ((Float)2.0 * (Float)i / (Float)(camera->film->width - 1)) - (Float)1.0;
     Float v = ((Float)2.0 * (Float)j / (Float)(camera->film->height - 1)) - (Float)1.0;

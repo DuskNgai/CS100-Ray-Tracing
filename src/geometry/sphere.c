@@ -23,6 +23,7 @@
 #include "geometry/sphere.h"
 
 #include <assert.h>
+#include <stddef.h>
 
 bool sphere_hit(Sphere const* sphere, Ray const* ray, Float t_min, Float t_max, Interaction* interaction) {
     assert(sphere != NULL);
