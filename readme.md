@@ -34,27 +34,30 @@ This project is intended for recitation of Introduction to Programming (CS100) a
 ### Week 7
 
 1. Introduction to `c++`.
-2. `RandomNumberGenerator`
 
 ### Week 8
 
-1. `Material`, `Lamberian`, `Metal`
+1. `Timer`, `RandomNumberGenerator`
 
 ### Week 9
 
-1. `Dielectric`, `SharedPtr`
+1. `Material`, `Lamberian`, `Metal`
 
 ### Week 10
 
-1. `Scene`, `Json`
+1. `Dielectric`, `SharedPtr`
 
 ### Week 11
 
-1. CMake, `std::thread`
+1. `Scene`, `Json`
 
 ### Week 12
 
-1. `Eigen`
+1. `std::thread`
+
+### Week 13
+
+1. CMake, `Eigen`
 
 ## References
 
