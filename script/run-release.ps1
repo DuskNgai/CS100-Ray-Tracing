@@ -8,7 +8,11 @@ function info() {
     Write-Host "$args" -ForegroundColor Blue
 }
 
+info "[script] Compiling..."
+gcc (Get-ChildItem ..\src\*.c) -o "..\windows-build\Release\CS100-Ray-Tracing" -I "..\include" -O3 -std=c17 -Wall -Wextra -Wpedantic -Werror -lm
+
 info "[script] Generating image.ppm..."
-.\"..\windows-build\x64\Release\CS100-Ray-Tracing.exe" | out-file "..\result\image.ppm" -encoding utf8
+.\"..\windows-build\Release\CS100-Ray-Tracing.exe" | out-file "..\result\image.ppm" -encoding utf8
+
 info "[script] Converting image.ppm to image.png..."
-python "ppm-to-png.py" "../result/image.ppm"
+python "ppm-to-png.py" "..\result\image.ppm"

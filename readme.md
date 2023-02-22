@@ -15,7 +15,8 @@ For students who uses Visual Studio, we recommend you follows the instructions b
 3. Create a `scripts` directory which stores the scripts for building the project.
 4. Create a `src` directory which stores the source files.
 5. Create a `include` directory which stores the header files.
-6. Create a `main.c` file in the `src` directory. Add it to projected managed source files.
+6. Create a `result` directory which stores the result images.
+7. Create a `main.c` file in the `src` directory. Add it to project managed source files.
 
 #### Run the Project
 
@@ -39,7 +40,8 @@ for running the shell scripts.
 3. Create a `scripts` directory which stores the scripts for building the project.
 4. Create a `src` directory which stores the source files.
 5. Create a `include` directory which stores the header files.
-6. Create a `main.c` file in the `src` directory.
+6. Create a `result` directory which stores the result images.
+7. Create a `main.c` file in the `src` directory.
 
 #### Run the Project
 
@@ -66,6 +68,12 @@ for running the shell scripts.
 2. Compiling and running a program through VS2022/GCC/Clang.
 3. Introduction to the project.
 4. Establishing the project environment.
+
+### Week 3
+
+1. Performing basic running command of the project.
+2. Using Fixed width integer types (`uint32_t`).
+3. Using `typedef` to define a new type.
 
 ## References
 

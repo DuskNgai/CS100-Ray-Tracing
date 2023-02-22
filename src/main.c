@@ -20,28 +20,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// TODO: remove this after introducing CMake.
 #define _CRT_SECURE_NO_WARNINGS
 
 #include <stdio.h>
+#include <stdint.h>
+
+typedef float Float;
 
 int main() {
-	int image_width = 256, image_height = 256;
+	uint32_t image_width = 256, image_height = 256;
 
-	printf("P3\n%d %d\n255\n", image_width, image_height);
-
-	for (int j = 0; j < image_height; ++j) {
-		for (int i = 0; i < image_width; ++i) {
+	// Render the image.
+	// Output the image.
+	printf("P3\n%u %u\n255\n", image_width, image_height);
+	for (uint32_t j = 0; j < image_height; ++j) {
+		for (uint32_t i = 0; i < image_width; ++i) {
 			// [0, W - 1] -> [0.0, 1.0]
-			double r = (double)i / (double)(image_width - 1);
-			double g = (double)j / (double)(image_height - 1);
-			double b = 0.25;
+			Float r = (Float)i / (Float)(image_width - 1);
+			Float g = (Float)j / (Float)(image_height - 1);
+			Float b = (Float)0.25;
 
 			// [0.0, 1.0] -> [0, 255]
-			int ir = (int)(255.0 * r);
-			int ig = (int)(255.0 * g);
-			int ib = (int)(255.0 * b);
+			uint8_t ir = (uint8_t)(255.0 * r);
+			uint8_t ig = (uint8_t)(255.0 * g);
+			uint8_t ib = (uint8_t)(255.0 * b);
 
-			printf("%d %d %d\n", ir, ig, ib);
+			printf("%u %u %u\n", ir, ig, ib);
 		}
 	}
 	return 0;

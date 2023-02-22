@@ -24,7 +24,7 @@ mkdir -p "$bin_dir_name"
 result_dir_name="../result"
 mkdir -p "$result_dir_name"
 
-info "[script] Compling..."
+info "[script] Compiling..."
 run gcc "../src/"*.c \
     -o "../linux-build/Release/CS100-Ray-Tracing" \
     -I "../include"                               \
