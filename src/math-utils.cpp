@@ -1,6 +1,6 @@
 /*
  * CS100-Ray-Tracing for course recitation.
- * The implementation of a ray.
+ * A header file for math utilities.
  *
  * Copyright (C) 2023
  * Author: Haizhao Dai
@@ -20,13 +20,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "ray.h"
+#include "math-utils.h"
 
-#include <assert.h>
-#include <stddef.h>
-
-Point3 ray_at(Ray const* r, Float t) {
-    assert(r != NULL);
-
-    return vec3_add(r->origin, vec3_scalar_mul(r->direction, t));
+Float deg_to_rad(Float deg) {
+    return deg * PI<Float> / static_cast<Float>(180.0);
 }

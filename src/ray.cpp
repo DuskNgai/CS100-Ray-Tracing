@@ -1,6 +1,6 @@
 /*
  * CS100-Ray-Tracing for course recitation.
- * A header file for math utilities.
+ * The implementation of a ray.
  *
  * Copyright (C) 2023
  * Author: Haizhao Dai
@@ -20,8 +20,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "math-utils.h"
+#include "ray.h"
 
-Float deg_to_rad(Float deg) {
-    return deg * PI / (Float)180.0;
+Ray::Ray(Point3f const& origin, Vector3f const& direction)
+    : origin{ origin }, direction{ direction } {}
+
+Point3f Ray::at(Float t) const {
+    return this->origin + this->direction * t;
 }

@@ -1,6 +1,6 @@
 /*
  * CS100-Ray-Tracing for course recitation.
- * The definition of a ray.
+ * The scene class that contains all geometry objects.
  *
  * Copyright (C) 2023
  * Author: Haizhao Dai
@@ -20,25 +20,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _CS100_RAY_TRACING_RAY_H_
-#define _CS100_RAY_TRACING_RAY_H_
+#ifndef _CS100_RAY_TRACING_SCENE_H_
+#define _CS100_RAY_TRACING_SCENE_H_
 
-#include "vector3.h"
+#include <vector>
+#include <memory>
 
-/// @brief A ray is a line segment with a starting point and a direction.
-struct Ray {
-    Point3f origin;
-    Vector3f direction;
+#include "geometry/geometry.h"
 
-    Ray() = default;
-    Ray(Point3f const& origin, Vector3f const& direction);
+class Scene : public Geometry {
+private:
+    std::vector<std::shared_ptr<Geometry>> objects;
 
-    /// @brief Evaluate the ray at a given ray parameter.
-    /// @param r The ray.
-    /// @param t The ray parameter.
-    /// @return The point on the ray, which is ray.origin + ray.direction * `t`.
-    Point3f at(Float t) const;
+public:
+    Scene() = default;
+    Scene(std::vector<std::shared_ptr<Geometry>> const& objects);
+
+    void add_object(std::shared_ptr<Geometry> const& object);
+    void clear_objects();
+    std::vector<std::shared_ptr<Geometry>> const& get_objects() const;
+
+    virtual bool hit(Ray const& ray, Float t_min, Float t_max, Interaction* interaction) const override;
 };
 
-
-#endif // !_CS100_RAY_TRACING_RAY_H_
+#endif // !_CS100_RAY_TRACING_SCENE_H_

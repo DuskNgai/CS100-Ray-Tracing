@@ -23,11 +23,20 @@
 #ifndef _CS100_RAY_TRACING_INTEGRATOR_H_
 #define _CS100_RAY_TRACING_INTEGRATOR_H_
 
-#include "ray.h"
+#include "camera.h"
+#include "geometry/scene.h"
 
-/// @brief The integrator is responsible for computing the radiance along a ray.
-/// @param ray The ray to be traced.
-/// @return The radiance along the ray.
-Color3 radiance(const Ray* ray);
+class Integrator {
+public:
+    Integrator() = default;
+    ~Integrator() = default;
+
+    void render(Camera const& camera, Scene const& scene);
+
+    /// @brief The integrator is responsible for computing the radiance along a ray.
+    /// @param ray The ray to be traced.
+    /// @return The radiance along the ray.
+    Color3f radiance(Ray const& ray, Scene const& scene);
+};
 
 #endif // !_CS100_RAY_TRACING_INTEGRATOR_H_

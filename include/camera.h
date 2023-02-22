@@ -23,57 +23,63 @@
 #ifndef _CS100_RAY_TRACING_CAMERA_H_
 #define _CS100_RAY_TRACING_CAMERA_H_
 
+#include <memory>
+
 #include "film.h"
 #include "ray.h"
 
 /// @brief A camera that generates rays whose up direction is always positive y axis.
-typedef struct Camera {
-    Point3 look_from;
-    Point3 look_to;
+class Camera {
+private:
+    Point3f look_from;
+    Point3f look_to;
 
     Float y_field_of_view;
     Float focal_length;
 
-    Vec3 look_front;
-    Vec3 look_up;
-    Vec3 look_right;
+    Vector3f look_front;
+    Vector3f look_up;
+    Vector3f look_right;
 
-    Vec3 horizontal;
-    Vec3 vertical;
+    Vector3f horizontal;
+    Vector3f vertical;
 
-    Film* film;
-} Camera;
+    std::shared_ptr<Film> film;
 
-/// @brief Create a camera.
-/// @param look_from The position of the camera.
-/// @param look_to The position of the object that the camera looks at.
-/// @param ref_up The reference up vector of the camera.
-/// @param y_field_of_view The y field of view of the camera, in degrees.
-/// @param focal_length The focal length of the camera.
-/// @return The created camera.
-Camera* camera_create(Point3 look_from, Point3 look_to, Vec3 ref_up, Float y_field_of_view, Float focal_length);
+public:
+    /// @brief Create a camera.
+    /// @param look_from The position of the camera.
+    /// @param look_to The position of the object that the camera looks at.
+    /// @param ref_up The reference up vector of the camera.
+    /// @param y_field_of_view The y field of view of the camera, in degrees.
+    /// @param focal_length The focal length of the camera.
+    /// @param film The film of the camera.
+    Camera(Point3f const& look_from, Point3f const& look_to, Vector3f const& ref_up, Float y_field_of_view, Float focal_length, std::shared_ptr<Film> film = nullptr);
+    Camera(Camera const& other) = delete;
+    Camera(Camera&& other) = delete;
+    Camera& operator=(Camera const& other) = delete;
+    Camera& operator=(Camera&& other) = delete;
+    ~Camera() = default;
 
-/// @brief Destroy a camera.
-/// @param camera The camera to destroy.
-void camera_destroy(Camera* camera);
+    /// @brief Set the film of the camera, change the aspect radio of camera.
+    /// @param film The film.
+    void set_film(std::shared_ptr<Film> film);
 
-/// @brief Set the film of the camera, change the aspect radio of camera.
-/// @param camera The camera.
-/// @param film The film.
-void camera_set_film(Camera* camera, Film* film);
+    /// @brief Get the film of the camera.
+    /// @param film The film.
+    Film const& get_film() const;
 
-/// @brief Set the pixel of the camera.
-/// @param camera The camera.
-/// @param i The i coordinate of the pixel.
-/// @param j The j coordinate of the pixel.
-/// @param color The color of the pixel.
-void camera_set_pixel_color3(Camera* camera, uint32_t i, uint32_t j, Color3 color);
+    /// @brief Set the pixel color of the film.
+    /// @param i The i coordinate of the pixel.
+    /// @param j The j coordinate of the pixel.
+    /// @param color The color of the pixel.
+    void set_pixel(uint32_t i, uint32_t j, Color3f const& color) const;
 
-/// @brief Generate a ray from the camera.
-/// @param camera The camera.
-/// @param i The i coordinate of the pixel.
-/// @param j The j coordinate of the pixel.
-/// @return The generated ray.
-Ray camera_generate_ray(Camera* camera, uint32_t i, uint32_t j);
+    /// @brief Generate a ray from the camera.
+    /// @param i The i coordinate of the pixel.
+    /// @param j The j coordinate of the pixel.
+    /// @return The generated ray.
+    Ray generate_ray(uint32_t i, uint32_t j) const;
+};
 
 #endif // !_CS100_RAY_TRACING_CAMERA_H_

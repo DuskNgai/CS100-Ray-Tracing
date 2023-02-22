@@ -17,7 +17,7 @@ This project is intended for recitation of Introduction to Programming (CS100) a
 
 ### Week 3
 
-1. `Vec3`
+1. `Vector3`
 
 ### Week 4
 
@@ -29,7 +29,7 @@ This project is intended for recitation of Introduction to Programming (CS100) a
 
 ### Week 6
 
-1. `LinkedList`
+1. `LinkedList`, `Scene`
 
 ### Week 7
 

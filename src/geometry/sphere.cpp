@@ -22,19 +22,16 @@
 
 #include "geometry/sphere.h"
 
-#include <assert.h>
-#include <stddef.h>
+Sphere::Sphere(Point3f const& center, Float radius)
+    : center(center), radius(radius) {}
 
-bool sphere_hit(Sphere const* sphere, Ray const* ray, Float t_min, Float t_max, Interaction* interaction) {
-    assert(sphere != NULL);
-    assert(ray != NULL);
-
-    Vec3 oc = vec3_sub(ray->origin, sphere->center);
+bool Sphere::hit(Ray const& ray, Float t_min, Float t_max, Interaction* interaction) const {
+    Vector3f oc = ray.origin - this->center;
 
     // Convert to a quadratic equation.
-    Float a = vec3_square_norm(ray->direction);
-    Float b_half = vec3_dot(oc, ray->direction);
-    Float c = vec3_square_norm(oc) - sphere->radius * sphere->radius;
+    Float a = ray.direction.square_norm();
+    Float b_half = dot(oc, ray.direction);
+    Float c = oc.square_norm() - this->radius * this->radius;
     Float discriminant = b_half * b_half - a * c;
 
     if (discriminant < 0) {
@@ -42,9 +39,9 @@ bool sphere_hit(Sphere const* sphere, Ray const* ray, Float t_min, Float t_max, 
     }
 
     // Find and check the root.
-    Float t = (-b_half - sqrt(discriminant)) / a;
+    Float t = (-b_half - std::sqrt(discriminant)) / a;
     if (t < t_min || t > t_max) {
-        t = (-b_half + sqrt(discriminant)) / a;
+        t = (-b_half + std::sqrt(discriminant)) / a;
         if (t < t_min || t > t_max) {
             return false;
         }
@@ -52,7 +49,7 @@ bool sphere_hit(Sphere const* sphere, Ray const* ray, Float t_min, Float t_max, 
 
     // Record this interaction.
     interaction->t = t;
-    interaction->hit_point = ray_at(ray, t);
-    interaction->normal = vec3_scalar_div(vec3_sub(interaction->hit_point, sphere->center), sphere->radius);
+    interaction->hit_point = ray.at(t);
+    interaction->normal = (interaction->hit_point - this->center) / this->radius;
     return true;
 }

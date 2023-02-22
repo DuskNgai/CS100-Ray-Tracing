@@ -23,57 +23,52 @@
 #ifndef _CS100_RAY_TRACING_FILM_H_
 #define _CS100_RAY_TRACING_FILM_H_
 
-#include <stdint.h>
+#include <fstream>
+#include <vector>
 
-#include "vec3.h"
+#include "vector3.h"
 
 /// @brief A film is a 2D array of pixels.
-typedef struct Film {
+struct Film {
     uint32_t width;
     uint32_t height;
-    Color3* pixels;
-} Film;
+    std::vector<Color3f> pixels;
 
-/// @brief Create a new film.
-/// @param width The width of the film.
-/// @param height The height of the film.
-/// @return A pointer to the new film.
-Film* film_create(uint32_t width, uint32_t height);
+    /// @brief Create a new film.
+    /// @param width The width of the film.
+    /// @param height The height of the film.
+    Film(uint32_t width, uint32_t height);
+    Film(Film const&) = delete;
+    Film(Film&&) = delete;
+    Film& operator=(Film const&) = delete;
+    Film& operator=(Film&&) = delete;
+    ~Film() = default;
 
-/// @brief Destroy a film.
-/// @param film The film to destroy.
-void film_destroy(Film* film);
+    /// @brief Get the aspect ratio of a film.
+    /// @return The aspect ratio of the film.
+    Float get_aspect_ratio() const;
 
-/// @brief Get the aspect ratio of a film.
-/// @param film The film to get the aspect ratio of.
-/// @return The aspect ratio of the film.
-Float film_get_aspect_ratio(Film const* film);
+    /// @brief Get the color of a pixel.
+    /// @param i The i coordinate of the pixel.
+    /// @param j The j coordinate of the pixel.
+    /// @return The color of the pixel.
+    Color3f get_pixel(uint32_t i, uint32_t j) const;
 
-/// @brief Get the color of a pixel.
-/// @param film The film to get the pixel of.
-/// @param i The i coordinate of the pixel.
-/// @param j The j coordinate of the pixel.
-/// @return The color of the pixel.
-Color3 film_get_pixel_color3(Film const* film, uint32_t i, uint32_t j);
+    /// @brief Set the color of a pixel.
+    /// @param i The i coordinate of the pixel.
+    /// @param j The j coordinate of the pixel.
+    /// @return The color of the pixel.
+    void set_pixel(uint32_t i, uint32_t j, Color3f const& color);
 
-/// @brief Set the color of a pixel.
-/// @param film The film to set the pixel of.
-/// @param i The i coordinate of the pixel.
-/// @param j The j coordinate of the pixel.
-/// @param color The color of the pixel.
-void film_set_pixel_color3(Film* film, uint32_t i, uint32_t j, Color3 color);
+    /// @brief Save a film to a file.
+    void save(std::string const& file_path) const;
 
-/// @brief Set the color of a pixel.
-/// @param film The film to set the pixel of.
-/// @param i The i coordinate of the pixel.
-/// @param j The j coordinate of the pixel.
-/// @param r The red component of the pixel.
-/// @param g The green component of the pixel.
-/// @param b The blue component of the pixel.
-void film_set_pixel_3f(Film* film, uint32_t i, uint32_t j, Float r, Float g, Float b);
-
-/// @brief Save a film to a file.
-/// @param film The film to save.
-void film_save(Film const* film);
+private:
+    /// @brief Get the index of 2 dimensional array.
+    /// @param i The i coordinate of the pixel.
+    /// @param j The j coordinate of the pixel.
+    /// @return The index of the pixel (i, j).
+    uint32_t get_pixel_index(uint32_t i, uint32_t j) const;
+};
 
 #endif // !_CS100_RAY_TRACING_FILM_H_

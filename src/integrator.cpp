@@ -22,21 +22,28 @@
 
 #include "integrator.h"
 
-#include <assert.h>
-#include <stddef.h>
+#include <cstdio>
 
-#include "geometry/sphere.h"
+void Integrator::render(Camera const& camera, Scene const& scene) {
+    for (uint32_t j = 0; j < camera.get_film().height; ++j) {
+        fprintf(stderr, "\rScanlines remaining: %u ", camera.get_film().height - j - 1);
+        fflush(stderr);
 
-Color3 radiance(const Ray* ray) {
-    assert(ray != NULL);
+        for (uint32_t i = 0; i < camera.get_film().width; ++i) {
+            Ray ray = camera.generate_ray(i, j);
+            Color3f color = this->radiance(ray, scene);
+            camera.set_pixel(i, j, color);
+        }
+    }
+}
 
-    Sphere s = { (Point3){ 0.0, 0.0, -1.0 }, 0.5 };
+Color3f Integrator::radiance(Ray const& ray, Scene const& scene) {
     Interaction interaction;
-    if (sphere_hit(&s, ray, 0.0, INF, &interaction)) {
-        return vec3_scalar_mul(vec3_add(interaction.normal, (Vec3){ 1.0, 1.0, 1.0 }), (Float)0.5);
+    if (scene.hit(ray, 0.0, INF<Float>, &interaction)) {
+        return (interaction.normal + Vector3f{ 1.0, 1.0, 1.0 }) * static_cast<Float>(0.5);
     }
 
-    Vec3 unit_dir = vec3_unit(ray->direction);
-    Float t = (Float)0.5 * (unit_dir.y + (Float)1.0);
-    return vec3_lerp((Color3){ 1, 1, 1 }, (Color3){ 0.5, 0.7, 1.0 }, t);
+    Vector3f unit_dir = ray.direction.unit();
+    Float t = (unit_dir.y + static_cast<Float>(1.0)) * static_cast<Float>(0.5);
+    return lerp(Color3f{ 1.0, 1.0, 1.0 }, Color3f{ 0.5, 0.7, 1.0 }, t);
 }

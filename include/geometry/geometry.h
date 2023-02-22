@@ -1,6 +1,6 @@
 /*
  * CS100-Ray-Tracing for course recitation.
- * The definition of a ray.
+ * The abstract class for all geometry objects.
  *
  * Copyright (C) 2023
  * Author: Haizhao Dai
@@ -20,25 +20,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _CS100_RAY_TRACING_RAY_H_
-#define _CS100_RAY_TRACING_RAY_H_
+#ifndef _CS100_RAY_TRACING_GEOMETRY_H_
+#define _CS100_RAY_TRACING_GEOMETRY_H_
 
-#include "vector3.h"
+#include "geometry/interaction.h"
+#include "ray.h"
 
-/// @brief A ray is a line segment with a starting point and a direction.
-struct Ray {
-    Point3f origin;
-    Vector3f direction;
-
-    Ray() = default;
-    Ray(Point3f const& origin, Vector3f const& direction);
-
-    /// @brief Evaluate the ray at a given ray parameter.
-    /// @param r The ray.
-    /// @param t The ray parameter.
-    /// @return The point on the ray, which is ray.origin + ray.direction * `t`.
-    Point3f at(Float t) const;
+/// @brief The abstract class for all geometry objects.
+struct Geometry {
+    /// @brief Test if a ray intersects with a geometry.
+    /// @param ray The ray.
+    /// @param t_min The minimum t value.
+    /// @param t_max The maximum t value.
+    /// @param interaction The interaction record.
+    /// @return True if the ray intersects with the geometry.
+    virtual bool hit(Ray const& ray, Float t_min, Float t_max, Interaction* interaction) const = 0;
 };
 
-
-#endif // !_CS100_RAY_TRACING_RAY_H_
+#endif // !_CS100_RAY_TRACING_GEOMETRY_H_

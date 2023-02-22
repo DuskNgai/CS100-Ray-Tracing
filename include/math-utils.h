@@ -23,29 +23,14 @@
 #ifndef _CS100_RAY_TRACING_MATH_UTILS_H_
 #define _CS100_RAY_TRACING_MATH_UTILS_H_
 
-#include <math.h>
+#include <cmath>
+#include <limits>
 
-typedef float Float;
+using Float = float;
 
-#define INF HUGE_VAL
-#define PI ((Float)3.14159265358979323846)
-
-// Generic selection, a c11 standard feature.
-// https://en.cppreference.com/w/c/language/generic
 // clang-format off
-#define sqrt(x)            \
-    _Generic((x),          \
-        float: sqrtf,      \
-        double: sqrt,      \
-        long double: sqrtl \
-    )(x)
-
-#define pow(x, y)         \
-    _Generic((x),         \
-        float: powf,      \
-        double: pow,      \
-        long double: powl \
-    )(x, y)
+template <typename FloatingPoint> constexpr FloatingPoint PI  = static_cast<FloatingPoint>(3.141592653589793238462643383279);
+template <typename FloatingPoint> constexpr FloatingPoint INF = std::numeric_limits<FloatingPoint>::max();
 // clang-format on
 
 /// @brief Convert degrees to radians.
