@@ -30,7 +30,7 @@
 
 /// @brief The definition of a sphere.
 typedef struct Sphere {
-    Point3 center;
+    Point3f center;
     Float radius;
 } Sphere;
 

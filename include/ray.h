@@ -23,18 +23,18 @@
 #ifndef _CS100_RAY_TRACING_RAY_H_
 #define _CS100_RAY_TRACING_RAY_H_
 
-#include "vec3.h"
+#include "vector3.h"
 
 /// @brief A ray is a line segment with a starting point and a direction.
 typedef struct Ray {
-    Point3 origin;
-    Vec3 direction;
+    Point3f origin;
+    Vector3f direction;
 } Ray;
 
 /// @brief Evaluate the ray at a given ray parameter.
 /// @param r The ray.
 /// @param t The ray parameter.
 /// @return The point on the ray, which is ray.origin + ray.direction * `t`.
-Point3 ray_at(Ray const* r, Float t);
+Point3f ray_at(Ray const* r, Float t);
 
 #endif // !_CS100_RAY_TRACING_RAY_H_

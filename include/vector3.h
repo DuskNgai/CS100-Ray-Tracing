@@ -26,48 +26,48 @@
 #include "math-utils.h"
 
 /// @brief A 3D vector.
-typedef struct Vec3 {
+typedef struct Vector3f {
     Float x, y, z;
-} Vec3;
+} Vector3f;
 
-// Operations on Vec3.
+// Operations on Vector3f.
 
 /// @brief u + v.
-Vec3 vec3_add(Vec3 u, Vec3 v);
+Vector3f vector3_add(Vector3f u, Vector3f v);
 
 /// @brief u - v.
-Vec3 vec3_sub(Vec3 u, Vec3 v);
+Vector3f vector3_sub(Vector3f u, Vector3f v);
 
 /// @brief -u.
-Vec3 vec3_neg(Vec3 u);
+Vector3f vector3_neg(Vector3f u);
 
 /// @brief u * a.
-Vec3 vec3_scalar_mul(Vec3 u, Float a);
+Vector3f vector3_scalar_mul(Vector3f u, Float a);
 
 /// @brief u / a.
-Vec3 vec3_scalar_div(Vec3 u, Float a);
+Vector3f vector3_scalar_div(Vector3f u, Float a);
 
-// Properties of Vec3.
+// Properties of Vector3f.
 
 /// @brief <u, v>.
-Float vec3_dot(Vec3 u, Vec3 v);
+Float vector3_dot(Vector3f u, Vector3f v);
 
 /// @brief u x v.
-Vec3 vec3_cross(Vec3 u, Vec3 v);
+Vector3f vector3_cross(Vector3f u, Vector3f v);
 
 /// @brief |u|.
-Float vec3_norm(Vec3 u);
+Float vector3_norm(Vector3f u);
 
 /// @brief |u|^2.
-Float vec3_square_norm(Vec3 u);
+Float vector3_square_norm(Vector3f u);
 
 /// @brief u / |u|.
-Vec3 vec3_unit(Vec3 u);
+Vector3f vector3_unit(Vector3f u);
 
 /// @brief u * (1 - t) + v * t.
-Vec3 vec3_lerp(Vec3 u, Vec3 v, Float t);
+Vector3f vector3_lerp(Vector3f u, Vector3f v, Float t);
 
-typedef Vec3 Color3;
-typedef Vec3 Point3;
+typedef Vector3f Color3f;
+typedef Vector3f Point3f;
 
 #endif // !_CS100_RAY_TRACING_VEC3_H_

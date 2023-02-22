@@ -24,19 +24,33 @@
 
 #include <assert.h>
 #include <stddef.h>
+#include <stdio.h>
 
 #include "geometry/sphere.h"
 
-Color3 radiance(const Ray* ray) {
-    assert(ray != NULL);
+void render(Camera const* camera, Scene const* scene) {
+    for (uint32_t j = 0; j < camera->film->height; ++j) {
+        fprintf(stderr, "\rScanlines remaining: %u ", camera->film->height - j - 1);
+        fflush(stderr);
 
-    Sphere s = { (Point3){ 0.0, 0.0, -1.0 }, 0.5 };
+        for (uint32_t i = 0; i < camera->film->width; ++i) {
+            Ray ray = camera_generate_ray(camera, i, j);
+            Color3f color = radiance(&ray, scene);
+            camera_set_pixel(camera, i, j, color);
+        }
+    }
+}
+
+Color3f radiance(Ray const* ray, Scene const* scene) {
+    assert(ray != NULL);
+    assert(scene != NULL);
+
     Interaction interaction;
-    if (sphere_hit(&s, ray, 0.0, INF, &interaction)) {
-        return vec3_scalar_mul(vec3_add(interaction.normal, (Vec3){ 1.0, 1.0, 1.0 }), (Float)0.5);
+    if (scene_hit(scene, ray, 0.0, INF, &interaction)) {
+        return vector3_scalar_mul(vector3_add(interaction.normal, (Vector3f){ 1.0, 1.0, 1.0 }), (Float)0.5);
     }
 
-    Vec3 unit_dir = vec3_unit(ray->direction);
+    Vector3f unit_dir = vector3_unit(ray->direction);
     Float t = (Float)0.5 * (unit_dir.y + (Float)1.0);
-    return vec3_lerp((Color3){ 1, 1, 1 }, (Color3){ 0.5, 0.7, 1.0 }, t);
+    return vector3_lerp((Color3f){ 1.0, 1.0, 1.0 }, (Color3f){ 0.5, 0.7, 1.0 }, t);
 }

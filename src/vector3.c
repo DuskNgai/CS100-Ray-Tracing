@@ -20,10 +20,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "vec3.h"
+#include "vector3.h"
 
-Vec3 vec3_add(Vec3 u, Vec3 v) {
-    Vec3 res = {
+Vector3f vector3_add(Vector3f u, Vector3f v) {
+    Vector3f res = {
         .x = u.x + v.x,
         .y = u.y + v.y,
         .z = u.z + v.z
@@ -31,8 +31,8 @@ Vec3 vec3_add(Vec3 u, Vec3 v) {
     return res;
 }
 
-Vec3 vec3_sub(Vec3 u, Vec3 v) {
-    Vec3 res = {
+Vector3f vector3_sub(Vector3f u, Vector3f v) {
+    Vector3f res = {
         .x = u.x - v.x,
         .y = u.y - v.y,
         .z = u.z - v.z
@@ -40,8 +40,8 @@ Vec3 vec3_sub(Vec3 u, Vec3 v) {
     return res;
 }
 
-Vec3 vec3_neg(Vec3 u) {
-    Vec3 res = {
+Vector3f vector3_neg(Vector3f u) {
+    Vector3f res = {
         .x = -u.x,
         .y = -u.y,
         .z = -u.z
@@ -49,8 +49,8 @@ Vec3 vec3_neg(Vec3 u) {
     return res;
 }
 
-Vec3 vec3_scalar_mul(Vec3 u, Float a) {
-    Vec3 res = {
+Vector3f vector3_scalar_mul(Vector3f u, Float a) {
+    Vector3f res = {
         .x = u.x * a,
         .y = u.y * a,
         .z = u.z * a
@@ -58,16 +58,16 @@ Vec3 vec3_scalar_mul(Vec3 u, Float a) {
     return res;
 }
 
-Vec3 vec3_scalar_div(Vec3 u, Float a) {
-    return vec3_scalar_mul(u, (Float)1.0 / a);
+Vector3f vector3_scalar_div(Vector3f u, Float a) {
+    return vector3_scalar_mul(u, (Float)1.0 / a);
 }
 
-Float vec3_dot(Vec3 u, Vec3 v) {
+Float vector3_dot(Vector3f u, Vector3f v) {
     return u.x * v.x + u.y * v.y + u.z * v.z;
 }
 
-Vec3 vec3_cross(Vec3 u, Vec3 v) {
-    Vec3 res = {
+Vector3f vector3_cross(Vector3f u, Vector3f v) {
+    Vector3f res = {
         .x = u.y * v.z - u.z * v.y,
         .y = u.z * v.x - u.x * v.z,
         .z = u.x * v.y - u.y * v.x
@@ -75,18 +75,18 @@ Vec3 vec3_cross(Vec3 u, Vec3 v) {
     return res;
 }
 
-Float vec3_norm(Vec3 u) {
-    return sqrt(vec3_dot(u, u));
+Float vector3_norm(Vector3f u) {
+    return sqrt(vector3_square_norm(u));
 }
 
-Float vec3_square_norm(Vec3 u) {
-    return vec3_dot(u, u);
+Float vector3_square_norm(Vector3f u) {
+    return vector3_dot(u, u);
 }
 
-Vec3 vec3_unit(Vec3 u) {
-    return vec3_scalar_div(u, vec3_norm(u));
+Vector3f vector3_unit(Vector3f u) {
+    return vector3_scalar_div(u, vector3_norm(u));
 }
 
-Vec3 vec3_lerp(Vec3 u, Vec3 v, Float t) {
-    return vec3_add(vec3_scalar_mul(u, (Float)1.0 - t), vec3_scalar_mul(v, t));
+Vector3f vector3_lerp(Vector3f u, Vector3f v, Float t) {
+    return vector3_add(u, vector3_scalar_mul(vector3_sub(v, u), t));
 }

@@ -28,18 +28,18 @@
 
 /// @brief A camera that generates rays whose up direction is always positive y axis.
 typedef struct Camera {
-    Point3 look_from;
-    Point3 look_to;
+    Point3f look_from;
+    Point3f look_to;
 
     Float y_field_of_view;
     Float focal_length;
 
-    Vec3 look_front;
-    Vec3 look_up;
-    Vec3 look_right;
+    Vector3f look_front;
+    Vector3f look_up;
+    Vector3f look_right;
 
-    Vec3 horizontal;
-    Vec3 vertical;
+    Vector3f horizontal;
+    Vector3f vertical;
 
     Film* film;
 } Camera;
@@ -50,8 +50,9 @@ typedef struct Camera {
 /// @param ref_up The reference up vector of the camera.
 /// @param y_field_of_view The y field of view of the camera, in degrees.
 /// @param focal_length The focal length of the camera.
+/// @param film The film of the camera.
 /// @return The created camera.
-Camera* camera_create(Point3 look_from, Point3 look_to, Vec3 ref_up, Float y_field_of_view, Float focal_length);
+Camera* camera_create(Point3f look_from, Point3f look_to, Vector3f ref_up, Float y_field_of_view, Float focal_length, Film* film);
 
 /// @brief Destroy a camera.
 /// @param camera The camera to destroy.
@@ -67,13 +68,13 @@ void camera_set_film(Camera* camera, Film* film);
 /// @param i The i coordinate of the pixel.
 /// @param j The j coordinate of the pixel.
 /// @param color The color of the pixel.
-void camera_set_pixel_color3(Camera* camera, uint32_t i, uint32_t j, Color3 color);
+void camera_set_pixel(Camera const* camera, uint32_t i, uint32_t j, Color3f color);
 
 /// @brief Generate a ray from the camera.
 /// @param camera The camera.
 /// @param i The i coordinate of the pixel.
 /// @param j The j coordinate of the pixel.
 /// @return The generated ray.
-Ray camera_generate_ray(Camera* camera, uint32_t i, uint32_t j);
+Ray camera_generate_ray(Camera const* camera, uint32_t i, uint32_t j);
 
 #endif // !_CS100_RAY_TRACING_CAMERA_H_

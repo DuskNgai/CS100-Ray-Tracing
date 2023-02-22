@@ -28,7 +28,7 @@
 typedef float Float;
 
 #define INF HUGE_VAL
-#define PI ((Float)3.14159265358979323846)
+#define PI ((Float)3.141592653589793238462643383279)
 
 // Generic selection, a c11 standard feature.
 // https://en.cppreference.com/w/c/language/generic

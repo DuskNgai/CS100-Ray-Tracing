@@ -17,7 +17,7 @@ This project is intended for recitation of Introduction to Programming (CS100) a
 
 ### Week 3
 
-1. `Vec3`
+1. `Vector3f`
 
 ### Week 4
 

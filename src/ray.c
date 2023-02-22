@@ -25,8 +25,8 @@
 #include <assert.h>
 #include <stddef.h>
 
-Point3 ray_at(Ray const* r, Float t) {
+Point3f ray_at(Ray const* r, Float t) {
     assert(r != NULL);
 
-    return vec3_add(r->origin, vec3_scalar_mul(r->direction, t));
+    return vector3_add(r->origin, vector3_scalar_mul(r->direction, t));
 }

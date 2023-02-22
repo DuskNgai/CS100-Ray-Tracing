@@ -30,7 +30,7 @@ Film* film_create(uint32_t width, uint32_t height) {
     Film* film = (Film*)malloc(sizeof(Film));
     film->width = width;
     film->height = height;
-    film->pixels = (Color3*)malloc(sizeof(Color3) * width * height);
+    film->pixels = (Color3f*)malloc(sizeof(Color3f) * width * height);
     return film;
 }
 
@@ -53,30 +53,25 @@ static uint32_t film_get_pixel_index(Film const* film, uint32_t i, uint32_t j) {
     return j * film->width + i;
 }
 
-Color3 film_get_pixel_color3(Film const* film, uint32_t i, uint32_t j) {
+Color3f film_get_pixel(Film const* film, uint32_t i, uint32_t j) {
     assert(film != NULL);
 
     return film->pixels[film_get_pixel_index(film, i, j)];
 }
 
-void film_set_pixel_color3(Film* film, uint32_t i, uint32_t j, Color3 color) {
+void film_set_pixel(Film const* film, uint32_t i, uint32_t j, Color3f color) {
     assert(film != NULL);
 
     film->pixels[film_get_pixel_index(film, i, j)] = color;
 }
 
-void film_set_pixel_3f(Film* film, uint32_t i, uint32_t j, Float r, Float g, Float b) {
-    assert(film != NULL);
-
-    film_set_pixel_color3(film, i, j, (Color3){ r, g, b });
-}
-
 void film_save(Film const* film) {
     assert(film != NULL);
 
+    printf("P3\n%u %u\n255\n", film->width, film->height);
     for (uint32_t j = 0; j < film->height; ++j) {
         for (uint32_t i = 0; i < film->width; ++i) {
-            Color3 color = film_get_pixel_color3(film, i, j);
+            Color3f color = film_get_pixel(film, i, j);
             uint8_t r = (uint8_t)(color.x * 255.0);
             uint8_t g = (uint8_t)(color.y * 255.0);
             uint8_t b = (uint8_t)(color.z * 255.0);

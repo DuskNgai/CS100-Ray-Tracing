@@ -25,8 +25,8 @@
 
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 
-#include "camera.h"
 #include "integrator.h"
 
 int main() {
@@ -49,32 +49,33 @@ int main() {
     }
 
     // Create the camera.
-    Film* film = film_create(image_width, image_height);
     Camera* camera = camera_create(
-        (Point3){ 0.0, 0.0, 0.0 },
-        (Point3){ 0.0, 0.0, -1.0 },
-        (Vec3){ 0.0, 1.0, 0.0 },
+        (Point3f){ 0.0, 0.0, 0.0 },
+        (Point3f){ 0.0, 0.0, -1.0 },
+        (Vector3f){ 0.0, 1.0, 0.0 },
         (Float)90.0,
-        (Float)1.0);
-    camera_set_film(camera, film);
+        (Float)1.0,
+        film_create(image_width, image_height));
+
+    // Create the scene.
+    Scene* scene = scene_create(2);
+    Sphere* s1 = (Sphere*)malloc(sizeof(Sphere));
+    s1->center = (Point3f){ 0.0, 0.0, -1.0 };
+    s1->radius = 0.5;
+    Sphere* s2 = (Sphere*)malloc(sizeof(Sphere));
+    s2->center = (Point3f){ 0.0, -100.5, -1.0 };
+    s2->radius = 100.0;
+    scene_add_object(scene, s1, 0);
+    scene_add_object(scene, s2, 1);
 
     // Render the image.
-    printf("P3\n%u %u\n255\n", image_width, image_height);
-    for (uint32_t j = 0; j < image_height; ++j) {
-        fprintf(stderr, "\rScanlines remaining: %u ", image_height - j - 1);
-        fflush(stderr);
-
-        for (uint32_t i = 0; i < image_width; ++i) {
-            Ray ray = camera_generate_ray(camera, i, j);
-            Color3 color = radiance(&ray);
-            camera_set_pixel_color3(camera, i, j, color);
-        }
-    }
+    render(camera, scene);
     fprintf(stderr, "\nRendering done, outputing image.\n");
-    film_save(film);
+    film_save(camera->film);
     fprintf(stderr, "Done!\n");
 
-    film_destroy(film);
+    scene_destroy(scene);
+    film_destroy(camera->film);
     camera_destroy(camera);
     return 0;
 }

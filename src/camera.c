@@ -27,7 +27,7 @@
 
 #include "math-utils.h"
 
-Camera* camera_create(Point3 look_from, Point3 look_to, Vec3 ref_up, Float y_field_of_view, Float focal_length) {
+Camera* camera_create(Point3f look_from, Point3f look_to, Vector3f ref_up, Float y_field_of_view, Float focal_length, Film* film) {
     Camera* camera = (Camera*)malloc(sizeof(Camera));
 
     camera->look_from = look_from;
@@ -36,14 +36,14 @@ Camera* camera_create(Point3 look_from, Point3 look_to, Vec3 ref_up, Float y_fie
     camera->y_field_of_view = y_field_of_view;
     camera->focal_length = focal_length;
 
-    camera->look_front = vec3_unit(vec3_sub(camera->look_to, camera->look_from));
-    camera->look_right = vec3_unit(vec3_cross(camera->look_front, ref_up));
-    camera->look_up = vec3_cross(camera->look_right, camera->look_front);
+    camera->look_front = vector3_unit(vector3_sub(camera->look_to, camera->look_from));
+    camera->look_right = vector3_unit(vector3_cross(camera->look_front, ref_up));
+    camera->look_up = vector3_cross(camera->look_right, camera->look_front);
 
-    camera->horizontal = (Vec3){ 0.0, 0.0, 0.0 };
-    camera->vertical = vec3_scalar_mul(camera->look_up, tan(deg_to_rad(camera->y_field_of_view / (Float)2.0)) * camera->focal_length);
+    camera->horizontal = (Vector3f){ 0.0, 0.0, 0.0 };
+    camera->vertical = vector3_scalar_mul(camera->look_up, tan(deg_to_rad(camera->y_field_of_view / (Float)2.0)) * camera->focal_length);
 
-    camera->film = NULL;
+    camera_set_film(camera, film);
     return camera;
 }
 
@@ -59,23 +59,23 @@ void camera_set_film(Camera* camera, Film* film) {
 
     camera->film = film;
     Float aspect_ratio = film_get_aspect_ratio(film);
-    camera->horizontal = vec3_scalar_mul(camera->look_right, vec3_norm(camera->vertical) * aspect_ratio);
+    camera->horizontal = vector3_scalar_mul(camera->look_right, vector3_norm(camera->vertical) * aspect_ratio);
 }
 
-void camera_set_pixel_color3(Camera* camera, uint32_t i, uint32_t j, Color3 color) {
+void camera_set_pixel(Camera const* camera, uint32_t i, uint32_t j, Color3f color) {
     assert(camera->film != NULL);
 
-    film_set_pixel_color3(camera->film, i, j, color);
+    film_set_pixel(camera->film, i, j, color);
 }
 
-Ray camera_generate_ray(Camera* camera, uint32_t i, uint32_t j) {
+Ray camera_generate_ray(Camera const* camera, uint32_t i, uint32_t j) {
     assert(camera->film != NULL);
 
     Float u = ((Float)2.0 * (Float)i / (Float)(camera->film->width - 1)) - (Float)1.0;
     Float v = ((Float)2.0 * (Float)j / (Float)(camera->film->height - 1)) - (Float)1.0;
 
-    Point3 origin = camera->look_from;
-    Vec3 direction = vec3_add(vec3_add(vec3_scalar_mul(camera->horizontal, u), vec3_scalar_mul(camera->vertical, v)), vec3_scalar_mul(camera->look_front, camera->focal_length));
+    Point3f origin = camera->look_from;
+    Vector3f direction = vector3_add(vector3_add(vector3_scalar_mul(camera->horizontal, u), vector3_scalar_mul(camera->vertical, v)), vector3_scalar_mul(camera->look_front, camera->focal_length));
 
     return (Ray){ origin, direction };
 }

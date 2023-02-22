@@ -24,13 +24,13 @@
 #define _CS100_RAY_TRACING_INTERACTION_H_
 
 #include "math-utils.h"
-#include "vec3.h"
+#include "vector3.h"
 
 /// @brief The record for interaction between a ray and an object.
 typedef struct Interaction {
     Float t;
-    Point3 hit_point;
-    Vec3 normal;
+    Point3f hit_point;
+    Vector3f normal;
 } Interaction;
 
 #endif // !_CS100_RAY_TRACING_INTERACTION_H_

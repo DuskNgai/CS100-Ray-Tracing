@@ -23,11 +23,17 @@
 #ifndef _CS100_RAY_TRACING_INTEGRATOR_H_
 #define _CS100_RAY_TRACING_INTEGRATOR_H_
 
-#include "ray.h"
+#include "camera.h"
+#include "geometry/scene.h"
 
-/// @brief The integrator is responsible for computing the radiance along a ray.
+/// @brief Fill the film with the rendered image specified by the camera and scene.
+/// @param camera The camera to render the scene with.
+/// @param scene The scene to render.
+void render(Camera const* camera, Scene const* scene);
+
+/// @brief Computing the radiance along a ray.
 /// @param ray The ray to be traced.
 /// @return The radiance along the ray.
-Color3 radiance(const Ray* ray);
+Color3f radiance(Ray const* ray);
 
 #endif // !_CS100_RAY_TRACING_INTEGRATOR_H_
