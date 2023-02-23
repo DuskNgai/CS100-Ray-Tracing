@@ -27,8 +27,12 @@
 #include "geometry/scene.h"
 
 class Integrator {
+private:
+    uint32_t spp;
+    RandomNumberGenerator rng{};
+
 public:
-    Integrator() = default;
+    Integrator(uint32_t spp);
     ~Integrator() = default;
 
     void render(Camera const& camera, Scene const& scene);

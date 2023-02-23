@@ -24,15 +24,22 @@
 
 #include <cstdio>
 
+Integrator::Integrator(uint32_t spp)
+    : spp(spp) {}
+
 void Integrator::render(Camera const& camera, Scene const& scene) {
     for (uint32_t j = 0; j < camera.get_film().height; ++j) {
         fprintf(stderr, "\rScanlines remaining: %u ", camera.get_film().height - j - 1);
         fflush(stderr);
 
         for (uint32_t i = 0; i < camera.get_film().width; ++i) {
-            Ray ray = camera.generate_ray(i, j);
-            Color3f color = this->radiance(ray, scene);
-            camera.set_pixel(i, j, color);
+            Color3f pixel_color;
+            for (uint32_t s = 0; s < this->spp; ++s) {
+                Ray ray = camera.generate_ray(i, j, this->rng);
+                Color3f color = this->radiance(ray, scene);
+                pixel_color += color;
+            }
+            camera.set_pixel(i, j, pixel_color / this->spp);
         }
     }
 }

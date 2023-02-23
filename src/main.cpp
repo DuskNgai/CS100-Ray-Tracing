@@ -34,8 +34,8 @@
 
 int main(int argc, char **argv) {
     // TODO: replace by parsing command line arguments/configuration files.
-    if (argc != 4) {
-        fprintf(stderr, "Usage: %s <image_width> <image_height> <output_file_path>\n", argv[0]);
+    if (argc != 5) {
+        fprintf(stderr, "Usage: %s <image_width> <image_height> <sample_per_pixel> <output_file_path>\n", argv[0]);
         return 1;
     }
 
@@ -54,13 +54,21 @@ int main(int argc, char **argv) {
         fprintf(stderr, "%s. [Error] Invalid image_height, process terminate.\n", e.what());
         return 1;
     }
-    fprintf(stderr, "The image size is %u x %u pixels.\n", image_width, image_height);
-    if (image_width > 2048 || image_height > 2048) {
+
+    uint32_t spp;
+    try {
+        spp = std::stoul(argv[3]);
+    } catch (std::exception const& e) {
+        fprintf(stderr, "%s. [Error] Invalid spp, process terminate.\n", e.what());
+        return 1;
+    }
+    fprintf(stderr, "The image size is %u x %u pixels, with %u spp.\n", image_width, image_height, spp);
+    if (image_width > 2048 || image_height > 2048 || spp > 2048) {
         fprintf(stderr, "[Error] The image is too large to create, process terminate.\n");
         return 1;
     }
 
-    std::string output_file_path{argv[3]};
+    std::string output_file_path{argv[4]};
     if (!std::filesystem::exists(std::filesystem::path{ output_file_path }.parent_path())) {
         fprintf(stderr, "[Error] The parent path of %s does not exist, process terminate.\n", output_file_path.c_str());
         return 1;
@@ -76,12 +84,13 @@ int main(int argc, char **argv) {
         std::make_shared<Film>(image_width, image_height));
 
     // Create the scene.
-    Scene scene;
-    scene.add_object(std::make_shared<Sphere>(Point3f{ 0.0, 0.0, -1.0 }, 0.5));
-    scene.add_object(std::make_shared<Sphere>(Point3f{ 0.0, -100.5, -1.0 }, 100.0));
+    Scene scene({
+        std::make_shared<Sphere>(Point3f{ 0.0, 0.0, -1.0 }, 0.5),
+        std::make_shared<Sphere>(Point3f{ 0.0, -100.5, -1.0 }, 100.0)
+    });
 
     // Render the image.
-    Integrator integrator;
+    Integrator integrator(spp);
     integrator.render(camera, scene);
 
     // Output the image.

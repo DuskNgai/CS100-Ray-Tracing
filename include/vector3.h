@@ -35,7 +35,7 @@ struct Vector3 {
         struct {
             T x, y, z;
         };
-        std::array<Float, 3> data;
+        std::array<Float, 3> data {0, 0, 0};
     };
 
     // Constructors.
@@ -67,60 +67,60 @@ struct Vector3 {
     T const &operator[](std::size_t i) const { return this->data[i]; }
 
     // Operations.
-    Vector3 &operator+=(Vector3 const& v) {
+    Vector3& operator+=(Vector3 const& v) {
         this->x += v.x;
         this->y += v.y;
         this->z += v.z;
         return *this;
     }
-    Vector3 &operator-=(Vector3 const& v) {
+    Vector3& operator-=(Vector3 const& v) {
         this->x -= v.x;
         this->y -= v.y;
         this->z -= v.z;
         return *this;
     }
-    Vector3 &operator*=(T a) {
+    Vector3& operator*=(T a) {
         this->x *= a;
         this->y *= a;
         this->z *= a;
         return *this;
     }
-    Vector3 &operator/=(T a) {
+    Vector3& operator/=(T a) {
         return *this *= (static_cast<T>(1) / a);
     }
 
     /// @brief |v|
-    T norm() const { return std::sqrt(this->square_norm()); }
+    T constexpr norm() const { return std::sqrt(this->square_norm()); }
     /// @brief |v|^2
-    T square_norm() const { return dot(*this, *this); }
+    T constexpr square_norm() const { return dot(*this, *this); }
     /// @brief v / |v|
-    Vector3 unit() const { return *this / this->norm(); }
+    Vector3 constexpr unit() const { return *this / this->norm(); }
 };
 
 // Operations.
 
 template <typename T>
-Vector3<T> operator+(Vector3<T> const& u, Vector3<T> const& v) {
+Vector3<T> constexpr operator+(Vector3<T> const& u, Vector3<T> const& v) {
     return Vector3<T>{u} += v;
 }
 
 template <typename T>
-Vector3<T> operator-(Vector3<T> const& u, Vector3<T> const& v) {
+Vector3<T> constexpr operator-(Vector3<T> const& u, Vector3<T> const& v) {
     return Vector3<T>{u} -= v;
 }
 
-template <typename T>
-Vector3<T> operator*(Vector3<T> const& u, T a) {
+template <typename T, typename U>
+Vector3<std::enable_if_t<std::is_convertible_v<T, U>, T>> constexpr operator*(Vector3<T> const& u, U a) {
     return Vector3<T>{u} *= a;
 }
 
-template <typename T>
-Vector3<T> operator*(T a, Vector3<T> const& u) {
+template <typename T, typename U>
+Vector3<std::enable_if_t<std::is_convertible_v<T, U>, T>> constexpr operator*(U a, Vector3<T> const& u) {
     return u * a;
 }
 
-template <typename T>
-Vector3<T> operator/(Vector3<T> const& u, T a) {
+template <typename T, typename U>
+Vector3<std::enable_if_t<std::is_convertible_v<T, U>, T>> constexpr operator/(Vector3<T> const& u, U a) {
     return u * (static_cast<T>(1.0) / a);
 }
 
@@ -132,13 +132,13 @@ std::ostream& operator<<(std::ostream& out, Vector3<T> const& v) {
 
 /// @brief <u, v>.
 template <typename T>
-T dot(Vector3<T> const& u, Vector3<T> const& v) {
+T constexpr dot(Vector3<T> const& u, Vector3<T> const& v) {
     return u.x * v.x + u.y * v.y + u.z * v.z;
 }
 
 /// @brief u x v.
 template <typename T>
-Vector3<T> cross(Vector3<T> const& u, Vector3<T> const& v) {
+Vector3<T> constexpr cross(Vector3<T> const& u, Vector3<T> const& v) {
     return {
         u.y * v.z - u.z * v.y,
         u.z * v.x - u.x * v.z,
@@ -148,7 +148,7 @@ Vector3<T> cross(Vector3<T> const& u, Vector3<T> const& v) {
 
 /// @brief u * (1 - t) + v * t.
 template <typename T, typename FloatingPoint>
-Vector3<T> lerp(Vector3<T> const& u, Vector3<T> const& v, FloatingPoint t) {
+Vector3<T> constexpr lerp(Vector3<T> const& u, Vector3<T> const& v, FloatingPoint t) {
     return u + (v - u) * t;
 }
 

@@ -1,6 +1,6 @@
 /*
  * CS100-Ray-Tracing for course recitation.
- * The scene class that contains all geometry objects.
+ * The definition of scene class that contains all geometry objects.
  *
  * Copyright (C) 2023
  * Author: Haizhao Dai
@@ -34,7 +34,10 @@ private:
 
 public:
     Scene() = default;
+    Scene(std::initializer_list<std::shared_ptr<Geometry>> objects);
     Scene(std::vector<std::shared_ptr<Geometry>> const& objects);
+    Scene(Scene const& other) = delete;
+    Scene& operator=(Scene const& other) = delete;
 
     void add_object(std::shared_ptr<Geometry> const& object);
     void clear_objects();

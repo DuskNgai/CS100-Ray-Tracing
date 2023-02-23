@@ -27,6 +27,7 @@
 
 #include "film.h"
 #include "ray.h"
+#include "utils/random-number-generator.h"
 
 /// @brief A camera that generates rays whose up direction is always positive y axis.
 class Camera {
@@ -79,7 +80,7 @@ public:
     /// @param i The i coordinate of the pixel.
     /// @param j The j coordinate of the pixel.
     /// @return The generated ray.
-    Ray generate_ray(uint32_t i, uint32_t j) const;
+    Ray generate_ray(uint32_t i, uint32_t j, RandomNumberGenerator& rng) const;
 };
 
 #endif // !_CS100_RAY_TRACING_CAMERA_H_

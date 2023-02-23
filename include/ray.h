@@ -30,7 +30,6 @@ struct Ray {
     Point3f origin;
     Vector3f direction;
 
-    Ray() = default;
     Ray(Point3f const& origin, Vector3f const& direction);
 
     /// @brief Evaluate the ray at a given ray parameter.

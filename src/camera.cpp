@@ -50,9 +50,9 @@ void Camera::set_pixel(uint32_t i, uint32_t j, Color3f const& color) const {
     this->film->set_pixel(i, j, color);
 }
 
-Ray Camera::generate_ray(uint32_t i, uint32_t j) const {
-    Float u = (static_cast<Float>(2.0) * static_cast<Float>(i) / static_cast<Float>(this->film->width - 1)) - static_cast<Float>(1.0);
-    Float v = (static_cast<Float>(2.0) * static_cast<Float>(j) / static_cast<Float>(this->film->height - 1)) - static_cast<Float>(1.0);
+Ray Camera::generate_ray(uint32_t i, uint32_t j, RandomNumberGenerator& rng) const {
+    Float u = (static_cast<Float>(2.0) * (static_cast<Float>(i) + rng() - static_cast<Float>(0.5)) / static_cast<Float>(this->film->width - 1)) - static_cast<Float>(1.0);
+    Float v = (static_cast<Float>(2.0) * (static_cast<Float>(j) + rng() - static_cast<Float>(0.5)) / static_cast<Float>(this->film->height - 1)) - static_cast<Float>(1.0);
 
     Point3f origin = this->look_from;
     Vector3f direction = this->horizontal * u + this->vertical * v + this->look_front * this->focal_length;

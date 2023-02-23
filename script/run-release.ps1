@@ -9,6 +9,6 @@ function info() {
 }
 
 info "[script] Generating image.ppm..."
-.\"..\windows-build\x64\Release\CS100-Ray-Tracing.exe" 960 540 "..\result\image.ppm"
+.\"..\windows-build\x64\Release\CS100-Ray-Tracing.exe" 960 540 20 "..\result\image.ppm"
 info "[script] Converting image.ppm to image.png..."
 python "ppm-to-png.py" "../result/image.ppm"

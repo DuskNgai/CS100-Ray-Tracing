@@ -32,7 +32,7 @@ run g++ "../src/"*.cpp "../src/geometry/"*.cpp \
     -lm
 
 info "[script] Generating image.ppm..."
-run ./"../linux-build/Release/CS100-Ray-Tracing" 960 540 "..\result\image.ppm" > "../result/image.ppm"
+run ./"../linux-build/Release/CS100-Ray-Tracing" 960 540 20 "..\result\image.ppm" > "../result/image.ppm"
 
 info "[script] Converting image.ppm to image.png..."
 run python "ppm-to-png.py" "../result/image.ppm"
