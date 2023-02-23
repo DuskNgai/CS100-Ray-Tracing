@@ -42,12 +42,12 @@ int main() {
         fprintf(stderr, "[Error] Invalid image_height, process terminate.\n");
         return 1;
     }
-    fprintf(stderr, "The image size is %u x %u pixels.\n", image_width, image_height);
     if (image_width > 2048 || image_height > 2048) {
         fprintf(stderr, "[Error] The image is too large to create, process terminate.\n");
         return 1;
     }
 
+    fprintf(stderr, "The image size is %u x %u pixels.\n", image_width, image_height);
     // Create the camera.
     Camera* camera = camera_create(
         (Point3f){ 0.0, 0.0, 0.0 },

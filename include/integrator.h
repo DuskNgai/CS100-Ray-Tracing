@@ -33,7 +33,8 @@ void render(Camera const* camera, Scene const* scene);
 
 /// @brief Computing the radiance along a ray.
 /// @param ray The ray to be traced.
+/// @param scene The scene to be traced.
 /// @return The radiance along the ray.
-Color3f radiance(Ray const* ray);
+Color3f radiance(Ray const* ray, Scene const* scene);
 
 #endif // !_CS100_RAY_TRACING_INTEGRATOR_H_

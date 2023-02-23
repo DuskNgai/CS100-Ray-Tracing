@@ -17,15 +17,15 @@ This project is intended for recitation of Introduction to Programming (CS100) a
 
 ### Week 3
 
-1. `Vector3f`
+1. `Integrator`
 
 ### Week 4
 
-1. `Ray`, `Film`
+1. `Vector3f`, `Ray`, `Film`
 
 ### Week 5
 
-1. `Sphere`, `Camera`, `Interaction`, `Integrator`
+1. `Sphere`, `Camera`, `Interaction`
 
 ### Week 6
 

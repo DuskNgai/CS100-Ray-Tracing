@@ -30,27 +30,27 @@
 /// @brief The scene class that contains all geometry objects.
 typedef struct Scene {
     uint32_t num_obj;
-    Sphere **obj_list;
+    Sphere** obj_list;
 } Scene;
 
 /// @brief Create a scene.
 /// @param num_obj Number of objects in the scene.
 /// @return The pointer to the scene.
-Scene *scene_create(uint32_t num_obj);
+Scene* scene_create(uint32_t num_obj);
 
 /// @brief Destroy a scene.
 /// @param scene The pointer to the scene.
-void scene_destroy(Scene *scene);
+void scene_destroy(Scene* scene);
 
 /// @brief Add an object to the scene.
 /// @param scene The scene object.
 /// @param obj The object to be added.
 /// @param index The index of the object.
-void scene_add_object(Scene *scene, Sphere *obj, uint32_t index);
+void scene_add_object(Scene* scene, Sphere* obj, uint32_t index);
 
 /// @brief Clear all objects in the scene.
 /// @param scene The scene object.
-void scene_clear_objects(Scene *scene);
+void scene_clear_objects(Scene* scene);
 
 /// @brief Test if a ray intersects with a scene.
 /// @param scene The scene object.
