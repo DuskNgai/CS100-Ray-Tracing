@@ -31,21 +31,16 @@
 /// @brief A 3D vector.
 template <typename T>
 struct Vector3 {
-    union {
-        struct {
-            T x, y, z;
-        };
-        std::array<Float, 3> data {0, 0, 0};
-    };
+    T x{ 0 }, y{ 0 }, z{ 0 };
 
     // Constructors.
     Vector3() = default;
     Vector3(T x, T y, T z)
-        : data{ x, y, z } {}
+        : x{ x }, y{ y }, z{ z } {}
     Vector3(Vector3 const& v)
-        : data{ v.data } {}
-    Vector3(Vector3 &&v) noexcept
-        : data{ std::move(v.data) } {}
+        : x{ v.x }, y{ v.y }, z{ v.z } {}
+    Vector3(Vector3&& v) noexcept
+        : x{ std::move(v.x) }, y{ std::move(v.y) }, z{ std::move(v.z) } {}
     Vector3& operator=(Vector3 const& v) {
         if (this != &v) {
             x = v.x;
@@ -54,7 +49,7 @@ struct Vector3 {
         }
         return *this;
     }
-    Vector3 &operator=(Vector3 &&v) noexcept {
+    Vector3& operator=(Vector3&& v) noexcept {
         x = std::move(v.x);
         y = std::move(v.y);
         z = std::move(v.z);
@@ -63,8 +58,8 @@ struct Vector3 {
     ~Vector3() = default;
 
     // Access function.
-    T &operator[](std::size_t i) { return this->data[i]; }
-    T const &operator[](std::size_t i) const { return this->data[i]; }
+    T& operator[](std::size_t i) { return this->data[i]; }
+    T const& operator[](std::size_t i) const { return this->data[i]; }
 
     // Operations.
     Vector3& operator+=(Vector3 const& v) {
@@ -101,17 +96,17 @@ struct Vector3 {
 
 template <typename T>
 Vector3<T> constexpr operator+(Vector3<T> const& u, Vector3<T> const& v) {
-    return Vector3<T>{u} += v;
+    return Vector3<T>{ u } += v;
 }
 
 template <typename T>
 Vector3<T> constexpr operator-(Vector3<T> const& u, Vector3<T> const& v) {
-    return Vector3<T>{u} -= v;
+    return Vector3<T>{ u } -= v;
 }
 
 template <typename T, typename U>
 Vector3<std::enable_if_t<std::is_convertible_v<T, U>, T>> constexpr operator*(Vector3<T> const& u, U a) {
-    return Vector3<T>{u} *= a;
+    return Vector3<T>{ u } *= a;
 }
 
 template <typename T, typename U>

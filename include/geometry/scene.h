@@ -23,8 +23,8 @@
 #ifndef _CS100_RAY_TRACING_SCENE_H_
 #define _CS100_RAY_TRACING_SCENE_H_
 
-#include <vector>
 #include <memory>
+#include <vector>
 
 #include "geometry/geometry.h"
 

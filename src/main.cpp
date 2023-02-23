@@ -24,56 +24,60 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include <cstdio>
+#include <filesystem>
 #include <memory>
 #include <string>
-#include <filesystem>
 
-#include "integrator.h"
 #include "geometry/scene.h"
 #include "geometry/sphere.h"
+#include "integrator.h"
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
     // TODO: replace by parsing command line arguments/configuration files.
     if (argc != 5) {
-        fprintf(stderr, "Usage: %s <image_width> <image_height> <sample_per_pixel> <output_file_path>\n", argv[0]);
+        printf("Usage: %s <image_width> <image_height> <sample_per_pixel> <output_file_path>\n", argv[0]);
         return 1;
     }
 
     uint32_t image_width;
     try {
         image_width = std::stoul(argv[1]);
-    } catch (std::exception const& e) {
-        fprintf(stderr, "%s. [Error] Invalid image_width, process terminate.\n", e.what());
+    }
+    catch (std::exception const& e) {
+        printf("%s. [Error] Invalid image_width, process terminate.\n", e.what());
         return 1;
     }
 
     uint32_t image_height;
     try {
         image_height = std::stoul(argv[2]);
-    } catch (std::exception const& e) {
-        fprintf(stderr, "%s. [Error] Invalid image_height, process terminate.\n", e.what());
+    }
+    catch (std::exception const& e) {
+        printf("%s. [Error] Invalid image_height, process terminate.\n", e.what());
         return 1;
     }
 
     uint32_t spp;
     try {
         spp = std::stoul(argv[3]);
-    } catch (std::exception const& e) {
-        fprintf(stderr, "%s. [Error] Invalid spp, process terminate.\n", e.what());
+    }
+    catch (std::exception const& e) {
+        printf("%s. [Error] Invalid spp, process terminate.\n", e.what());
         return 1;
     }
-    fprintf(stderr, "The image size is %u x %u pixels, with %u spp.\n", image_width, image_height, spp);
     if (image_width > 2048 || image_height > 2048 || spp > 2048) {
-        fprintf(stderr, "[Error] The image is too large to create, process terminate.\n");
+        printf("[Error] The image is too large to create, process terminate.\n");
         return 1;
     }
 
-    std::string output_file_path{argv[4]};
-    if (!std::filesystem::exists(std::filesystem::path{ output_file_path }.parent_path())) {
-        fprintf(stderr, "[Error] The parent path of %s does not exist, process terminate.\n", output_file_path.c_str());
+    std::string output_file_path{ argv[4] };
+    auto parent_dir = std::filesystem::path{ output_file_path }.parent_path();
+    if (!std::filesystem::exists(parent_dir)) {
+        printf("[Error] The directory %s does not exist, process terminate.\n", parent_dir.c_str());
         return 1;
     }
 
+    printf("The image size is %u x %u pixels, with %u spp.\n", image_width, image_height, spp);
     // Create the camera.
     Camera camera(
         Point3f{ 0.0, 0.0, 0.0 },
@@ -84,20 +88,18 @@ int main(int argc, char **argv) {
         std::make_shared<Film>(image_width, image_height));
 
     // Create the scene.
-    Scene scene({
-        std::make_shared<Sphere>(Point3f{ 0.0, 0.0, -1.0 }, 0.5),
-        std::make_shared<Sphere>(Point3f{ 0.0, -100.5, -1.0 }, 100.0)
-    });
+    Scene scene({ std::make_shared<Sphere>(Point3f{ 0.0, 0.0, -1.0 }, 0.5),
+                  std::make_shared<Sphere>(Point3f{ 0.0, -100.5, -1.0 }, 100.0) });
 
     // Render the image.
     Integrator integrator(spp);
     integrator.render(camera, scene);
 
     // Output the image.
-    fprintf(stderr, "\nRendering done, outputing image.\n");
+    printf("\nRendering done, outputing image.\n");
     camera.get_film().save(output_file_path);
 
-    fprintf(stderr, "Done!\n");
+    printf("Done!\n");
 
     return 0;
 }

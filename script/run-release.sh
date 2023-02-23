@@ -25,14 +25,14 @@ result_dir_name="../result"
 mkdir -p "$result_dir_name"
 
 info "[script] Compiling..."
-run g++ "../src/"*.cpp "../src/geometry/"*.cpp \
-    -o "../linux-build/Release/CS100-Ray-Tracing" \
-    -I "../include"                               \
-    -O3 -std=c17 -Wall -Wextra -Wpedantic -Werror \
+run g++ "../src/"*.cpp "../src/geometry/"*.cpp "../src/utils/"*.cpp \
+    -o "../linux-build/Release/CS100-Ray-Tracing"   \
+    -I "../include"                                 \
+    -O3 -std=c++17 -Wall -Wextra -Wpedantic -Werror \
     -lm
 
 info "[script] Generating image.ppm..."
-run ./"../linux-build/Release/CS100-Ray-Tracing" 960 540 20 "..\result\image.ppm" > "../result/image.ppm"
+run ./"../linux-build/Release/CS100-Ray-Tracing" 960 540 20 "../result/image.ppm"
 
 info "[script] Converting image.ppm to image.png..."
 run python "ppm-to-png.py" "../result/image.ppm"
