@@ -35,7 +35,7 @@
 int main(int argc, char** argv) {
     // TODO: replace by parsing command line arguments/configuration files.
     if (argc != 5) {
-        printf("Usage: %s <image_width> <image_height> <sample_per_pixel> <output_file_path>\n", argv[0]);
+        std::printf("Usage: %s <image_width> <image_height> <sample_per_pixel> <output_file_path>\n", argv[0]);
         return 1;
     }
 
@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
         image_width = std::stoul(argv[1]);
     }
     catch (std::exception const& e) {
-        printf("%s. [Error] Invalid image_width, process terminate.\n", e.what());
+        std::printf("%s. [Error] Invalid image_width, process terminate.\n", e.what());
         return 1;
     }
 
@@ -53,7 +53,7 @@ int main(int argc, char** argv) {
         image_height = std::stoul(argv[2]);
     }
     catch (std::exception const& e) {
-        printf("%s. [Error] Invalid image_height, process terminate.\n", e.what());
+        std::printf("%s. [Error] Invalid image_height, process terminate.\n", e.what());
         return 1;
     }
 
@@ -62,22 +62,22 @@ int main(int argc, char** argv) {
         spp = std::stoul(argv[3]);
     }
     catch (std::exception const& e) {
-        printf("%s. [Error] Invalid spp, process terminate.\n", e.what());
+        std::printf("%s. [Error] Invalid spp, process terminate.\n", e.what());
         return 1;
     }
     if (image_width > 2048 || image_height > 2048 || spp > 2048) {
-        printf("[Error] The image is too large to create, process terminate.\n");
+        std::printf("[Error] The image is too large to create, process terminate.\n");
         return 1;
     }
 
     std::string output_file_path{ argv[4] };
     auto parent_dir = std::filesystem::path{ output_file_path }.parent_path();
     if (!std::filesystem::exists(parent_dir)) {
-        printf("[Error] The directory %s does not exist, process terminate.\n", parent_dir.c_str());
+        std::printf("[Error] The directory %s does not exist, process terminate.\n", parent_dir.c_str());
         return 1;
     }
 
-    printf("The image size is %u x %u pixels, with %u spp.\n", image_width, image_height, spp);
+    std::printf("The image size is %u x %u pixels, with %u spp.\n", image_width, image_height, spp);
     // Create the camera.
     Camera camera(
         Point3f{ 0.0, 0.0, 0.0 },
@@ -96,10 +96,10 @@ int main(int argc, char** argv) {
     integrator.render(camera, scene);
 
     // Output the image.
-    printf("\nRendering done, outputing image.\n");
+    std::printf("\nRendering done, outputing image.\n");
     camera.get_film().save(output_file_path);
 
-    printf("Done!\n");
+    std::printf("Done!\n");
 
     return 0;
 }

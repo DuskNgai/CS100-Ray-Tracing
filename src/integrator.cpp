@@ -29,8 +29,8 @@ Integrator::Integrator(uint32_t spp)
 
 void Integrator::render(Camera const& camera, Scene const& scene) {
     for (uint32_t j = 0; j < camera.get_film().height; ++j) {
-        printf("\rScanlines remaining: %u ", camera.get_film().height - j - 1);
-        fflush(stderr);
+        std::printf("\rScanlines remaining: %u ", camera.get_film().height - j - 1);
+        fflush(stdout);
 
         for (uint32_t i = 0; i < camera.get_film().width; ++i) {
             Color3f pixel_color;
