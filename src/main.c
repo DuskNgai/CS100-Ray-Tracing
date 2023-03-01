@@ -23,31 +23,34 @@
 // TODO: remove this after introducing CMake.
 #define _CRT_SECURE_NO_WARNINGS
 
-#include <stdio.h>
 #include <stdint.h>
+#include <stdio.h>
 
-typedef float Float;
+#include "integrator.h"
 
 int main() {
-	uint32_t image_width = 256, image_height = 256;
+	uint32_t image_width, image_height;
+
+	fprintf(stderr, "Image width you want: ");
+	if (scanf("%u", &image_width) != 1) {
+		fprintf(stderr, "[Error] Invalid image_width, process terminate\n.");
+		return 1;
+	}
+
+	fprintf(stderr, "Image height you want: ");
+	if (scanf("%u", &image_height) != 1) {
+		fprintf(stderr, "[Error] Invalid image_height, process terminate\n.");
+		return 1;
+	}
+
+	if (image_width > 2048 || image_height > 2048) {
+		fprintf(stderr, "[Error] Image size too large, process terminate\n.");
+		return 1;
+	}
+
+	fprintf(stderr, "The image size is %u x %u pixels.\n", image_width, image_height);
 
 	// Render the image.
-	// Output the image.
-	printf("P3\n%u %u\n255\n", image_width, image_height);
-	for (uint32_t j = 0; j < image_height; ++j) {
-		for (uint32_t i = 0; i < image_width; ++i) {
-			// [0, W - 1] -> [0.0, 1.0]
-			Float r = (Float)i / (Float)(image_width - 1);
-			Float g = (Float)j / (Float)(image_height - 1);
-			Float b = (Float)0.25;
-
-			// [0.0, 1.0] -> [0, 255]
-			uint8_t ir = (uint8_t)(255.0 * r);
-			uint8_t ig = (uint8_t)(255.0 * g);
-			uint8_t ib = (uint8_t)(255.0 * b);
-
-			printf("%u %u %u\n", ir, ig, ib);
-		}
-	}
+	render(image_width, image_height);
 	return 0;
 }

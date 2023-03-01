@@ -28,6 +28,8 @@ Please refer to [Project Configuration of CS100 Recitaion](doc/Project Configura
 ### Week 4
 
 1. Code abstraction (functions).
+2. Multiple files (`.h` and `.c`) in a project.
+3. `stderr` and `stdout`.
 
 ## References
 
