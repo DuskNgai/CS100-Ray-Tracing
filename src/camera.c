@@ -71,8 +71,9 @@ void camera_set_pixel(Camera const* camera, uint32_t i, uint32_t j, Color3f colo
 Ray camera_generate_ray(Camera const* camera, uint32_t i, uint32_t j) {
     assert(camera->film != NULL);
 
-    Float u = ((Float)2.0 * (Float)i / (Float)(camera->film->width - 1)) - (Float)1.0;
-    Float v = ((Float)2.0 * (Float)j / (Float)(camera->film->height - 1)) - (Float)1.0;
+    // Shoot ray to the center of the pixel.
+    Float u = (2.0 * ((Float)i + 0.5) / (Float)camera->film->width) - 1.0;
+    Float v = (2.0 * ((Float)j + 0.5) / (Float)camera->film->height) - 1.0;
 
     Point3f origin = camera->look_from;
     Vector3f direction = vector3_add(vector3_add(vector3_scalar_mul(camera->horizontal, u), vector3_scalar_mul(camera->vertical, v)), vector3_scalar_mul(camera->look_front, camera->focal_length));
