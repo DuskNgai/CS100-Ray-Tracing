@@ -39,9 +39,10 @@ bool Sphere::hit(Ray const& ray, Float t_min, Float t_max, Interaction* interact
     }
 
     // Find and check the root.
-    Float t = (-b_half - std::sqrt(discriminant)) / a;
+    Float sqrt_discriminant = std::sqrt(discriminant);
+    Float t = (-b_half - sqrt_discriminant) / a;
     if (t < t_min || t > t_max) {
-        t = (-b_half + std::sqrt(discriminant)) / a;
+        t = (-b_half + sqrt_discriminant) / a;
         if (t < t_min || t > t_max) {
             return false;
         }

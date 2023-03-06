@@ -34,8 +34,8 @@
 
 int main(int argc, char** argv) {
     // TODO: replace by parsing command line arguments/configuration files.
-    if (argc != 5) {
-        std::printf("Usage: %s <image_width> <image_height> <sample_per_pixel> <output_file_path>\n", argv[0]);
+    if (argc != 6) {
+        std::printf("Usage: %s <image_width> <image_height> <sample_per_pixel> <ray_tracing_depth> <output_file_path>\n", argv[0]);
         return 1;
     }
 
@@ -70,7 +70,16 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    std::string output_file_path{ argv[4] };
+    uint32_t ray_tracing_depth;
+    try {
+        ray_tracing_depth = std::stoul(argv[4]);
+    }
+    catch (std::exception const& e) {
+        std::printf("%s. [Error] Invalid ray_tracing_depth, process terminate.\n", e.what());
+        return 1;
+    }
+
+    std::string output_file_path{ argv[5] };
     auto parent_dir = std::filesystem::path{ output_file_path }.parent_path();
     if (!std::filesystem::exists(parent_dir)) {
         std::printf("[Error] The directory %s does not exist, process terminate.\n", parent_dir.c_str());
@@ -92,7 +101,7 @@ int main(int argc, char** argv) {
                   std::make_shared<Sphere>(Point3f{ 0.0, -100.5, -1.0 }, 100.0) });
 
     // Render the image.
-    Integrator integrator(spp);
+    Integrator integrator(spp, ray_tracing_depth);
     integrator.render(camera, scene);
 
     // Output the image.

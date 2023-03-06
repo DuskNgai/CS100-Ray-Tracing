@@ -23,10 +23,10 @@
 #ifndef _CS100_RAY_TRACING_VECTOR3_H_
 #define _CS100_RAY_TRACING_VECTOR3_H_
 
-#include <array>
 #include <iostream>
 
 #include "math-utils.h"
+#include "utils/random-number-generator.h"
 
 /// @brief A 3D vector.
 template <typename T>
@@ -35,6 +35,8 @@ struct Vector3 {
 
     // Constructors.
     Vector3() = default;
+    Vector3(T x)
+        : x{ x }, y{ x }, z{ x } {}
     Vector3(T x, T y, T z)
         : x{ x }, y{ y }, z{ z } {}
     Vector3(Vector3 const& v)
@@ -150,5 +152,18 @@ Vector3<T> constexpr lerp(Vector3<T> const& u, Vector3<T> const& v, FloatingPoin
 using Vector3f = Vector3<Float>;
 using Color3f = Vector3f;
 using Point3f = Vector3f;
+
+Vector3f inline random_vector3f(RandomNumberGenerator& rng, Float min = 0.0_f, Float max = 1.0_f) {
+    return Vector3f{ rng(), rng(), rng() } * (max - min) + Vector3f{ min };
+}
+
+Vector3f inline random_vector3f_in_unit_sphere(RandomNumberGenerator& rng) {
+    while (true) {
+        auto p = random_vector3f(rng, -1.0_f, 1.0_f);
+        if (p.square_norm() <= 1.0_f) {
+            return p;
+        }
+    }
+}
 
 #endif // !_CS100_RAY_TRACING_VECTOR3_H_

@@ -22,8 +22,10 @@
 
 #include "film.h"
 
+#include <algorithm>
+
 Film::Film(uint32_t width, uint32_t height)
-    : width{ width }, height{ height }, pixels{ width * height } {}
+    : width{ width }, height{ height }, pixels(width * height) {}
 
 Float Film::get_aspect_ratio() const {
     return static_cast<Float>(this->width) / static_cast<Float>(this->height);
@@ -40,11 +42,18 @@ void Film::set_pixel(uint32_t i, uint32_t j, Color3f const& color) {
 void Film::save(std::string const& file_path) const {
     std::ofstream out(file_path, std::ios::out);
 
-    out << "P3\n" << this->width << " " << this->height << "\n255\n";
+    /// @brief Gamma correction.
+    auto gamma_correction = [](Float x, Float gamma = 2.0_f) {
+        x = std::clamp(x, 0.0_f, 1.0_f);
+        return static_cast<uint8_t>(std::pow(x, 1.0_f / gamma) * 255.0_f);
+    };
+
+    out << "P3\n"
+        << this->width << " " << this->height << "\n255\n";
     for (auto const& color : this->pixels) {
-        uint8_t r = static_cast<uint8_t>(color.x * 255.0);
-        uint8_t g = static_cast<uint8_t>(color.y * 255.0);
-        uint8_t b = static_cast<uint8_t>(color.z * 255.0);
+        auto r = gamma_correction(color.x);
+        auto g = gamma_correction(color.y);
+        auto b = gamma_correction(color.z);
         out << (int)r << ' ' << (int)g << ' ' << (int)b << '\n';
     }
 }

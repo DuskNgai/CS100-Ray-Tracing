@@ -29,18 +29,24 @@
 class Integrator {
 private:
     uint32_t spp;
+    uint32_t depth;
     RandomNumberGenerator rng{};
 
 public:
-    Integrator(uint32_t spp);
+    Integrator(uint32_t spp, uint32_t depth);
     ~Integrator() = default;
 
+    /// @brief Render the scene with the given camera.
+    /// @param camera The camera used to render the scene.
+    /// @param scene The scene to be rendered.
     void render(Camera const& camera, Scene const& scene);
 
     /// @brief The integrator is responsible for computing the radiance along a ray.
     /// @param ray The ray to be traced.
+    /// @param scene The scene to be rendered.
+    /// @param current_depth The current recursion depth of the ray.
     /// @return The radiance along the ray.
-    Color3f radiance(Ray const& ray, Scene const& scene);
+    Color3f radiance(Ray const& ray, Scene const& scene, uint32_t current_depth);
 };
 
 #endif // !_CS100_RAY_TRACING_INTEGRATOR_H_

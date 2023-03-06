@@ -24,8 +24,9 @@
 
 #include <cstdio>
 
-Integrator::Integrator(uint32_t spp)
-    : spp(spp) {}
+Integrator::Integrator(uint32_t spp, uint32_t depth)
+    : spp(spp)
+    , depth(depth) {}
 
 void Integrator::render(Camera const& camera, Scene const& scene) {
     for (uint32_t j = 0; j < camera.get_film().height; ++j) {
@@ -36,21 +37,26 @@ void Integrator::render(Camera const& camera, Scene const& scene) {
             Color3f pixel_color;
             for (uint32_t s = 0; s < this->spp; ++s) {
                 Ray ray = camera.generate_ray(i, j, this->rng);
-                Color3f color = this->radiance(ray, scene);
-                pixel_color += color;
+                pixel_color += this->radiance(ray, scene, 0);
             }
             camera.set_pixel(i, j, pixel_color / this->spp);
         }
     }
 }
 
-Color3f Integrator::radiance(Ray const& ray, Scene const& scene) {
+Color3f Integrator::radiance(Ray const& ray, Scene const& scene, uint32_t current_depth) {
+    if (current_depth > this->depth) {
+        return { 0.0, 0.0, 0.0 };
+    }
+
     Interaction interaction;
-    if (scene.hit(ray, 0.0, INF<Float>, &interaction)) {
-        return (interaction.normal + Vector3f{ 1.0, 1.0, 1.0 }) * static_cast<Float>(0.5);
+    // `t_min` < 5e-5 is not a good choice for avoiding self shadow acne.
+    if (scene.hit(ray, 1e-3_f, INF<Float>, &interaction)) {
+        auto target = interaction.hit_point + interaction.normal + random_vector3f_in_unit_sphere(this->rng).unit();
+        return 0.5_f * this->radiance(Ray{ interaction.hit_point, target - interaction.hit_point }, scene, current_depth + 1);
     }
 
     Vector3f unit_dir = ray.direction.unit();
-    Float t = (unit_dir.y + static_cast<Float>(1.0)) * static_cast<Float>(0.5);
+    Float t = (unit_dir.y + 1.0_f) * 0.5_f;
     return lerp(Color3f{ 1.0, 1.0, 1.0 }, Color3f{ 0.5, 0.7, 1.0 }, t);
 }

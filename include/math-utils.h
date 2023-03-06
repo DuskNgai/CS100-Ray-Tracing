@@ -28,6 +28,9 @@
 
 using Float = float;
 
+// See https://en.cppreference.com/w/cpp/language/user_literal.
+Float inline constexpr operator""_f(long double x) { return static_cast<Float>(x); }
+
 // clang-format off
 template <typename FloatingPoint> constexpr FloatingPoint PI  = static_cast<FloatingPoint>(3.141592653589793238462643383279);
 template <typename FloatingPoint> constexpr FloatingPoint INF = std::numeric_limits<FloatingPoint>::max();

@@ -17,23 +17,24 @@ This project is intended for recitation of Introduction to Programming (CS100) a
 
 ### Week 3
 
-1. `Integrator`
+1. Same as week 2.
 
 ### Week 4
 
-1. `Vector3`, `Ray`, `Film`
+1. `Integrator`
 
 ### Week 5
 
-1. `Sphere`, `Camera`, `Interaction`
+1. `Vector3`, `Ray`, `Film`
 
 ### Week 6
 
-1. `LinkedList`, `Scene`
+1. `Sphere`, `Camera`, `Interaction`
 
 ### Week 7
 
 1. Introduction to `c++`.
+2. `Scene`
 
 ### Week 8
 

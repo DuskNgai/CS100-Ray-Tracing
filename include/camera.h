@@ -79,6 +79,7 @@ public:
     /// @brief Generate a ray from the camera.
     /// @param i The i coordinate of the pixel.
     /// @param j The j coordinate of the pixel.
+    /// @param rng The random number generator.
     /// @return The generated ray.
     Ray generate_ray(uint32_t i, uint32_t j, RandomNumberGenerator& rng) const;
 };
