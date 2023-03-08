@@ -31,6 +31,14 @@ Please refer to [Project Configuration of CS100 Recitaion](doc/Project Configura
 2. Multiple files (`.h` and `.c`) in a project.
 3. `stderr` and `stdout`.
 
+### Week 5
+
+1. Code abstraction (structure), C style object-oriented programming.
+2. Dynamic memory allocation/deallocation.
+3. Seperation of rendering and output.
+4. Assertion and error handling.
+5. Generic selection (C11 standard).
+
 ## References
 
 1. [Ray Tracing in One Weekend](https://raytracing.github.io/)

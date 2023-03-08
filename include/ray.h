@@ -1,6 +1,6 @@
 /*
  * CS100-Ray-Tracing for course recitation.
- * The implementation of the integrator, which calculate the radiance of a ray.
+ * The definition of a ray.
  *
  * Copyright (C) 2023
  * Author: Haizhao Dai
@@ -20,26 +20,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "integrator.h"
+#ifndef _CS100_RAY_TRACING_RAY_H_
+#define _CS100_RAY_TRACING_RAY_H_
 
-#include <stdio.h>
-
-#include "math-utils.h"
 #include "vector3.h"
 
-void render(Film const* film) {
-	for (uint32_t j = 0; j < film->height; ++j) {
-		fprintf(stderr, "\rScanlines remaining: %u ", film->height - j - 1);
-		fflush(stderr);
+/// @brief A ray is a line segment with a starting point and a direction.
+typedef struct Ray {
+    Point3f origin;
+    Vector3f direction;
+} Ray;
 
-		for (uint32_t i = 0; i < film->width; ++i) {
-			// [0, W - 1] -> [0.0, 1.0]
-			Float r = (Float)i / (Float)(film->width - 1);
-			Float g = (Float)j / (Float)(film->height - 1);
-			Float b = (Float)0.25;
+/// @brief Evaluate the ray at a given ray parameter.
+/// @param r The ray.
+/// @param t The ray parameter.
+/// @return The point on the ray, which is ray.origin + ray.direction * `t`.
+Point3f ray_at(Ray const* r, Float t);
 
-			film_set_pixel(film, i, j, (Color3f){r, g, b});
-		}
-	}
-	fprintf(stderr, "\nRendering done.\n");
-}
+#endif // !_CS100_RAY_TRACING_RAY_H_

@@ -50,7 +50,15 @@ int main() {
 
 	fprintf(stderr, "The image size is %u x %u pixels.\n", image_width, image_height);
 
+	// Create a film.
+	Film* film = film_create(image_width, image_height);
+
 	// Render the image.
-	render(image_width, image_height);
+	render(film);
+
+	film_save(film);
+	fprintf(stderr, "Image saving done!\n");
+
+	film_destroy(film);
 	return 0;
 }

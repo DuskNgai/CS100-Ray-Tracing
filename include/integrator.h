@@ -23,8 +23,10 @@
 #ifndef _CS100_RAY_TRACING_INTEGRATOR_H_
 #define _CS100_RAY_TRACING_INTEGRATOR_H_
 
-#include <stdint.h>
+#include "film.h"
 
-void render(uint32_t image_width, uint32_t image_height);
+/// @brief Fill the film with the rendered image.
+/// @param film The film to fill.
+void render(Film const* film);
 
 #endif // !_CS100_RAY_TRACING_INTEGRATOR_H_
