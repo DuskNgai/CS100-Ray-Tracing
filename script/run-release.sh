@@ -31,8 +31,9 @@ run g++ "../src/"*.cpp "../src/geometry/"*.cpp "../src/utils/"*.cpp \
     -O3 -std=c++17 -Wall -Wextra -Wpedantic -Werror \
     -lm
 
+image_path="../result/image.ppm"
 info "[script] Generating image.ppm..."
-run ./"../linux-build/Release/CS100-Ray-Tracing" 960 540 100 50 "../result/image.ppm"
+run ./"../linux-build/Release/CS100-Ray-Tracing" 960 540 100 50 "$image_path"
 
-info "[script] Converting image.ppm to image.png..."
-run python "ppm-to-png.py" "../result/image.ppm"
+info "[script] Converting .ppm to .png..."
+run python "ppm-to-png.py" "$image_path"

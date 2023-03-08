@@ -31,7 +31,7 @@ Camera::Camera(Point3f const& look_from, Point3f const& look_to, Vector3f const&
     this->look_up = cross(this->look_right, this->look_front);
 
     this->horizontal = Vector3f{ 0.0, 0.0, 0.0 };
-    this->vertical = this->look_up * std::tan(deg_to_rad(this->y_field_of_view / static_cast<Float>(2.0))) * this->focal_length;
+    this->vertical = this->look_up * std::tan(deg_to_rad(this->y_field_of_view / 2.0_f)) * this->focal_length;
 
     this->set_film(film);
 }

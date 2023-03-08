@@ -34,7 +34,7 @@ bool Sphere::hit(Ray const& ray, Float t_min, Float t_max, Interaction* interact
     Float c = oc.square_norm() - this->radius * this->radius;
     Float discriminant = b_half * b_half - a * c;
 
-    if (discriminant < 0) {
+    if (discriminant < 0.0_f) {
         return false;
     }
 
