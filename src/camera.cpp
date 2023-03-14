@@ -24,22 +24,22 @@
 
 #include "math-utils.h"
 
-Camera::Camera(Point3f const& look_from, Point3f const& look_to, Vector3f const& ref_up, Float y_field_of_view, Float focal_length, std::shared_ptr<Film> film)
-    : look_from(look_from), look_to(look_to), y_field_of_view(y_field_of_view), focal_length(focal_length) {
+Camera::Camera(Point3f const& look_from, Point3f const& look_to, Vector3f const& ref_up, Float y_field_of_view, Float focal_length, Float aspect_ratio)
+    : look_from{ look_from }
+    , look_to{ look_to }
+    , y_field_of_view{ y_field_of_view }
+    , focal_length{ focal_length }
+    , aspect_ratio{ aspect_ratio } {
     this->look_front = (this->look_to - this->look_from).unit();
     this->look_right = cross(this->look_front, ref_up).unit();
     this->look_up = cross(this->look_right, this->look_front);
 
-    this->horizontal = Vector3f{ 0.0, 0.0, 0.0 };
     this->vertical = this->look_up * std::tan(deg_to_rad(this->y_field_of_view / 2.0_f)) * this->focal_length;
-
-    this->set_film(film);
+    this->horizontal = this->look_right * this->vertical.norm() * this->aspect_ratio;
 }
 
-void Camera::set_film(std::shared_ptr<Film> film) {
+void Camera::set_film(std::shared_ptr<Film> const& film) {
     this->film = film;
-    Float aspect_ratio = film->get_aspect_ratio();
-    this->horizontal = this->look_right * this->vertical.norm() * aspect_ratio;
 }
 
 Film const& Camera::get_film() const {

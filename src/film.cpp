@@ -23,9 +23,12 @@
 #include "film.h"
 
 #include <algorithm>
+#include <fstream>
 
 Film::Film(uint32_t width, uint32_t height)
-    : width{ width }, height{ height }, pixels(width * height) {}
+    : width{ width }
+    , height{ height }
+    , pixels(width * height) {}
 
 Float Film::get_aspect_ratio() const {
     return static_cast<Float>(this->width) / static_cast<Float>(this->height);

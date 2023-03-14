@@ -88,27 +88,28 @@ int main(int argc, char** argv) {
 
     std::printf("The image size is %u x %u pixels, with %u spp.\n", image_width, image_height, spp);
     // Create the camera.
-    Camera camera(
+    auto film = std::make_shared<Film>(image_width, image_height);
+    auto camera = std::make_shared<Camera>(
         Point3f{ 0.0, 0.0, 0.0 },
         Point3f{ 0.0, 0.0, -1.0 },
         Vector3f{ 0.0, 1.0, 0.0 },
-        static_cast<Float>(90.0),
-        static_cast<Float>(1.0),
-        std::make_shared<Film>(image_width, image_height));
+        90.0_f,
+        1.0_f,
+        film->get_aspect_ratio());
+    camera->set_film(film);
 
     // Create the scene.
-    Scene scene({ std::make_shared<Sphere>(Point3f{ 0.0, 0.0, -1.0 }, 0.5),
-                  std::make_shared<Sphere>(Point3f{ 0.0, -100.5, -1.0 }, 100.0) });
+    auto scene = std::make_shared<Scene>();
+    scene->add_object(std::make_shared<Sphere>(Point3f{ 0.0, 0.0, -1.0 }, 0.5_f));
+    scene->add_object(std::make_shared<Sphere>(Point3f{ 0.0, -100.5, -1.0 }, 100.0_f));
 
     // Render the image.
     Integrator integrator(spp, ray_tracing_depth);
     integrator.render(camera, scene);
 
     // Output the image.
-    std::printf("\nRendering done, outputing image.\n");
-    camera.get_film().save(output_file_path);
-
-    std::printf("Done!\n");
+    camera->get_film().save(output_file_path);
+    std::printf("Image saving done!\n");
 
     return 0;
 }

@@ -37,6 +37,7 @@ private:
 
     Float y_field_of_view;
     Float focal_length;
+    Float aspect_ratio;
 
     Vector3f look_front;
     Vector3f look_up;
@@ -54,8 +55,8 @@ public:
     /// @param ref_up The reference up vector of the camera.
     /// @param y_field_of_view The y field of view of the camera, in degrees.
     /// @param focal_length The focal length of the camera.
-    /// @param film The film of the camera.
-    Camera(Point3f const& look_from, Point3f const& look_to, Vector3f const& ref_up, Float y_field_of_view, Float focal_length, std::shared_ptr<Film> film = nullptr);
+    /// @param aspect_ratio The aspect ratio of the camera.
+    Camera(Point3f const& look_from, Point3f const& look_to, Vector3f const& ref_up, Float y_field_of_view, Float focal_length, Float aspect_ratio);
     Camera(Camera const& other) = delete;
     Camera(Camera&& other) = delete;
     Camera& operator=(Camera const& other) = delete;
@@ -64,7 +65,7 @@ public:
 
     /// @brief Set the film of the camera, change the aspect radio of camera.
     /// @param film The film.
-    void set_film(std::shared_ptr<Film> film);
+    void set_film(std::shared_ptr<Film> const& film);
 
     /// @brief Get the film of the camera.
     /// @param film The film.

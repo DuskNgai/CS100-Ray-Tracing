@@ -24,34 +24,34 @@
 
 #include <cstdio>
 
-Integrator::Integrator(uint32_t spp, uint32_t depth)
+Integrator::Integrator(uint32_t spp, uint32_t ray_tracing_depth)
     : spp(spp)
-    , depth(depth) {}
+    , ray_tracing_depth(ray_tracing_depth) {}
 
-void Integrator::render(Camera const& camera, Scene const& scene) {
-    for (uint32_t j = 0; j < camera.get_film().height; ++j) {
-        std::printf("\rScanlines remaining: %u ", camera.get_film().height - j - 1);
-        fflush(stdout);
+void Integrator::render(std::shared_ptr<Camera> const& camera, std::shared_ptr<Scene> const& scene) {
+    for (uint32_t j = 0; j < camera->get_film().height; ++j) {
+        std::printf("\rScanlines remaining: %u ", camera->get_film().height - j - 1);
+        std::fflush(stdout);
 
-        for (uint32_t i = 0; i < camera.get_film().width; ++i) {
+        for (uint32_t i = 0; i < camera->get_film().width; ++i) {
             Color3f pixel_color;
             for (uint32_t s = 0; s < this->spp; ++s) {
-                Ray ray = camera.generate_ray(i, j, this->rng);
+                Ray ray = camera->generate_ray(i, j, this->rng);
                 pixel_color += this->radiance(ray, scene, 0);
             }
-            camera.set_pixel(i, j, pixel_color / this->spp);
+            camera->set_pixel(i, j, pixel_color / this->spp);
         }
     }
 }
 
-Color3f Integrator::radiance(Ray const& ray, Scene const& scene, uint32_t current_depth) {
-    if (current_depth > this->depth) {
+Color3f Integrator::radiance(Ray const& ray, std::shared_ptr<Scene> const& scene, uint32_t current_depth) {
+    if (current_depth > this->ray_tracing_depth) {
         return { 0.0, 0.0, 0.0 };
     }
 
     Interaction interaction;
     // `t_min` < 5e-5 is not a good choice for avoiding self shadow acne.
-    if (scene.hit(ray, 1e-3_f, INF<Float>, &interaction)) {
+    if (scene->hit(ray, 1e-3_f, INF<Float>, &interaction)) {
         auto target = interaction.hit_point + interaction.normal + random_vector3f_in_unit_sphere(this->rng).unit();
         return 0.5_f * this->radiance(Ray{ interaction.hit_point, target - interaction.hit_point }, scene, current_depth + 1);
     }

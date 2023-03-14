@@ -29,24 +29,27 @@
 class Integrator {
 private:
     uint32_t spp;
-    uint32_t depth;
+    uint32_t ray_tracing_depth;
     RandomNumberGenerator rng{};
 
 public:
-    Integrator(uint32_t spp, uint32_t depth);
+    /// @brief Construct a new Integrator object.
+    /// @param spp The number of samples per pixel.
+    /// @param ray_tracing_depth The maximum recursion depth of the ray.
+    Integrator(uint32_t spp, uint32_t ray_tracing_depth);
     ~Integrator() = default;
 
     /// @brief Render the scene with the given camera.
     /// @param camera The camera used to render the scene.
     /// @param scene The scene to be rendered.
-    void render(Camera const& camera, Scene const& scene);
+    void render(std::shared_ptr<Camera> const& camera, std::shared_ptr<Scene> const& scene);
 
     /// @brief The integrator is responsible for computing the radiance along a ray.
     /// @param ray The ray to be traced.
     /// @param scene The scene to be rendered.
     /// @param current_depth The current recursion depth of the ray.
     /// @return The radiance along the ray.
-    Color3f radiance(Ray const& ray, Scene const& scene, uint32_t current_depth);
+    Color3f radiance(Ray const& ray, std::shared_ptr<Scene> const& scene, uint32_t current_depth);
 };
 
 #endif // !_CS100_RAY_TRACING_INTEGRATOR_H_

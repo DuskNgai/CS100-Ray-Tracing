@@ -39,6 +39,8 @@ template <typename FloatingPoint> constexpr FloatingPoint INF = std::numeric_lim
 /// @brief Convert degrees to radians.
 /// @param deg The degrees.
 /// @return The radians.
-Float deg_to_rad(Float deg);
+Float inline constexpr deg_to_rad(Float deg) {
+    return deg * PI<Float> / 180.0_f;
+}
 
 #endif // !_CS100_RAY_TRACING_MATH_UTILS_H_
