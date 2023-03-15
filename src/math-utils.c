@@ -20,37 +20,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _CS100_RAY_TRACING_MATH_UTILS_H_
-#define _CS100_RAY_TRACING_MATH_UTILS_H_
+#include "math-utils.h"
 
-#include <math.h>
-
-typedef float Float;
-
-#define INF HUGE_VAL
-#define PI ((Float)3.141592653589793238462643383279)
-
-// Generic selection, a c11 standard feature.
-// https://en.cppreference.com/w/c/language/generic
-// clang-format off
-#define sqrt(x)            \
-    _Generic((x),          \
-        float: sqrtf,      \
-        double: sqrt,      \
-        long double: sqrtl \
-    )(x)
-
-#define tan(x)            \
-    _Generic((x),         \
-        float: tanf,      \
-        double: tan,      \
-        long double: tanl \
-    )(x)
-// clang-format on
-
-/// @brief Convert degrees to radians.
-/// @param deg The degrees.
-/// @return The radians.
-Float deg_to_rad(Float deg);
-
-#endif // !_CS100_RAY_TRACING_MATH_UTILS_H_
+Float deg_to_rad(Float deg) {
+    return deg * PI / (Float)180.0;
+}

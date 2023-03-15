@@ -19,10 +19,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#define _CRT_SECURE_NO_WARNINGS
 
 #include "film.h"
 
 #include <assert.h>
+#include <inttypes.h>
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -49,6 +51,8 @@ Float film_get_aspect_ratio(Film const* film) {
     return (Float)film->width / (Float)film->height;
 }
 
+// `static` function for only being used in this `.c` file.
+// That is, you can not access this function outside of this file.
 static uint32_t film_get_pixel_index(Film const* film, uint32_t i, uint32_t j) {
     assert(film != NULL);
 
@@ -67,10 +71,15 @@ void film_set_pixel(Film const* film, uint32_t i, uint32_t j, Color3f color) {
     film->pixels[film_get_pixel_index(film, i, j)] = color;
 }
 
-void film_save(Film const* film) {
+void film_save(Film const* film, char const* file_name) {
     assert(film != NULL);
+    assert(file_name != NULL);
 
-    printf("P3\n%u %u\n255\n", film->width, film->height);
+    // TODO: using third library to output an image.
+    FILE* fp = fopen(file_name, "w");
+    assert(fp != NULL);
+
+    fprintf(fp, "P3\n%" PRIu32 " %" PRIu32 "\n255\n", film->width, film->height);
     for (uint32_t j = 0; j < film->height; ++j) {
         for (uint32_t i = 0; i < film->width; ++i) {
             Color3f color = film_get_pixel(film, i, j);
@@ -78,7 +87,9 @@ void film_save(Film const* film) {
             uint8_t g = (uint8_t)(color.y * 255.0);
             uint8_t b = (uint8_t)(color.z * 255.0);
 
-            printf("%u %u %u\n", r, g, b);
+            fprintf(fp, "%" PRIu8 " %" PRIu8 " %" PRIu8 "\n", r, g, b);
         }
     }
+
+    fclose(fp);
 }

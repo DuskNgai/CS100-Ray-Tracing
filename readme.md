@@ -39,6 +39,13 @@ Please refer to [Project Configuration of CS100 Recitaion](doc/Project Configura
 4. Assertion and error handling.
 5. Generic selection (C11 standard).
 
+### Week 6
+
+1. Command line argument: `int main(int argc, char** argv)`.
+2. Parsing string with stdandard library function `strtoul`.
+3. Seperation of camera and film.
+4. File input and output.
+
 ## References
 
 1. [Ray Tracing in One Weekend](https://raytracing.github.io/)

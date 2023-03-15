@@ -1,6 +1,6 @@
 /*
  * CS100-Ray-Tracing for course recitation.
- * The definition of the integrator, which calculate the radiance of a ray.
+ * The definition of a sphere.
  *
  * Copyright (C) 2023
  * Author: Haizhao Dai
@@ -20,18 +20,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _CS100_RAY_TRACING_INTEGRATOR_H_
-#define _CS100_RAY_TRACING_INTEGRATOR_H_
+#ifndef _CS100_RAY_TRACING_SPHERE_H_
+#define _CS100_RAY_TRACING_SPHERE_H_
 
-#include "camera.h"
+#include <stdbool.h>
 
-/// @brief Fill the film with the rendered image specified by the camera.
-/// @param camera The camera used to render the scene.
-void render(Camera const* camera);
+#include "geometry/interaction.h"
+#include "ray.h"
 
-/// @brief Computing the radiance (or color value) along a ray.
-/// @param ray The ray to be traced.
-/// @return The radiance along the ray.
-Color3f radiance(Ray const* ray);
+/// @brief The definition of a sphere.
+typedef struct Sphere {
+    Point3f center;
+    Float radius;
+} Sphere;
 
-#endif // !_CS100_RAY_TRACING_INTEGRATOR_H_
+/// @brief Test if a ray intersects with a sphere.
+/// @param sphere The sphere object.
+/// @param ray The ray.
+/// @param t_min The minimum t value.
+/// @param t_max The maximum t value.
+/// @param interaction The interaction record.
+/// @return True if the ray intersects with the sphere.
+bool sphere_hit(Sphere const* sphere, Ray const* ray, Float t_min, Float t_max, Interaction* interaction);
+
+#endif // !_CS100_RAY_TRACING_SPHERE_H_

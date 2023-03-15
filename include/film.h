@@ -66,6 +66,7 @@ void film_set_pixel(Film const* film, uint32_t i, uint32_t j, Color3f color);
 
 /// @brief Save a film to a file.
 /// @param film The film to save.
-void film_save(Film const* film);
+/// @param file_name The file name to save to.
+void film_save(Film const* film, char const* file_name);
 
 #endif // !_CS100_RAY_TRACING_FILM_H_

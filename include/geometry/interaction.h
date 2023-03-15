@@ -1,6 +1,6 @@
 /*
  * CS100-Ray-Tracing for course recitation.
- * The definition of the integrator, which calculate the radiance of a ray.
+ * The definition of ray-object interaction, which records the intersection imformation.
  *
  * Copyright (C) 2023
  * Author: Haizhao Dai
@@ -20,18 +20,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _CS100_RAY_TRACING_INTEGRATOR_H_
-#define _CS100_RAY_TRACING_INTEGRATOR_H_
+#ifndef _CS100_RAY_TRACING_INTERACTION_H_
+#define _CS100_RAY_TRACING_INTERACTION_H_
 
-#include "camera.h"
+#include "math-utils.h"
+#include "vector3.h"
 
-/// @brief Fill the film with the rendered image specified by the camera.
-/// @param camera The camera used to render the scene.
-void render(Camera const* camera);
+/// @brief The record for interaction between a ray and an object.
+typedef struct Interaction {
+    Float t;
+    Point3f hit_point;
+    Vector3f normal;
+} Interaction;
 
-/// @brief Computing the radiance (or color value) along a ray.
-/// @param ray The ray to be traced.
-/// @return The radiance along the ray.
-Color3f radiance(Ray const* ray);
-
-#endif // !_CS100_RAY_TRACING_INTEGRATOR_H_
+#endif // !_CS100_RAY_TRACING_INTERACTION_H_
