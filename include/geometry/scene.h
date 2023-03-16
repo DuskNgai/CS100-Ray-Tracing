@@ -23,19 +23,22 @@
 #ifndef _CS100_RAY_TRACING_SCENE_H_
 #define _CS100_RAY_TRACING_SCENE_H_
 
-#include <memory>
 #include <vector>
 
 #include "geometry/geometry.h"
 
+CS100_RAY_TRACING_NAMESPACE_BEGIN
+
+/// @brief The scene class that contains all geometry objects.
+/// Also, this class is a geometry object itself, which can be added to another scene.
 class Scene : public Geometry {
 private:
     std::vector<std::shared_ptr<Geometry>> objects;
 
 public:
     Scene() = default;
-    Scene(std::initializer_list<std::shared_ptr<Geometry>> objects);
-    Scene(std::vector<std::shared_ptr<Geometry>> const& objects);
+    explicit Scene(std::initializer_list<std::shared_ptr<Geometry>> objects);
+    explicit Scene(std::vector<std::shared_ptr<Geometry>> const& objects);
     Scene(Scene const& other) = delete;
     Scene& operator=(Scene const& other) = delete;
 
@@ -44,6 +47,12 @@ public:
     std::vector<std::shared_ptr<Geometry>> const& get_objects() const;
 
     virtual bool hit(Ray const& ray, Float t_min, Float t_max, Interaction* interaction) const override;
+
+public:
+    /// @brief Create a scene object based on given configuration.
+    static std::shared_ptr<Scene> create(nlohmann::json const& config);
 };
+
+CS100_RAY_TRACING_NAMESPACE_END
 
 #endif // !_CS100_RAY_TRACING_SCENE_H_

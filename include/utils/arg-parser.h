@@ -1,6 +1,6 @@
 /*
  * CS100-Ray-Tracing for course recitation.
- * The definition of a sphere.
+ * The definition of arguments that need to be parsed.
  *
  * Copyright (C) 2023
  * Author: Haizhao Dai
@@ -20,24 +20,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _CS100_RAY_TRACING_SPHERE_H_
-#define _CS100_RAY_TRACING_SPHERE_H_
+#ifndef _CS100_RAY_TRACING_UTILS_ARG_PARSER_HPP_
+#define _CS100_RAY_TRACING_UTILS_ARG_PARSER_HPP_
 
-#include "geometry/base-geometry.h"
+#include <args.hxx>
+#include <string>
+
+#include "common.h"
 
 CS100_RAY_TRACING_NAMESPACE_BEGIN
 
-/// @brief The definition of a sphere.
-struct Sphere : public Geometry {
-    Point3f center;
-    Float radius;
-    std::shared_ptr<Material> mat_ptr;
-
-    Sphere(Point3f const& center, Float radius, std::shared_ptr<Material> const& mat_ptr);
-
-    virtual bool hit(Ray const& ray, Float t_min, Float t_max, Interaction* interaction) const override;
+/// @brief The arguments parsed required from command line.
+struct Arguments {
+    uint32_t image_width;
+    uint32_t image_height;
+    uint32_t spp;
+    uint32_t ray_tracing_depth;
+    std::string output_file_path;
+    std::string config_file_path;
 };
+
+/// @brief Parse the arguments from command line.
+/// @param argc The number of arguments.
+/// @param argv The arguments.
+/// @return The parsed arguments.
+Arguments parse_args(int argc, char** argv);
 
 CS100_RAY_TRACING_NAMESPACE_END
 
-#endif // !_CS100_RAY_TRACING_SPHERE_H_
+#endif // !_CS100_RAY_TRACING_UTILS_ARG_PARSER_HPP_

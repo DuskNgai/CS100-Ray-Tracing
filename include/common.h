@@ -1,6 +1,6 @@
 /*
  * CS100-Ray-Tracing for course recitation.
- * The definition of a sphere.
+ * A common header for other files to use, which need to be included in all files directly or indirectly.
  *
  * Copyright (C) 2023
  * Author: Haizhao Dai
@@ -20,24 +20,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _CS100_RAY_TRACING_SPHERE_H_
-#define _CS100_RAY_TRACING_SPHERE_H_
+#ifndef _CS100_RAY_TRACING_COMMON_H_
+#define _CS100_RAY_TRACING_COMMON_H_
 
-#include "geometry/base-geometry.h"
+#define CS100_RAY_TRACING_NAMESPACE_BEGIN namespace CS100 {
+#define CS100_RAY_TRACING_NAMESPACE_END }
 
 CS100_RAY_TRACING_NAMESPACE_BEGIN
 
-/// @brief The definition of a sphere.
-struct Sphere : public Geometry {
-    Point3f center;
-    Float radius;
-    std::shared_ptr<Material> mat_ptr;
-
-    Sphere(Point3f const& center, Float radius, std::shared_ptr<Material> const& mat_ptr);
-
-    virtual bool hit(Ray const& ray, Float t_min, Float t_max, Interaction* interaction) const override;
-};
+struct Interaction;
+struct Material;
 
 CS100_RAY_TRACING_NAMESPACE_END
 
-#endif // !_CS100_RAY_TRACING_SPHERE_H_
+#endif // !_CS100_RAY_TRACING_COMMON_H_

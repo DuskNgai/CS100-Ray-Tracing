@@ -25,11 +25,14 @@
 
 #include "vector3.h"
 
+CS100_RAY_TRACING_NAMESPACE_BEGIN
+
 /// @brief A ray is a line segment with a starting point and a direction.
 struct Ray {
-    Point3f origin;
-    Vector3f direction;
+    Point3f origin{};
+    Vector3f direction{};
 
+    Ray() = default;
     Ray(Point3f const& origin, Vector3f const& direction);
 
     /// @brief Evaluate the ray at a given ray parameter.
@@ -39,5 +42,6 @@ struct Ray {
     Point3f at(Float t) const;
 };
 
+CS100_RAY_TRACING_NAMESPACE_END
 
 #endif // !_CS100_RAY_TRACING_RAY_H_

@@ -26,11 +26,14 @@
 #include "camera.h"
 #include "geometry/scene.h"
 
+CS100_RAY_TRACING_NAMESPACE_BEGIN
+
+/// @brief The integrator is responsible for computing the radiance along a ray
+/// and rendering the scene to camera film.
 class Integrator {
 private:
     uint32_t spp;
     uint32_t ray_tracing_depth;
-    RandomNumberGenerator rng{};
 
 public:
     /// @brief Construct a new Integrator object.
@@ -47,9 +50,12 @@ public:
     /// @brief The integrator is responsible for computing the radiance along a ray.
     /// @param ray The ray to be traced.
     /// @param scene The scene to be rendered.
+    /// @param rng The random number generator used for sampling.
     /// @param current_depth The current recursion depth of the ray.
     /// @return The radiance along the ray.
-    Color3f radiance(Ray const& ray, std::shared_ptr<Scene> const& scene, uint32_t current_depth);
+    Color3f radiance(Ray const& ray, std::shared_ptr<Scene> const& scene, RandomNumberGenerator& rng, uint32_t current_depth);
 };
+
+CS100_RAY_TRACING_NAMESPACE_END
 
 #endif // !_CS100_RAY_TRACING_INTEGRATOR_H_

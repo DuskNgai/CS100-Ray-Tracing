@@ -22,41 +22,78 @@
 
 #include "integrator.h"
 
+#include <atomic>
 #include <cstdio>
+#include <thread>
+#include <vector>
+
+CS100_RAY_TRACING_NAMESPACE_BEGIN
 
 Integrator::Integrator(uint32_t spp, uint32_t ray_tracing_depth)
-    : spp(spp)
-    , ray_tracing_depth(ray_tracing_depth) {}
+    : spp{ spp }
+    , ray_tracing_depth{ ray_tracing_depth } {}
 
 void Integrator::render(std::shared_ptr<Camera> const& camera, std::shared_ptr<Scene> const& scene) {
-    for (uint32_t j = 0; j < camera->get_film().height; ++j) {
-        std::printf("\rScanlines remaining: %u ", camera->get_film().height - j - 1);
-        std::fflush(stdout);
+    std::atomic scanline_remaining{ camera->get_film().height };
 
-        for (uint32_t i = 0; i < camera->get_film().width; ++i) {
-            Color3f pixel_color;
-            for (uint32_t s = 0; s < this->spp; ++s) {
-                Ray ray = camera->generate_ray(i, j, this->rng);
-                pixel_color += this->radiance(ray, scene, 0);
+    auto single_thread_render_func = [&](auto thread_id, auto num_threads) {
+        auto image_width{ camera->get_film().width };
+        auto image_height{ camera->get_film().height };
+        auto begin_image_height{ image_height * thread_id / num_threads };
+        auto end_image_height{ image_height * (thread_id + 1) / num_threads };
+        // Per thread rng for non-competitive access.
+        RandomNumberGenerator rng{};
+
+        for (auto j{ begin_image_height }; j < end_image_height; ++j) {
+            --scanline_remaining;
+            std::printf("\rScanlines remaining: %u ", scanline_remaining.load());
+            std::fflush(stdout);
+
+            for (uint32_t i{ 0 }; i < image_width; ++i) {
+                Color3f pixel_color{ Color3f::Zero() };
+                for (uint32_t s{ 0 }; s < this->spp; ++s) {
+                    Ray ray{ camera->generate_ray(i, j, rng) };
+                    pixel_color += this->radiance(ray, scene, rng, 0);
+                }
+                camera->set_pixel(i, j, pixel_color / this->spp);
             }
-            camera->set_pixel(i, j, pixel_color / this->spp);
         }
+    };
+
+    // Create and launch the threads.
+    std::vector<std::thread> threads;
+    auto num_threads{ std::thread::hardware_concurrency() };
+    for (uint32_t i{ 0 }; i < num_threads; ++i) {
+        threads.emplace_back(single_thread_render_func, i, num_threads);
     }
+    for (auto&& t : threads) {
+        t.join();
+    }
+
+    std::printf("\nRendering Done!\n");
 }
 
-Color3f Integrator::radiance(Ray const& ray, std::shared_ptr<Scene> const& scene, uint32_t current_depth) {
+Color3f Integrator::radiance(Ray const& ray, std::shared_ptr<Scene> const& scene, RandomNumberGenerator& rng, uint32_t current_depth) {
     if (current_depth > this->ray_tracing_depth) {
-        return { 0.0, 0.0, 0.0 };
+        return Color3f::Zero();
     }
 
     Interaction interaction;
     // `t_min` < 5e-5 is not a good choice for avoiding self shadow acne.
     if (scene->hit(ray, 1e-3_f, INF<Float>, &interaction)) {
-        auto target = interaction.hit_point + interaction.normal + random_vector3f_in_unit_sphere(this->rng).unit();
-        return 0.5_f * this->radiance(Ray{ interaction.hit_point, target - interaction.hit_point }, scene, current_depth + 1);
+        Ray scattered;
+        Color3f attenuation;
+        if (interaction.mat_ptr->scatter(ray, interaction, rng, &attenuation, &scattered)) {
+            return attenuation.cwiseProduct(this->radiance(scattered, scene, rng, current_depth + 1));
+        }
+        else {
+            return Color3f::Zero();
+        }
     }
 
-    Vector3f unit_dir = ray.direction.unit();
-    Float t = (unit_dir.y + 1.0_f) * 0.5_f;
+    auto unit_dir{ ray.direction.normalized() };
+    auto t{ (unit_dir.y() + 1.0_f) * 0.5_f };
     return lerp(Color3f{ 1.0, 1.0, 1.0 }, Color3f{ 0.5, 0.7, 1.0 }, t);
 }
+
+CS100_RAY_TRACING_NAMESPACE_END

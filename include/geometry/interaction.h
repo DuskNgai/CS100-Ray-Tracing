@@ -23,14 +23,19 @@
 #ifndef _CS100_RAY_TRACING_INTERACTION_H_
 #define _CS100_RAY_TRACING_INTERACTION_H_
 
-#include "math-utils.h"
+#include "material/base-material.h"
 #include "vector3.h"
+
+CS100_RAY_TRACING_NAMESPACE_BEGIN
 
 /// @brief The record for interaction between a ray and an object.
 struct Interaction {
     Float t;
     Point3f hit_point;
     Vector3f normal;
+    std::shared_ptr<Material> mat_ptr;
 };
+
+CS100_RAY_TRACING_NAMESPACE_END
 
 #endif // !_CS100_RAY_TRACING_INTERACTION_H_

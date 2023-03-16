@@ -1,6 +1,6 @@
 /*
  * CS100-Ray-Tracing for course recitation.
- * The definition of a sphere.
+ * The implementation of lambertian material.
  *
  * Copyright (C) 2023
  * Author: Haizhao Dai
@@ -20,24 +20,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _CS100_RAY_TRACING_SPHERE_H_
-#define _CS100_RAY_TRACING_SPHERE_H_
+#include "material/lambertian.h"
 
-#include "geometry/base-geometry.h"
+#include <limits>
 
 CS100_RAY_TRACING_NAMESPACE_BEGIN
 
-/// @brief The definition of a sphere.
-struct Sphere : public Geometry {
-    Point3f center;
-    Float radius;
-    std::shared_ptr<Material> mat_ptr;
+Lambertian::Lambertian(Color3f const& albedo)
+    : albedo{ albedo } {}
 
-    Sphere(Point3f const& center, Float radius, std::shared_ptr<Material> const& mat_ptr);
+bool Lambertian::scatter([[maybe_unused]] Ray const& ray, Interaction const& interaction, RandomNumberGenerator& rng, Color3f* attenuation, Ray* scattered) const {
+    Vector3f target_direction{ interaction.normal + random_vector3f_in_unit_sphere(rng).normalized() };
 
-    virtual bool hit(Ray const& ray, Float t_min, Float t_max, Interaction* interaction) const override;
-};
+    // Catch degenerate scatter direction.
+    if (target_direction.isZero(std::numeric_limits<Float>::epsilon())) {
+        target_direction = interaction.normal;
+    }
+
+    *scattered = { interaction.hit_point, target_direction };
+    *attenuation = albedo;
+    return true;
+}
 
 CS100_RAY_TRACING_NAMESPACE_END
-
-#endif // !_CS100_RAY_TRACING_SPHERE_H_

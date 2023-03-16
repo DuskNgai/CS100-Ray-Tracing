@@ -25,6 +25,11 @@
 #include <algorithm>
 #include <fstream>
 
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include <stb_image_write.h>
+
+CS100_RAY_TRACING_NAMESPACE_BEGIN
+
 Film::Film(uint32_t width, uint32_t height)
     : width{ width }
     , height{ height }
@@ -42,8 +47,9 @@ void Film::set_pixel(uint32_t i, uint32_t j, Color3f const& color) {
     this->pixels[this->get_pixel_index(i, j)] = color;
 }
 
-void Film::save(std::string const& file_path) const {
-    std::ofstream out(file_path, std::ios::out);
+void Film::save(std::string const& file_name) const {
+    std::vector<uint8_t> buffer;
+    buffer.reserve(this->pixels.size() * 3);
 
     /// @brief Gamma correction.
     auto gamma_correction = [](Float x, Float gamma = 2.0_f) {
@@ -51,16 +57,18 @@ void Film::save(std::string const& file_path) const {
         return static_cast<uint8_t>(std::pow(x, 1.0_f / gamma) * 255.0_f);
     };
 
-    out << "P3\n"
-        << this->width << " " << this->height << "\n255\n";
     for (auto const& color : this->pixels) {
-        auto r = gamma_correction(color.x);
-        auto g = gamma_correction(color.y);
-        auto b = gamma_correction(color.z);
-        out << (int)r << ' ' << (int)g << ' ' << (int)b << '\n';
+        buffer.emplace_back(gamma_correction(color.x()));
+        buffer.emplace_back(gamma_correction(color.y()));
+        buffer.emplace_back(gamma_correction(color.z()));
     }
+
+    stbi_flip_vertically_on_write(true);
+    stbi_write_png(file_name.c_str(), this->width, this->height, 3, buffer.data(), 0);
 }
 
 uint32_t Film::get_pixel_index(uint32_t i, uint32_t j) const {
     return j * this->width + i;
 }
+
+CS100_RAY_TRACING_NAMESPACE_END

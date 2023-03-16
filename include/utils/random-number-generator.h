@@ -20,12 +20,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _CS100_RAY_TRACING_RANDOM_NUMBER_GENERATOR_H_
-#define _CS100_RAY_TRACING_RANDOM_NUMBER_GENERATOR_H_
+#ifndef _CS100_RAY_TRACING_UTILS_RANDOM_NUMBER_GENERATOR_H_
+#define _CS100_RAY_TRACING_UTILS_RANDOM_NUMBER_GENERATOR_H_
 
 #include <random>
 
 #include "math-utils.h"
+
+CS100_RAY_TRACING_NAMESPACE_BEGIN
 
 /// @brief A random number generator which uniformly generates a number in [0, 1).
 class RandomNumberGenerator {
@@ -40,4 +42,6 @@ public:
     Float operator()();
 };
 
-#endif // !_CS100_RAY_TRACING_RANDOM_NUMBER_GENERATOR_H_
+CS100_RAY_TRACING_NAMESPACE_END
+
+#endif // !_CS100_RAY_TRACING_UTILS_RANDOM_NUMBER_GENERATOR_H_

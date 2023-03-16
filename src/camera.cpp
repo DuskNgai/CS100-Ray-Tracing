@@ -24,15 +24,18 @@
 
 #include "math-utils.h"
 
+CS100_RAY_TRACING_NAMESPACE_BEGIN
+
 Camera::Camera(Point3f const& look_from, Point3f const& look_to, Vector3f const& ref_up, Float y_field_of_view, Float focal_length, Float aspect_ratio)
     : look_from{ look_from }
     , look_to{ look_to }
+    , ref_up{ ref_up }
     , y_field_of_view{ y_field_of_view }
     , focal_length{ focal_length }
     , aspect_ratio{ aspect_ratio } {
-    this->look_front = (this->look_to - this->look_from).unit();
-    this->look_right = cross(this->look_front, ref_up).unit();
-    this->look_up = cross(this->look_right, this->look_front);
+    this->look_front = (this->look_to - this->look_from).normalized();
+    this->look_right = this->look_front.cross(this->ref_up).normalized();
+    this->look_up = this->look_right.cross(this->look_front);
 
     this->vertical = this->look_up * std::tan(deg_to_rad(this->y_field_of_view / 2.0_f)) * this->focal_length;
     this->horizontal = this->look_right * this->vertical.norm() * this->aspect_ratio;
@@ -52,11 +55,23 @@ void Camera::set_pixel(uint32_t i, uint32_t j, Color3f const& color) const {
 
 Ray Camera::generate_ray(uint32_t i, uint32_t j, RandomNumberGenerator& rng) const {
     // Shoot ray to the center of the pixel.
-    Float u = (2.0_f * (static_cast<Float>(i) + rng()) / static_cast<Float>(this->film->width)) - 1.0_f;
-    Float v = (2.0_f * (static_cast<Float>(j) + rng()) / static_cast<Float>(this->film->height)) - 1.0_f;
+    Float u{ (2.0_f * (static_cast<Float>(i) + rng()) / static_cast<Float>(this->film->width)) - 1.0_f };
+    Float v{ (2.0_f * (static_cast<Float>(j) + rng()) / static_cast<Float>(this->film->height)) - 1.0_f };
 
-    Point3f origin = this->look_from;
-    Vector3f direction = this->horizontal * u + this->vertical * v + this->look_front * this->focal_length;
+    Point3f origin{ this->look_from };
+    Vector3f direction{ this->horizontal * u + this->vertical * v + this->look_front * this->focal_length };
 
     return { origin, direction };
 }
+
+std::shared_ptr<Camera> Camera::create(nlohmann::json const& config) {
+    return std::make_shared<Camera>(
+        from_json(config.at("look_from")),
+        from_json(config.at("look_to")),
+        from_json(config.at("ref_up")),
+        config.at("y_field_of_view"),
+        config.at("focal_length"),
+        config.at("aspect_ratio"));
+}
+
+CS100_RAY_TRACING_NAMESPACE_END

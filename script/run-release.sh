@@ -23,17 +23,8 @@ mkdir -p "$bin_dir_name"
 # Create a directory that contains the result files.
 result_dir_name="../result"
 mkdir -p "$result_dir_name"
+image_path="../result/image.png"
 
-info "[script] Compiling..."
-run g++ "../src/"*.cpp "../src/geometry/"*.cpp "../src/utils/"*.cpp \
-    -o "../linux-build/Release/CS100-Ray-Tracing"   \
-    -I "../include"                                 \
-    -O3 -std=c++17 -Wall -Wextra -Wpedantic -Werror \
-    -lm
-
-image_path="../result/image.ppm"
-info "[script] Generating image.ppm..."
+info "[script] Generating "$image_path"..."
 run ./"../linux-build/Release/CS100-Ray-Tracing" 960 540 100 50 "$image_path"
 
-info "[script] Converting .ppm to .png..."
-run python "ppm-to-png.py" "$image_path"

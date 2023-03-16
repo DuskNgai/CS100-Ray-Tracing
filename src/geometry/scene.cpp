@@ -22,11 +22,13 @@
 
 #include "geometry/scene.h"
 
+CS100_RAY_TRACING_NAMESPACE_BEGIN
+
 Scene::Scene(std::vector<std::shared_ptr<Geometry>> const& objects)
-    : objects(objects) {}
+    : objects{ objects } {}
 
 Scene::Scene(std::initializer_list<std::shared_ptr<Geometry>> objects)
-    : objects(objects) {}
+    : objects{ objects } {}
 
 void Scene::add_object(std::shared_ptr<Geometry> const& object) {
     objects.push_back(object);
@@ -41,8 +43,8 @@ std::vector<std::shared_ptr<Geometry>> const& Scene::get_objects() const {
 }
 
 bool Scene::hit(Ray const& ray, Float t_min, Float t_max, Interaction* interaction) const {
-    bool hit_anything = false;
-    Float closest_so_far = t_max;
+    bool hit_anything{ false };
+    Float closest_so_far{ t_max };
     Interaction local_interaction;
     for (auto const& object : this->objects) {
         // Update to the closest interaction.
@@ -54,3 +56,15 @@ bool Scene::hit(Ray const& ray, Float t_min, Float t_max, Interaction* interacti
     }
     return hit_anything;
 }
+
+
+std::shared_ptr<Scene> Scene::create(nlohmann::json const& config) {
+    std::vector<std::shared_ptr<Geometry>> objects;
+
+    for (auto const& c : config) {
+        objects.push_back(Geometry::create(c));
+    }
+    return std::make_shared<Scene>(objects);
+}
+
+CS100_RAY_TRACING_NAMESPACE_END

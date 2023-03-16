@@ -24,16 +24,20 @@
 #define _CS100_RAY_TRACING_CAMERA_H_
 
 #include <memory>
+#include <nlohmann/json.hpp>
 
 #include "film.h"
 #include "ray.h"
 #include "utils/random-number-generator.h"
+
+CS100_RAY_TRACING_NAMESPACE_BEGIN
 
 /// @brief A camera that generates rays whose up direction is always positive y axis.
 class Camera {
 private:
     Point3f look_from;
     Point3f look_to;
+    Vector3f ref_up;
 
     Float y_field_of_view;
     Float focal_length;
@@ -83,6 +87,12 @@ public:
     /// @param rng The random number generator.
     /// @return The generated ray.
     Ray generate_ray(uint32_t i, uint32_t j, RandomNumberGenerator& rng) const;
+
+public:
+    /// @brief Create a camera based on given configuration.
+    static std::shared_ptr<Camera> create(nlohmann::json const& config);
 };
+
+CS100_RAY_TRACING_NAMESPACE_END
 
 #endif // !_CS100_RAY_TRACING_CAMERA_H_

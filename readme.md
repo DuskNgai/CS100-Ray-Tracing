@@ -34,7 +34,7 @@ This project is intended for recitation of Introduction to Programming (CS100) a
 ### Week 7
 
 1. Introduction to `c++`.
-2. `Scene`
+2. `Scene`, `SharedPtr`
 
 ### Week 8
 
@@ -46,7 +46,7 @@ This project is intended for recitation of Introduction to Programming (CS100) a
 
 ### Week 10
 
-1. `Dielectric`, `SharedPtr`
+1. `Dielectric`
 
 ### Week 11
 

@@ -1,6 +1,6 @@
 /*
  * CS100-Ray-Tracing for course recitation.
- * The abstract class for all geometry objects.
+ * An include header for other files to use geometry.
  *
  * Copyright (C) 2023
  * Author: Haizhao Dai
@@ -20,21 +20,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _CS100_RAY_TRACING_GEOMETRY_H_
-#define _CS100_RAY_TRACING_GEOMETRY_H_
+#ifndef _CS100_RAY_TRACING_GEOMETRY_GEOMETRY_H_
+#define _CS100_RAY_TRACING_GEOMETRY_GEOMETRY_H_
 
-#include "geometry/interaction.h"
-#include "ray.h"
+#include "geometry/base-geometry.h"
+#include "geometry/sphere.h"
 
-/// @brief The abstract class for all geometry objects.
-struct Geometry {
-    /// @brief Test if a ray intersects with a geometry.
-    /// @param ray The ray.
-    /// @param t_min The minimum t value.
-    /// @param t_max The maximum t value.
-    /// @param interaction The interaction record.
-    /// @return True if the ray intersects with the geometry.
-    virtual bool hit(Ray const& ray, Float t_min, Float t_max, Interaction* interaction) const = 0;
-};
-
-#endif // !_CS100_RAY_TRACING_GEOMETRY_H_
+#endif // !_CS100_RAY_TRACING_GEOMETRY_GEOMETRY_H_

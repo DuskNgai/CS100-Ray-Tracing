@@ -22,25 +22,29 @@
 
 #include "geometry/sphere.h"
 
-Sphere::Sphere(Point3f const& center, Float radius)
-    : center(center), radius(radius) {}
+CS100_RAY_TRACING_NAMESPACE_BEGIN
+
+Sphere::Sphere(Point3f const& center, Float radius, std::shared_ptr<Material> const& mat_ptr)
+    : center{ center }
+    , radius{ radius }
+    , mat_ptr{ mat_ptr } {}
 
 bool Sphere::hit(Ray const& ray, Float t_min, Float t_max, Interaction* interaction) const {
-    Vector3f oc = ray.origin - this->center;
+    Vector3f oc{ ray.origin - this->center };
 
     // Convert to a quadratic equation.
-    Float a = ray.direction.square_norm();
-    Float b_half = dot(oc, ray.direction);
-    Float c = oc.square_norm() - this->radius * this->radius;
-    Float discriminant = b_half * b_half - a * c;
+    Float a{ ray.direction.squaredNorm() };
+    Float b_half{ oc.dot(ray.direction) };
+    Float c{ oc.squaredNorm() - this->radius * this->radius };
+    Float discriminant{ b_half * b_half - a * c };
 
     if (discriminant < 0.0_f) {
         return false;
     }
 
     // Find and check the root.
-    Float sqrt_discriminant = std::sqrt(discriminant);
-    Float t = (-b_half - sqrt_discriminant) / a;
+    Float sqrt_discriminant{ std::sqrt(discriminant) };
+    Float t{ (-b_half - sqrt_discriminant) / a };
     if (t < t_min || t > t_max) {
         t = (-b_half + sqrt_discriminant) / a;
         if (t < t_min || t > t_max) {
@@ -52,5 +56,8 @@ bool Sphere::hit(Ray const& ray, Float t_min, Float t_max, Interaction* interact
     interaction->t = t;
     interaction->hit_point = ray.at(t);
     interaction->normal = (interaction->hit_point - this->center) / this->radius;
+    interaction->mat_ptr = this->mat_ptr;
     return true;
 }
+
+CS100_RAY_TRACING_NAMESPACE_END

@@ -1,6 +1,6 @@
 /*
  * CS100-Ray-Tracing for course recitation.
- * The definition of a sphere.
+ * The definition of metal material.
  *
  * Copyright (C) 2023
  * Author: Haizhao Dai
@@ -20,24 +20,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _CS100_RAY_TRACING_SPHERE_H_
-#define _CS100_RAY_TRACING_SPHERE_H_
+#ifndef _CS100_RAY_TRACING_MATERIAL_METAL_H_
+#define _CS100_RAY_TRACING_MATERIAL_METAL_H_
 
-#include "geometry/base-geometry.h"
+#include "material/base-material.h"
 
 CS100_RAY_TRACING_NAMESPACE_BEGIN
 
-/// @brief The definition of a sphere.
-struct Sphere : public Geometry {
-    Point3f center;
-    Float radius;
-    std::shared_ptr<Material> mat_ptr;
+class Metal : public Material {
+private:
+    Color3f albedo;
+    Float fuzz;
 
-    Sphere(Point3f const& center, Float radius, std::shared_ptr<Material> const& mat_ptr);
+public:
+    Metal(Color3f const& albedo, Float fuzz);
 
-    virtual bool hit(Ray const& ray, Float t_min, Float t_max, Interaction* interaction) const override;
+    virtual bool scatter(Ray const& ray, Interaction const& interaction, RandomNumberGenerator& rng, Color3f* attenuation, Ray* scattered) const override;
 };
 
 CS100_RAY_TRACING_NAMESPACE_END
 
-#endif // !_CS100_RAY_TRACING_SPHERE_H_
+#endif // !_CS100_RAY_TRACING_MATERIAL_METAL_H_

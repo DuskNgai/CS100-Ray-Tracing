@@ -23,125 +23,20 @@
 #ifndef _CS100_RAY_TRACING_VECTOR3_H_
 #define _CS100_RAY_TRACING_VECTOR3_H_
 
+#include <Eigen/Dense>
 #include <iostream>
+#include <nlohmann/json.hpp>
 
 #include "math-utils.h"
 #include "utils/random-number-generator.h"
 
-/// @brief A 3D vector.
-template <typename T>
-struct Vector3 {
-    T x{ 0 }, y{ 0 }, z{ 0 };
-
-    // Constructors.
-    Vector3() = default;
-    Vector3(T x)
-        : x{ x }, y{ x }, z{ x } {}
-    Vector3(T x, T y, T z)
-        : x{ x }, y{ y }, z{ z } {}
-    Vector3(Vector3 const& v)
-        : x{ v.x }, y{ v.y }, z{ v.z } {}
-    Vector3(Vector3&& v) noexcept
-        : x{ std::move(v.x) }, y{ std::move(v.y) }, z{ std::move(v.z) } {}
-    Vector3& operator=(Vector3 const& v) {
-        if (this != &v) {
-            x = v.x;
-            y = v.y;
-            z = v.z;
-        }
-        return *this;
-    }
-    Vector3& operator=(Vector3&& v) noexcept {
-        x = std::move(v.x);
-        y = std::move(v.y);
-        z = std::move(v.z);
-        return *this;
-    }
-    ~Vector3() = default;
-
-    // Access function.
-    T& operator[](std::size_t i) { return this->data[i]; }
-    T const& operator[](std::size_t i) const { return this->data[i]; }
-
-    // Operations.
-    Vector3& operator+=(Vector3 const& v) {
-        this->x += v.x;
-        this->y += v.y;
-        this->z += v.z;
-        return *this;
-    }
-    Vector3& operator-=(Vector3 const& v) {
-        this->x -= v.x;
-        this->y -= v.y;
-        this->z -= v.z;
-        return *this;
-    }
-    Vector3& operator*=(T a) {
-        this->x *= a;
-        this->y *= a;
-        this->z *= a;
-        return *this;
-    }
-    Vector3& operator/=(T a) {
-        return *this *= (static_cast<T>(1) / a);
-    }
-
-    /// @brief |v|
-    T constexpr norm() const { return std::sqrt(this->square_norm()); }
-    /// @brief |v|^2
-    T constexpr square_norm() const { return dot(*this, *this); }
-    /// @brief v / |v|
-    Vector3 constexpr unit() const { return *this / this->norm(); }
-};
-
-// Operations.
+CS100_RAY_TRACING_NAMESPACE_BEGIN
 
 template <typename T>
-Vector3<T> constexpr operator+(Vector3<T> const& u, Vector3<T> const& v) {
-    return Vector3<T>{ u } += v;
-}
-
-template <typename T>
-Vector3<T> constexpr operator-(Vector3<T> const& u, Vector3<T> const& v) {
-    return Vector3<T>{ u } -= v;
-}
-
-template <typename T, typename U>
-Vector3<std::enable_if_t<std::is_convertible_v<T, U>, T>> constexpr operator*(Vector3<T> const& u, U a) {
-    return Vector3<T>{ u } *= a;
-}
-
-template <typename T, typename U>
-Vector3<std::enable_if_t<std::is_convertible_v<T, U>, T>> constexpr operator*(U a, Vector3<T> const& u) {
-    return u * a;
-}
-
-template <typename T, typename U>
-Vector3<std::enable_if_t<std::is_convertible_v<T, U>, T>> constexpr operator/(Vector3<T> const& u, U a) {
-    return u * (static_cast<T>(1.0) / a);
-}
-
-template <typename T>
-std::ostream& operator<<(std::ostream& out, Vector3<T> const& v) {
-    out << "(" << v.x << ", " << v.y << ", " << v.z << ")";
-    return out;
-}
-
-/// @brief <u, v>.
-template <typename T>
-T constexpr dot(Vector3<T> const& u, Vector3<T> const& v) {
-    return u.x * v.x + u.y * v.y + u.z * v.z;
-}
-
-/// @brief u x v.
-template <typename T>
-Vector3<T> constexpr cross(Vector3<T> const& u, Vector3<T> const& v) {
-    return {
-        u.y * v.z - u.z * v.y,
-        u.z * v.x - u.x * v.z,
-        u.x * v.y - u.y * v.x
-    };
-}
+using Vector3 = Eigen::Vector3<T>;
+using Vector3f = Eigen::Vector3<Float>;
+using Color3f = Vector3f;
+using Point3f = Vector3f;
 
 /// @brief u * (1 - t) + v * t.
 template <typename T, typename FloatingPoint>
@@ -149,21 +44,36 @@ Vector3<T> constexpr lerp(Vector3<T> const& u, Vector3<T> const& v, FloatingPoin
     return u + (v - u) * t;
 }
 
-using Vector3f = Vector3<Float>;
-using Color3f = Vector3f;
-using Point3f = Vector3f;
-
-Vector3f inline random_vector3f(RandomNumberGenerator& rng, Float min = 0.0_f, Float max = 1.0_f) {
-    return Vector3f{ rng(), rng(), rng() } * (max - min) + Vector3f{ min };
+/// @brief Reflect the incoming direction `v` respect to the normal `n`.
+template <typename T>
+Vector3<T> constexpr reflect(Vector3<T> const& v, Vector3<T> const& n) {
+    return v - 2.0_f * v.dot(n) * n;
 }
 
+/// @brief A random vector in [min, max]^3.
+Vector3f inline random_vector3f(RandomNumberGenerator& rng, Float min = 0.0_f, Float max = 1.0_f) {
+    return Vector3f{ rng(), rng(), rng() } * (max - min) + Vector3f{ min, min, min };
+}
+
+/// @brief A random vector who is in a unit sphere.
 Vector3f inline random_vector3f_in_unit_sphere(RandomNumberGenerator& rng) {
     while (true) {
-        auto p = random_vector3f(rng, -1.0_f, 1.0_f);
-        if (p.square_norm() <= 1.0_f) {
+        auto p{ random_vector3f(rng, -1.0_f, 1.0_f) };
+        if (p.squaredNorm() <= 1.0_f) {
             return p;
         }
     }
 }
+
+/// @brief Convert array in configuration file to `Vector3f`.
+Vector3f inline from_json(nlohmann::json const& config) {
+    Vector3f v;
+    for (std::size_t i = 0; i < 3; ++i) {
+        v[i] = config[i];
+    }
+    return v;
+}
+
+CS100_RAY_TRACING_NAMESPACE_END
 
 #endif // !_CS100_RAY_TRACING_VECTOR3_H_

@@ -1,6 +1,6 @@
 /*
  * CS100-Ray-Tracing for course recitation.
- * The implementation of a ray.
+ * The abstract class for all geometry objects.
  *
  * Copyright (C) 2023
  * Author: Haizhao Dai
@@ -20,16 +20,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef _CS100_RAY_TRACING_GEOMETRY_BASE_GEOMETRY_H_
+#define _CS100_RAY_TRACING_GEOMETRY_BASE_GEOMETRY_H_
+
+#include "geometry/interaction.h"
 #include "ray.h"
 
 CS100_RAY_TRACING_NAMESPACE_BEGIN
 
-Ray::Ray(Point3f const& origin, Vector3f const& direction)
-    : origin{ origin }
-    , direction{ direction } {}
+/// @brief The abstract class for all geometry objects.
+struct Geometry {
+    /// @brief Test if a ray intersects with a geometry.
+    /// @param ray The ray.
+    /// @param t_min The minimum t value.
+    /// @param t_max The maximum t value.
+    /// @param interaction The interaction record.
+    /// @return True if the ray intersects with the geometry.
+    virtual bool hit(Ray const& ray, Float t_min, Float t_max, Interaction* interaction) const = 0;
 
-Point3f Ray::at(Float t) const {
-    return this->origin + this->direction * t;
-}
+    /// @brief Create a geometry object based on given configuration.
+    static std::shared_ptr<Geometry> create(nlohmann::json const& config);
+};
 
 CS100_RAY_TRACING_NAMESPACE_END
+
+#endif // !_CS100_RAY_TRACING_GEOMETRY_BASE_GEOMETRY_H_

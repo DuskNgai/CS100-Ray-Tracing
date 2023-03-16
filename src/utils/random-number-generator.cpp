@@ -22,6 +22,8 @@
 
 #include "utils/random-number-generator.h"
 
+CS100_RAY_TRACING_NAMESPACE_BEGIN
+
 RandomNumberGenerator::RandomNumberGenerator()
     : generator{ std::random_device{}() }
     , distribution{} {}
@@ -29,3 +31,5 @@ RandomNumberGenerator::RandomNumberGenerator()
 Float RandomNumberGenerator::operator()() {
     return distribution(generator);
 }
+
+CS100_RAY_TRACING_NAMESPACE_END

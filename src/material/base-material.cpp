@@ -1,6 +1,6 @@
 /*
  * CS100-Ray-Tracing for course recitation.
- * The definition of a sphere.
+ * The abstract class for all material.
  *
  * Copyright (C) 2023
  * Author: Haizhao Dai
@@ -20,24 +20,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _CS100_RAY_TRACING_SPHERE_H_
-#define _CS100_RAY_TRACING_SPHERE_H_
-
-#include "geometry/base-geometry.h"
+#include "material/material.h"
 
 CS100_RAY_TRACING_NAMESPACE_BEGIN
 
-/// @brief The definition of a sphere.
-struct Sphere : public Geometry {
-    Point3f center;
-    Float radius;
-    std::shared_ptr<Material> mat_ptr;
+std::shared_ptr<Material> Material::create(nlohmann::json const& config) {
+    std::string type{ config.at("type") };
 
-    Sphere(Point3f const& center, Float radius, std::shared_ptr<Material> const& mat_ptr);
-
-    virtual bool hit(Ray const& ray, Float t_min, Float t_max, Interaction* interaction) const override;
-};
+    if (type == "Lambertian") {
+        return std::make_shared<Lambertian>(from_json(config.at("albedo")));
+    }
+    else if (type == "Metal") {
+        return std::make_shared<Metal>(
+            from_json(config.at("albedo")),
+            config.at("fuzz"));
+    }
+    else {
+        throw std::runtime_error{ "Unknown material type: " + type };
+    }
+}
 
 CS100_RAY_TRACING_NAMESPACE_END
-
-#endif // !_CS100_RAY_TRACING_SPHERE_H_

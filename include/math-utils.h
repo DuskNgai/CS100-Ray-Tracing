@@ -26,14 +26,23 @@
 #include <cmath>
 #include <limits>
 
+#include "common.h"
+
+CS100_RAY_TRACING_NAMESPACE_BEGIN
+
 using Float = float;
+
+template <typename T>
+using enable_if_floating_point = std::enable_if_t<std::is_floating_point_v<T>, T>;
 
 // See https://en.cppreference.com/w/cpp/language/user_literal.
 Float inline constexpr operator""_f(long double x) { return static_cast<Float>(x); }
 
 // clang-format off
-template <typename FloatingPoint> constexpr FloatingPoint PI  = static_cast<FloatingPoint>(3.141592653589793238462643383279);
-template <typename FloatingPoint> constexpr FloatingPoint INF = std::numeric_limits<FloatingPoint>::max();
+template <typename FloatingPoint>
+FloatingPoint constexpr PI  = static_cast<enable_if_floating_point<FloatingPoint>>(3.141592653589793238462643383279502884L);
+template <typename FloatingPoint>
+FloatingPoint constexpr INF = std::numeric_limits<enable_if_floating_point<FloatingPoint>>::max();
 // clang-format on
 
 /// @brief Convert degrees to radians.
@@ -42,5 +51,7 @@ template <typename FloatingPoint> constexpr FloatingPoint INF = std::numeric_lim
 Float inline constexpr deg_to_rad(Float deg) {
     return deg * PI<Float> / 180.0_f;
 }
+
+CS100_RAY_TRACING_NAMESPACE_END
 
 #endif // !_CS100_RAY_TRACING_MATH_UTILS_H_

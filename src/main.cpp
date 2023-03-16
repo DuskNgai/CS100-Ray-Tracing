@@ -20,95 +20,45 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// TODO: remove this after introducing CMake.
-#define _CRT_SECURE_NO_WARNINGS
-
+#include <cinttypes>
 #include <cstdio>
-#include <filesystem>
+#include <fstream>
 #include <memory>
+#include <nlohmann/json.hpp>
 #include <string>
 
-#include "geometry/scene.h"
-#include "geometry/sphere.h"
+#include "geometry/geometry.h"
 #include "integrator.h"
+#include "material/material.h"
+#include "utils/arg-parser.h"
+
+using namespace CS100;
 
 int main(int argc, char** argv) {
-    // TODO: replace by parsing command line arguments/configuration files.
-    if (argc != 6) {
-        std::printf("Usage: %s <image_width> <image_height> <sample_per_pixel> <ray_tracing_depth> <output_file_path>\n", argv[0]);
-        return 1;
-    }
+    Arguments args = parse_args(argc, argv);
 
-    uint32_t image_width;
-    try {
-        image_width = std::stoul(argv[1]);
-    }
-    catch (std::exception const& e) {
-        std::printf("%s. [Error] Invalid image_width, process terminate.\n", e.what());
-        return 1;
-    }
+    std::printf(
+        "The image size is %" PRIu32 " x %" PRIu32 " pixels, with %" PRIu32 " spp, depth of each ray is %" PRIu32 ".\n",
+        args.image_width, args.image_height, args.spp, args.ray_tracing_depth);
 
-    uint32_t image_height;
-    try {
-        image_height = std::stoul(argv[2]);
-    }
-    catch (std::exception const& e) {
-        std::printf("%s. [Error] Invalid image_height, process terminate.\n", e.what());
-        return 1;
-    }
+    std::ifstream file{ args.config_file_path };
+    nlohmann::json config = nlohmann::json::parse(file);
+    file.close();
 
-    uint32_t spp;
-    try {
-        spp = std::stoul(argv[3]);
-    }
-    catch (std::exception const& e) {
-        std::printf("%s. [Error] Invalid spp, process terminate.\n", e.what());
-        return 1;
-    }
-    if (image_width > 2048 || image_height > 2048 || spp > 2048) {
-        std::printf("[Error] The image is too large to create, process terminate.\n");
-        return 1;
-    }
-
-    uint32_t ray_tracing_depth;
-    try {
-        ray_tracing_depth = std::stoul(argv[4]);
-    }
-    catch (std::exception const& e) {
-        std::printf("%s. [Error] Invalid ray_tracing_depth, process terminate.\n", e.what());
-        return 1;
-    }
-
-    std::string output_file_path{ argv[5] };
-    auto parent_dir = std::filesystem::path{ output_file_path }.parent_path();
-    if (!std::filesystem::exists(parent_dir)) {
-        std::printf("[Error] The directory %s does not exist, process terminate.\n", parent_dir.c_str());
-        return 1;
-    }
-
-    std::printf("The image size is %u x %u pixels, with %u spp.\n", image_width, image_height, spp);
     // Create the camera.
-    auto film = std::make_shared<Film>(image_width, image_height);
-    auto camera = std::make_shared<Camera>(
-        Point3f{ 0.0, 0.0, 0.0 },
-        Point3f{ 0.0, 0.0, -1.0 },
-        Vector3f{ 0.0, 1.0, 0.0 },
-        90.0_f,
-        1.0_f,
-        film->get_aspect_ratio());
+    auto film{ std::make_shared<Film>(args.image_width, args.image_height) };
+    auto camera{ Camera::create(config.at("Camera")) };
     camera->set_film(film);
 
     // Create the scene.
-    auto scene = std::make_shared<Scene>();
-    scene->add_object(std::make_shared<Sphere>(Point3f{ 0.0, 0.0, -1.0 }, 0.5_f));
-    scene->add_object(std::make_shared<Sphere>(Point3f{ 0.0, -100.5, -1.0 }, 100.0_f));
+    auto scene{ Scene::create(config.at("Scene")) };
 
     // Render the image.
-    Integrator integrator(spp, ray_tracing_depth);
+    Integrator integrator{ args.spp, args.ray_tracing_depth };
     integrator.render(camera, scene);
 
     // Output the image.
-    camera->get_film().save(output_file_path);
+    film->save(args.output_file_path);
     std::printf("Image saving done!\n");
 
     return 0;

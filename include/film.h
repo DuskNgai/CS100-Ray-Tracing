@@ -28,6 +28,8 @@
 
 #include "vector3.h"
 
+CS100_RAY_TRACING_NAMESPACE_BEGIN
+
 /// @brief A film is a 2D array of pixels.
 struct Film {
     uint32_t width;
@@ -61,7 +63,8 @@ struct Film {
     void set_pixel(uint32_t i, uint32_t j, Color3f const& color);
 
     /// @brief Save a film to a file.
-    void save(std::string const& file_path) const;
+    /// @param file_name The file name to store the image.
+    void save(std::string const& file_name) const;
 
 private:
     /// @brief Get the index of 2 dimensional array.
@@ -70,5 +73,7 @@ private:
     /// @return The index of the pixel (i, j).
     uint32_t get_pixel_index(uint32_t i, uint32_t j) const;
 };
+
+CS100_RAY_TRACING_NAMESPACE_END
 
 #endif // !_CS100_RAY_TRACING_FILM_H_
