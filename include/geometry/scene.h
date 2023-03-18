@@ -38,13 +38,13 @@ private:
 public:
     Scene() = default;
     explicit Scene(std::initializer_list<std::shared_ptr<Geometry>> objects);
-    explicit Scene(std::vector<std::shared_ptr<Geometry>> const& objects);
+    explicit Scene(decltype(Scene::objects) const& objects);
     Scene(Scene const& other) = delete;
     Scene& operator=(Scene const& other) = delete;
 
     void add_object(std::shared_ptr<Geometry> const& object);
     void clear_objects();
-    std::vector<std::shared_ptr<Geometry>> const& get_objects() const;
+    decltype(Scene::objects) const& get_objects() const;
 
     virtual bool hit(Ray const& ray, Float t_min, Float t_max, Interaction* interaction) const override;
 

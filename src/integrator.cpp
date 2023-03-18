@@ -33,27 +33,24 @@ Integrator::Integrator(uint32_t spp, uint32_t ray_tracing_depth)
     : spp{ spp }
     , ray_tracing_depth{ ray_tracing_depth } {}
 
-void Integrator::render(std::shared_ptr<Camera> const& camera, std::shared_ptr<Scene> const& scene) {
-    std::atomic scanline_remaining{ camera->get_film().height };
+void Integrator::render(std::shared_ptr<Scene> const& scene, std::shared_ptr<Camera> const& camera) {
+    std::atomic<uint32_t> scanline_finished{ 0 };
 
-    auto single_thread_render_func = [&](auto thread_id, auto num_threads) {
+    auto single_thread_render_func = [&]() {
         auto image_width{ camera->get_film().width };
         auto image_height{ camera->get_film().height };
-        auto begin_image_height{ image_height * thread_id / num_threads };
-        auto end_image_height{ image_height * (thread_id + 1) / num_threads };
         // Per thread rng for non-competitive access.
         RandomNumberGenerator rng{};
 
-        for (auto j{ begin_image_height }; j < end_image_height; ++j) {
-            --scanline_remaining;
-            std::printf("\rScanlines remaining: %u ", scanline_remaining.load());
+        for (uint32_t j{ scanline_finished.fetch_add(1, std::memory_order_relaxed) }; j < image_height; j = scanline_finished.fetch_add(1, std::memory_order_relaxed)) {
+            std::printf("\rScanlines remaining: %u ", image_height - j - 1);
             std::fflush(stdout);
 
             for (uint32_t i{ 0 }; i < image_width; ++i) {
                 Color3f pixel_color{ Color3f::Zero() };
                 for (uint32_t s{ 0 }; s < this->spp; ++s) {
                     Ray ray{ camera->generate_ray(i, j, rng) };
-                    pixel_color += this->radiance(ray, scene, rng, 0);
+                    pixel_color += this->radiance(scene, ray, rng, 0);
                 }
                 camera->set_pixel(i, j, pixel_color / this->spp);
             }
@@ -63,8 +60,8 @@ void Integrator::render(std::shared_ptr<Camera> const& camera, std::shared_ptr<S
     // Create and launch the threads.
     std::vector<std::thread> threads;
     auto num_threads{ std::thread::hardware_concurrency() };
-    for (uint32_t i{ 0 }; i < num_threads; ++i) {
-        threads.emplace_back(single_thread_render_func, i, num_threads);
+    for (uint32_t _{ 0 }; _ < num_threads; ++_) {
+        threads.emplace_back(single_thread_render_func);
     }
     for (auto&& t : threads) {
         t.join();
@@ -73,7 +70,7 @@ void Integrator::render(std::shared_ptr<Camera> const& camera, std::shared_ptr<S
     std::printf("\nRendering Done!\n");
 }
 
-Color3f Integrator::radiance(Ray const& ray, std::shared_ptr<Scene> const& scene, RandomNumberGenerator& rng, uint32_t current_depth) {
+Color3f Integrator::radiance(std::shared_ptr<Scene> const& scene, Ray const& ray, RandomNumberGenerator& rng, uint32_t current_depth) {
     if (current_depth > this->ray_tracing_depth) {
         return Color3f::Zero();
     }
@@ -84,7 +81,7 @@ Color3f Integrator::radiance(Ray const& ray, std::shared_ptr<Scene> const& scene
         Ray scattered;
         Color3f attenuation;
         if (interaction.mat_ptr->scatter(ray, interaction, rng, &attenuation, &scattered)) {
-            return attenuation.cwiseProduct(this->radiance(scattered, scene, rng, current_depth + 1));
+            return attenuation.cwiseProduct(this->radiance(scene, scattered, rng, current_depth + 1));
         }
         else {
             return Color3f::Zero();

@@ -30,9 +30,9 @@ Metal::Metal(Color3f const& albedo, Float fuzz)
     , fuzz{ fuzz < 1.0_f ? fuzz : 1.0_f } {}
 
 bool Metal::scatter(Ray const& ray, Interaction const& interaction, RandomNumberGenerator& rng, Color3f* attenuation, Ray* scattered) const {
-    Vector3f reflected{ reflect(ray.direction.normalized(), interaction.normal) };
-    *scattered = { interaction.hit_point, reflected + fuzz * random_vector3f_in_unit_sphere(rng) };
-    *attenuation = albedo;
+    auto reflected{ reflect(ray.direction.normalized(), interaction.normal) };
+    *scattered = { interaction.hit_point, reflected + this->fuzz * random_vector3f_in_unit_sphere(rng) };
+    *attenuation = this->albedo;
     return scattered->direction.dot(interaction.normal) > 0;
 }
 

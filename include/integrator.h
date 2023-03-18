@@ -43,17 +43,17 @@ public:
     ~Integrator() = default;
 
     /// @brief Render the scene with the given camera.
-    /// @param camera The camera used to render the scene.
     /// @param scene The scene to be rendered.
-    void render(std::shared_ptr<Camera> const& camera, std::shared_ptr<Scene> const& scene);
+    /// @param camera The camera used to render the scene.
+    void render(std::shared_ptr<Scene> const& scene, std::shared_ptr<Camera> const& camera);
 
     /// @brief The integrator is responsible for computing the radiance along a ray.
-    /// @param ray The ray to be traced.
     /// @param scene The scene to be rendered.
+    /// @param ray The ray to be traced.
     /// @param rng The random number generator used for sampling.
     /// @param current_depth The current recursion depth of the ray.
     /// @return The radiance along the ray.
-    Color3f radiance(Ray const& ray, std::shared_ptr<Scene> const& scene, RandomNumberGenerator& rng, uint32_t current_depth);
+    Color3f radiance(std::shared_ptr<Scene> const& scene, Ray const& ray, RandomNumberGenerator& rng, uint32_t current_depth);
 };
 
 CS100_RAY_TRACING_NAMESPACE_END

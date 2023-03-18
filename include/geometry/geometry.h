@@ -24,6 +24,7 @@
 #define _CS100_RAY_TRACING_GEOMETRY_GEOMETRY_H_
 
 #include "geometry/base-geometry.h"
+#include "geometry/scene.h"
 #include "geometry/sphere.h"
 
 #endif // !_CS100_RAY_TRACING_GEOMETRY_GEOMETRY_H_

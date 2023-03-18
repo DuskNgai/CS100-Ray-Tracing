@@ -26,18 +26,56 @@
 CS100_RAY_TRACING_NAMESPACE_BEGIN
 
 std::shared_ptr<Geometry> Geometry::create(nlohmann::json const& config) {
-    nlohmann::json cfg = config.at("geometry");
-    std::string type{ cfg.at("type") };
+    std::string type{ config.at("type") };
 
     if (type == "Sphere") {
         return std::make_shared<Sphere>(
-            from_json(cfg.at("center")),
-            cfg.at("radius"),
-            Material::create(cfg.at("material")));
+            from_json(config.at("center")),
+            config.at("radius"),
+            Material::create(config.at("material")));
+    }
+    else if (type == "RandomScene") {
+        return Geometry::create_random_scene();
     }
     else {
         throw std::runtime_error{ "Unknown geometry type: " + type };
     }
+}
+
+std::shared_ptr<Geometry> Geometry::create_random_scene() {
+    std::vector<std::shared_ptr<Geometry>> objects;
+    RandomNumberGenerator rng{};
+
+    for (int32_t a = -11; a < 11; ++a) {
+        for (int32_t b = -11; b < 11; ++b) {
+            Float choose_mat{ rng() };
+            Point3f center{ a + 0.9_f * rng(), 0.2_f, b + 0.9_f * rng() };
+
+            if ((center - Point3f{ 4, 0.2, 0 }).norm() > 0.9) {
+                std::shared_ptr<Material> sphere_material;
+
+                if (choose_mat < 0.8) {
+                    // Diffuse.
+                    Color3f albedo{ random_vector3f(rng).cwiseProduct(random_vector3f(rng)) };
+                    sphere_material = std::make_shared<Lambertian>(albedo);
+                    objects.push_back(std::make_shared<Sphere>(center, 0.2, sphere_material));
+                }
+                else if (choose_mat < 0.95) {
+                    // Metal.
+                    auto albedo{ random_vector3f(rng, 0.5_f, 1.0_f) };
+                    auto fuzz{ rng() * 0.5_f };
+                    sphere_material = std::make_shared<Metal>(albedo, fuzz);
+                    objects.push_back(std::make_shared<Sphere>(center, 0.2, sphere_material));
+                }
+                else {
+                    // Glass.
+                    sphere_material = std::make_shared<Dielectric>(1.5);
+                    objects.push_back(std::make_shared<Sphere>(center, 0.2, sphere_material));
+                }
+            }
+        }
+    }
+    return std::make_shared<Scene>(objects);
 }
 
 CS100_RAY_TRACING_NAMESPACE_END

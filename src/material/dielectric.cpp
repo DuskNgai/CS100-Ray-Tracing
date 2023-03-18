@@ -1,6 +1,6 @@
 /*
  * CS100-Ray-Tracing for course recitation.
- * The abstract class for all material.
+ * The implementation of dielectric material.
  *
  * Copyright (C) 2023
  * Author: Haizhao Dai
@@ -20,27 +20,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "material/material.h"
+#include "material/dielectric.h"
 
 CS100_RAY_TRACING_NAMESPACE_BEGIN
 
-std::shared_ptr<Material> Material::create(nlohmann::json const& config) {
-    std::string type{ config.at("type") };
+Dielectric::Dielectric(Float rior)
+    : rior{ rior } {}
 
-    if (type == "Lambertian") {
-        return std::make_shared<Lambertian>(from_json(config.at("albedo")));
-    }
-    else if (type == "Metal") {
-        return std::make_shared<Metal>(
-            from_json(config.at("albedo")),
-            config.at("fuzz"));
-    }
-    else if (type == "Dielectric") {
-        return std::make_shared<Dielectric>(config.at("rior"));
-    }
-    else {
-        throw std::runtime_error{ "Unknown material type: " + type };
-    }
+bool Dielectric::scatter(Ray const& ray, Interaction const& interaction, RandomNumberGenerator&, Color3f* attenuation, Ray* scattered) const {
+    auto rior_actual = interaction.is_outer_face ? 1.0_f / this->rior : this->rior;
+    auto refracted{ refract(ray.direction.normalized(), interaction.normal, rior_actual) };
+
+    auto target_direction{ refracted.has_value() ? refracted.value() : reflect(ray.direction.normalized(), interaction.normal) };
+
+    *attenuation = { 1.0_f, 1.0_f, 1.0_f };
+    *scattered = { interaction.hit_point, target_direction };
+    return true;
 }
 
 CS100_RAY_TRACING_NAMESPACE_END

@@ -1,0 +1,59 @@
+{
+    "Camera": {
+        "look_from": [3.0, 3.0, 2.0],
+        "look_to": [0.0, 0.0, -1.0],
+        "ref_up": [0.0, 1.0, 0.0],
+        "y_field_of_view": 20.0,
+        "focal_length": 5.196152422706632,
+        "aspect_ratio": 1.7777777777777777,
+        "aperture": 2.0
+    },
+    "Scene": {
+        "ground": {
+            "type": "Sphere",
+            "center": [0.0, -100.5, -1.0],
+            "radius": 100.0,
+            "material": {
+                "type": "Lambertian",
+                "albedo": [0.8, 0.8, 0.0]
+            }
+        },
+        "center ball": {
+            "type": "Sphere",
+            "center": [0.0, 0.0, -1.0],
+            "radius": 0.5,
+            "material": {
+                "type": "Lambertian",
+                "albedo": [0.1, 0.2, 0.5]
+            }
+        },
+        "left big ball": {
+            "type": "Sphere",
+            "center": [-1.0, 0.0, -1.0],
+            "radius": 0.5,
+            "material": {
+                "type": "Dielectric",
+                "rior": 1.5
+            }
+        },
+        "left small ball": {
+            "type": "Sphere",
+            "center": [-1.0, 0.0, -1.0],
+            "radius": -0.45,
+            "material": {
+                "type": "Dielectric",
+                "rior": 1.5
+            }
+        },
+        "right ball": {
+            "type": "Sphere",
+            "center": [1.0, 0.0, -1.0],
+            "radius": 0.5,
+            "material": {
+                "type": "Metal",
+                "albedo": [0.8, 0.6, 0.2],
+                "fuzz": 0.0
+            }
+        }
+    }
+}

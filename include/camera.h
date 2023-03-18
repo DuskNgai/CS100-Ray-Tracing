@@ -42,6 +42,7 @@ private:
     Float y_field_of_view;
     Float focal_length;
     Float aspect_ratio;
+    Float aperture;
 
     Vector3f look_front;
     Vector3f look_up;
@@ -60,7 +61,8 @@ public:
     /// @param y_field_of_view The y field of view of the camera, in degrees.
     /// @param focal_length The focal length of the camera.
     /// @param aspect_ratio The aspect ratio of the camera.
-    Camera(Point3f const& look_from, Point3f const& look_to, Vector3f const& ref_up, Float y_field_of_view, Float focal_length, Float aspect_ratio);
+    /// @param aperture The aperture size of the camera.
+    Camera(Point3f const& look_from, Point3f const& look_to, Vector3f const& ref_up, Float y_field_of_view, Float focal_length, Float aspect_ratio, Float aperture);
     Camera(Camera const& other) = delete;
     Camera(Camera&& other) = delete;
     Camera& operator=(Camera const& other) = delete;

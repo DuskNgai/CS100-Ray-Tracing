@@ -26,13 +26,21 @@
 
 CS100_RAY_TRACING_NAMESPACE_BEGIN
 
-Camera::Camera(Point3f const& look_from, Point3f const& look_to, Vector3f const& ref_up, Float y_field_of_view, Float focal_length, Float aspect_ratio)
+Camera::Camera(
+    Point3f const& look_from,
+    Point3f const& look_to,
+    Vector3f const& ref_up,
+    Float y_field_of_view,
+    Float focal_length,
+    Float aspect_ratio,
+    Float aperture)
     : look_from{ look_from }
     , look_to{ look_to }
     , ref_up{ ref_up }
     , y_field_of_view{ y_field_of_view }
     , focal_length{ focal_length }
-    , aspect_ratio{ aspect_ratio } {
+    , aspect_ratio{ aspect_ratio }
+    , aperture{ aperture * 0.5_f } {
     this->look_front = (this->look_to - this->look_from).normalized();
     this->look_right = this->look_front.cross(this->ref_up).normalized();
     this->look_up = this->look_right.cross(this->look_front);
@@ -58,8 +66,13 @@ Ray Camera::generate_ray(uint32_t i, uint32_t j, RandomNumberGenerator& rng) con
     Float u{ (2.0_f * (static_cast<Float>(i) + rng()) / static_cast<Float>(this->film->width)) - 1.0_f };
     Float v{ (2.0_f * (static_cast<Float>(j) + rng()) / static_cast<Float>(this->film->height)) - 1.0_f };
 
-    Point3f origin{ this->look_from };
-    Vector3f direction{ this->horizontal * u + this->vertical * v + this->look_front * this->focal_length };
+    // Avoid `auto` for intermediate Eigen types, unless you really know what you are doing!
+    // See https://eigen.tuxfamily.org/dox/TopicPitfalls.html.
+    Vector3f random_direction{ this->aperture * random_vector3f_in_unit_circle(rng) };
+    Vector3f offset{ this->look_right * random_direction.x() + this->look_up * random_direction.y() };
+
+    Point3f origin{ this->look_from + offset };
+    Vector3f direction{ this->horizontal * u + this->vertical * v + this->look_front * this->focal_length - offset };
 
     return { origin, direction };
 }
@@ -71,7 +84,8 @@ std::shared_ptr<Camera> Camera::create(nlohmann::json const& config) {
         from_json(config.at("ref_up")),
         config.at("y_field_of_view"),
         config.at("focal_length"),
-        config.at("aspect_ratio"));
+        config.at("aspect_ratio"),
+        config.at("aperture"));
 }
 
 CS100_RAY_TRACING_NAMESPACE_END

@@ -55,7 +55,7 @@ int main(int argc, char** argv) {
 
     // Render the image.
     Integrator integrator{ args.spp, args.ray_tracing_depth };
-    integrator.render(camera, scene);
+    integrator.render(scene, camera);
 
     // Output the image.
     film->save(args.output_file_path);

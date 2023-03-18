@@ -24,7 +24,7 @@
 #define _CS100_RAY_TRACING_INTERACTION_H_
 
 #include "material/base-material.h"
-#include "vector3.h"
+#include "ray.h"
 
 CS100_RAY_TRACING_NAMESPACE_BEGIN
 
@@ -33,7 +33,13 @@ struct Interaction {
     Float t;
     Point3f hit_point;
     Vector3f normal;
+    bool is_outer_face;
     std::shared_ptr<Material> mat_ptr;
+
+    void set_face_normal(Ray const& ray, Vector3f const& outward_normal) {
+        this->is_outer_face = ray.direction.dot(outward_normal) < 0.0_f;
+        this->normal = this->is_outer_face ? outward_normal : -outward_normal;
+    }
 };
 
 CS100_RAY_TRACING_NAMESPACE_END

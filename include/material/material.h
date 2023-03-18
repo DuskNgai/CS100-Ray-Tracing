@@ -24,6 +24,7 @@
 #define _CS100_RAY_TRACING_MATERIAL_MATERIAL_H_
 
 #include "material/base-material.h"
+#include "material/dielectric.h"
 #include "material/lambertian.h"
 #include "material/metal.h"
 

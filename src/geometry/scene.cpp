@@ -24,7 +24,7 @@
 
 CS100_RAY_TRACING_NAMESPACE_BEGIN
 
-Scene::Scene(std::vector<std::shared_ptr<Geometry>> const& objects)
+Scene::Scene(decltype(Scene::objects) const& objects)
     : objects{ objects } {}
 
 Scene::Scene(std::initializer_list<std::shared_ptr<Geometry>> objects)
@@ -38,7 +38,7 @@ void Scene::clear_objects() {
     objects.clear();
 }
 
-std::vector<std::shared_ptr<Geometry>> const& Scene::get_objects() const {
+decltype(Scene::objects) const& Scene::get_objects() const {
     return objects;
 }
 
@@ -57,13 +57,13 @@ bool Scene::hit(Ray const& ray, Float t_min, Float t_max, Interaction* interacti
     return hit_anything;
 }
 
-
 std::shared_ptr<Scene> Scene::create(nlohmann::json const& config) {
-    std::vector<std::shared_ptr<Geometry>> objects;
+    decltype(Scene::objects) objects;
 
     for (auto const& c : config) {
         objects.push_back(Geometry::create(c));
     }
+
     return std::make_shared<Scene>(objects);
 }
 

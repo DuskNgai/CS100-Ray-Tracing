@@ -38,7 +38,7 @@ bool Lambertian::scatter([[maybe_unused]] Ray const& ray, Interaction const& int
     }
 
     *scattered = { interaction.hit_point, target_direction };
-    *attenuation = albedo;
+    *attenuation = this->albedo;
     return true;
 }
 

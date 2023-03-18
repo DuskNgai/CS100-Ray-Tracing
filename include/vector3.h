@@ -26,6 +26,7 @@
 #include <Eigen/Dense>
 #include <iostream>
 #include <nlohmann/json.hpp>
+#include <optional>
 
 #include "math-utils.h"
 #include "utils/random-number-generator.h"
@@ -45,9 +46,32 @@ Vector3<T> constexpr lerp(Vector3<T> const& u, Vector3<T> const& v, FloatingPoin
 }
 
 /// @brief Reflect the incoming direction `v` respect to the normal `n`.
+/// @param v The incoming direction, required to be normalized.
+/// @param n The normal, required to be normalized.
+/// @return The reflected direction.
 template <typename T>
 Vector3<T> constexpr reflect(Vector3<T> const& v, Vector3<T> const& n) {
     return v - 2.0_f * v.dot(n) * n;
+}
+
+/// @brief Refract the incoming direction `v` respect to the normal `n`.
+/// @param v The incoming direction, required to be normalized.
+/// @param n The normal, required to be normalized.
+/// @return The refracted direction.
+template <typename T>
+std::optional<Vector3<T>> constexpr refract(Vector3<T> const& v, Vector3<T> const& n, T rior) {
+    auto cos_theta{ -std::min(v.dot(n), 1.0_f) };
+    auto sin_theta{ std::sqrt(1.0_f - cos_theta * cos_theta) };
+
+    // Total internal reflection.
+    if (rior * sin_theta > 1.0_f) {
+        return std::nullopt;
+    }
+
+    // Refract component that are perpendicular/parallel to the normal.
+    Vector3<T> perp{ (v + cos_theta * n) * rior };
+    Vector3<T> para{ -std::sqrt(std::abs(1.0_f - perp.squaredNorm())) * n };
+    return perp + para;
 }
 
 /// @brief A random vector in [min, max]^3.
@@ -58,7 +82,17 @@ Vector3f inline random_vector3f(RandomNumberGenerator& rng, Float min = 0.0_f, F
 /// @brief A random vector who is in a unit sphere.
 Vector3f inline random_vector3f_in_unit_sphere(RandomNumberGenerator& rng) {
     while (true) {
-        auto p{ random_vector3f(rng, -1.0_f, 1.0_f) };
+        Vector3f p{ random_vector3f(rng, -1.0_f, 1.0_f) };
+        if (p.squaredNorm() <= 1.0_f) {
+            return p;
+        }
+    }
+}
+
+/// @brief A random vector who is in a unit circle.
+Vector3f inline random_vector3f_in_unit_circle(RandomNumberGenerator& rng) {
+    while (true) {
+        Vector3f p{ Vector3f{ rng(), rng(), 0.0_f } * 2.0_f - Vector3f{ 1.0_f, 1.0_f, 0.0_f } };
         if (p.squaredNorm() <= 1.0_f) {
             return p;
         }

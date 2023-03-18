@@ -55,7 +55,7 @@ bool Sphere::hit(Ray const& ray, Float t_min, Float t_max, Interaction* interact
     // Record this interaction.
     interaction->t = t;
     interaction->hit_point = ray.at(t);
-    interaction->normal = (interaction->hit_point - this->center) / this->radius;
+    interaction->set_face_normal(ray, (interaction->hit_point - this->center) / this->radius);
     interaction->mat_ptr = this->mat_ptr;
     return true;
 }

@@ -1,6 +1,6 @@
 /*
  * CS100-Ray-Tracing for course recitation.
- * The abstract class for all material.
+ * The definition of dielectric material.
  *
  * Copyright (C) 2023
  * Author: Haizhao Dai
@@ -20,27 +20,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "material/material.h"
+#ifndef _CS100_RAY_TRACING_MATERIAL_DIELECTRIC_H_
+#define _CS100_RAY_TRACING_MATERIAL_DIELECTRIC_H_
+
+#include "base-material.h"
 
 CS100_RAY_TRACING_NAMESPACE_BEGIN
 
-std::shared_ptr<Material> Material::create(nlohmann::json const& config) {
-    std::string type{ config.at("type") };
+class Dielectric : public Material {
+private:
+    Float rior; // Relative index of refraction.
 
-    if (type == "Lambertian") {
-        return std::make_shared<Lambertian>(from_json(config.at("albedo")));
-    }
-    else if (type == "Metal") {
-        return std::make_shared<Metal>(
-            from_json(config.at("albedo")),
-            config.at("fuzz"));
-    }
-    else if (type == "Dielectric") {
-        return std::make_shared<Dielectric>(config.at("rior"));
-    }
-    else {
-        throw std::runtime_error{ "Unknown material type: " + type };
-    }
-}
+public:
+    explicit Dielectric(Float rior);
+
+    virtual bool scatter(Ray const& ray, Interaction const& interaction, RandomNumberGenerator& rng, Color3f* attenuation, Ray* scattered) const override;
+};
 
 CS100_RAY_TRACING_NAMESPACE_END
+
+#endif // !_CS100_RAY_TRACING_MATERIAL_DIELECTRIC_H_

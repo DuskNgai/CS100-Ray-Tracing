@@ -40,6 +40,8 @@ struct Geometry {
 
     /// @brief Create a geometry object based on given configuration.
     static std::shared_ptr<Geometry> create(nlohmann::json const& config);
+
+    static std::shared_ptr<Geometry> create_random_scene();
 };
 
 CS100_RAY_TRACING_NAMESPACE_END
