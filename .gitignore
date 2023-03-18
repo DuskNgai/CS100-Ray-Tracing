@@ -1,6 +1,7 @@
 # Directories.
 .vs
 .vscode
+bin
 build
 result
 linux-build

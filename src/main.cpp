@@ -46,9 +46,8 @@ int main(int argc, char** argv) {
     file.close();
 
     // Create the camera.
-    auto film{ std::make_shared<Film>(args.image_width, args.image_height) };
     auto camera{ Camera::create(config.at("Camera")) };
-    camera->set_film(film);
+    camera->set_film(std::make_unique<Film>(args.image_width, args.image_height));
 
     // Create the scene.
     auto scene{ Scene::create(config.at("Scene")) };
@@ -58,7 +57,7 @@ int main(int argc, char** argv) {
     integrator.render(scene, camera);
 
     // Output the image.
-    film->save(args.output_file_path);
+    camera->get_film().save(args.output_file_path);
     std::printf("Image saving done!\n");
 
     return 0;

@@ -51,7 +51,7 @@ private:
     Vector3f horizontal;
     Vector3f vertical;
 
-    std::shared_ptr<Film> film;
+    std::unique_ptr<Film> film{ nullptr };
 
 public:
     /// @brief Create a camera.
@@ -71,7 +71,7 @@ public:
 
     /// @brief Set the film of the camera, change the aspect radio of camera.
     /// @param film The film.
-    void set_film(std::shared_ptr<Film> const& film);
+    void set_film(std::unique_ptr<Film> film);
 
     /// @brief Get the film of the camera.
     /// @param film The film.

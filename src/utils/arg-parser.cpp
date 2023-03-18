@@ -63,13 +63,13 @@ Arguments parse_args(int argc, char** argv) {
 
     std::filesystem::path output_file_path{ args::get(output_file_path_flag) };
     if (not std::filesystem::exists(output_file_path.parent_path())) {
-        std::printf("[Error] The directory of the output file path %s does not exist, process terminate.\n", output_file_path.c_str());
+        std::printf("[Error] The directory of the output file path %ls does not exist, process terminate.\n", output_file_path.c_str());
         std::exit(-3);
     }
 
     std::filesystem::path config_file_path{ args::get(config_file_path_flag) };
     if (not std::filesystem::exists(config_file_path)) {
-        std::printf("[Error] The config file path %s does not exist, process terminate.\n", config_file_path.c_str());
+        std::printf("[Error] The config file path %ls does not exist, process terminate.\n", config_file_path.c_str());
         std::exit(-3);
     }
 

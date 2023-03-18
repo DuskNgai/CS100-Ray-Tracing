@@ -60,6 +60,7 @@ void Integrator::render(std::shared_ptr<Scene> const& scene, std::shared_ptr<Cam
     // Create and launch the threads.
     std::vector<std::thread> threads;
     auto num_threads{ std::thread::hardware_concurrency() };
+    std::printf("Number of threads: %u.\n", num_threads);
     for (uint32_t _{ 0 }; _ < num_threads; ++_) {
         threads.emplace_back(single_thread_render_func);
     }

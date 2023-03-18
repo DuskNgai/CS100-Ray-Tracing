@@ -49,8 +49,8 @@ Camera::Camera(
     this->horizontal = this->look_right * this->vertical.norm() * this->aspect_ratio;
 }
 
-void Camera::set_film(std::shared_ptr<Film> const& film) {
-    this->film = film;
+void Camera::set_film(std::unique_ptr<Film> film) {
+    this->film = std::move(film);
 }
 
 Film const& Camera::get_film() const {

@@ -12,14 +12,26 @@ set(CMAKE_BUILD_TYPE "Release")
 
 # Set compiler flags.
 if(MSVC)
-    set(CMAKE_CXX_FLAGS "/_CRT_SECURE_NO_WARNINGS")
+    set(CMAKE_CXX_FLAGS "/W3 /permissive-")
+    add_compile_definitions("_CRT_SECURE_NO_WARNINGS")
 else()
     set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror -Wpedantic -Wno-missing-field-initializers")
 endif()
 
+# Set output directories.
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}")
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG "${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}")
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG "${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}")
+
 # Third libraries' settings, from their project readme.
+set(ARGS_BUILD_EXAMPLE OFF CACHE INTERNAL "")
+set(ARGS_BUILD_UNITTESTS OFF CACHE INTERNAL "")
 set(JSON_BuildTests OFF CACHE INTERNAL "")
 set(JSON_Install OFF CACHE INTERNAL "")
+set(EIGEN_TEST_NOQT ON CACHE INTERNAL "")
 
 # Third libraries.
 add_subdirectory("dependencies/eigen")
