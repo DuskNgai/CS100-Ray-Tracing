@@ -47,7 +47,7 @@ void Film::set_pixel(uint32_t i, uint32_t j, Color3f const& color) {
     this->pixels[this->get_pixel_index(i, j)] = color;
 }
 
-void Film::save(std::string const& file_name) const {
+void Film::save(std::filesystem::path const& file_name) const {
     std::vector<uint8_t> buffer;
     buffer.reserve(this->pixels.size() * 3);
 
@@ -64,7 +64,7 @@ void Film::save(std::string const& file_name) const {
     }
 
     stbi_flip_vertically_on_write(true);
-    stbi_write_png(file_name.c_str(), this->width, this->height, 3, buffer.data(), 0);
+    stbi_write_png(file_name.string().c_str(), this->width, this->height, 3, buffer.data(), 0);
 }
 
 uint32_t Film::get_pixel_index(uint32_t i, uint32_t j) const {

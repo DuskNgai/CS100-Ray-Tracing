@@ -24,6 +24,7 @@
 #define _CS100_RAY_TRACING_FILM_H_
 
 #include <string>
+#include <filesystem>
 #include <vector>
 
 #include "vector3.h"
@@ -64,7 +65,7 @@ struct Film {
 
     /// @brief Save a film to a file.
     /// @param file_name The file name to store the image.
-    void save(std::string const& file_name) const;
+    void save(std::filesystem::path const& file_name) const;
 
 private:
     /// @brief Get the index of 2 dimensional array.

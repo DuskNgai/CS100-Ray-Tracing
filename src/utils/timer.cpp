@@ -1,6 +1,6 @@
 /*
  * CS100-Ray-Tracing for course recitation.
- * The definition of arguments that need to be parsed.
+ * The implementation of a simple timer.
  *
  * Copyright (C) 2023
  * Author: Haizhao Dai
@@ -20,32 +20,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _CS100_RAY_TRACING_UTILS_ARG_PARSER_HPP_
-#define _CS100_RAY_TRACING_UTILS_ARG_PARSER_HPP_
-
-#include <args.hxx>
-#include <filesystem>
-
-#include "common.h"
+#include "utils/timer.h"
 
 CS100_RAY_TRACING_NAMESPACE_BEGIN
 
-/// @brief The arguments parsed required from command line.
-struct Arguments {
-    uint32_t image_width;
-    uint32_t image_height;
-    uint32_t spp;
-    uint32_t ray_tracing_depth;
-    std::filesystem::path output_file_path;
-    std::filesystem::path config_file_path;
-};
+void Timer::start() {
+    this->start_time = std::chrono::steady_clock::now();
+}
 
-/// @brief Parse the arguments from command line.
-/// @param argc The number of arguments.
-/// @param argv The arguments.
-/// @return The parsed arguments.
-Arguments parse_args(int argc, char** argv);
+void Timer::stop() {
+    this->end_time = std::chrono::steady_clock::now();
+}
 
 CS100_RAY_TRACING_NAMESPACE_END
-
-#endif // !_CS100_RAY_TRACING_UTILS_ARG_PARSER_HPP_

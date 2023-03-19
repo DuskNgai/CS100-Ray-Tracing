@@ -31,9 +31,7 @@ std::shared_ptr<Material> Material::create(nlohmann::json const& config) {
         return std::make_shared<Lambertian>(from_json(config.at("albedo")));
     }
     else if (type == "Metal") {
-        return std::make_shared<Metal>(
-            from_json(config.at("albedo")),
-            config.at("fuzz"));
+        return std::make_shared<Metal>(from_json(config.at("albedo")), config.at("fuzz"));
     }
     else if (type == "Dielectric") {
         return std::make_shared<Dielectric>(config.at("rior"));

@@ -31,19 +31,18 @@
 #include "integrator.h"
 #include "material/material.h"
 #include "utils/arg-parser.h"
+#include "utils/timer.h"
 
 using namespace CS100;
 
 int main(int argc, char** argv) {
-    Arguments args = parse_args(argc, argv);
+    auto args{ parse_args(argc, argv) };
 
     std::printf(
         "The image size is %" PRIu32 " x %" PRIu32 " pixels, with %" PRIu32 " spp, depth of each ray is %" PRIu32 ".\n",
         args.image_width, args.image_height, args.spp, args.ray_tracing_depth);
 
-    std::ifstream file{ args.config_file_path };
-    nlohmann::json config = nlohmann::json::parse(file);
-    file.close();
+    nlohmann::json config = nlohmann::json::parse(std::ifstream{ args.config_file_path });
 
     // Create the camera.
     auto camera{ Camera::create(config.at("Camera")) };
@@ -53,8 +52,12 @@ int main(int argc, char** argv) {
     auto scene{ Scene::create(config.at("Scene")) };
 
     // Render the image.
+    Timer timer;
+    timer.start();
     Integrator integrator{ args.spp, args.ray_tracing_depth };
     integrator.render(scene, camera);
+    timer.stop();
+    std::printf("Elapsed time: %" PRIi64 " ms.\n", timer.get_elapsed_time());
 
     // Output the image.
     camera->get_film().save(args.output_file_path);
