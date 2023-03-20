@@ -42,7 +42,7 @@ void Integrator::render(std::shared_ptr<Scene> const& scene, std::shared_ptr<Cam
         // Per thread rng for non-competitive access.
         RandomNumberGenerator rng{};
 
-        for (uint32_t j{ scanline_finished.fetch_add(1, std::memory_order_relaxed) }; j < image_height; j = scanline_finished.fetch_add(1, std::memory_order_relaxed)) {
+        for (uint32_t j{ scanline_finished++ }; j < image_height; j = scanline_finished++) {
             std::printf("\rScanlines remaining: %u ", image_height - j - 1);
             std::fflush(stdout);
 

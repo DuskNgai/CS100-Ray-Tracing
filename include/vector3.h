@@ -28,7 +28,6 @@
 #include <nlohmann/json.hpp>
 #include <optional>
 
-#include "math-utils.h"
 #include "utils/random-number-generator.h"
 
 CS100_RAY_TRACING_NAMESPACE_BEGIN
@@ -60,7 +59,7 @@ Vector3<T> constexpr reflect(Vector3<T> const& v, Vector3<T> const& n) {
 /// @return The refracted direction.
 template <typename T>
 std::optional<Vector3<T>> constexpr refract(Vector3<T> const& v, Vector3<T> const& n, T rior) {
-    auto cos_theta{ -std::min(v.dot(n), 1.0_f) };
+    auto cos_theta{ std::min(-v.dot(n), 1.0_f) };
     auto sin_theta{ std::sqrt(1.0_f - cos_theta * cos_theta) };
 
     // Total internal reflection.
