@@ -22,11 +22,10 @@
 
 #include "ray.h"
 
-#include <assert.h>
-#include <stddef.h>
+#include <cassert>
 
 Point3f ray_at(Ray const* r, Float t) {
-    assert(r != NULL);
+    assert(r != nullptr);
 
     return vector3_add(r->origin, vector3_scalar_mul(r->direction, t));
 }

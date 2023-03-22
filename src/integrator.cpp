@@ -22,23 +22,22 @@
 
 #include "integrator.h"
 
-#include <assert.h>
-#include <stddef.h>
-#include <stdio.h>
+#include <cassert>
+#include <cstdio>
 
 #include "math-utils.h"
 #include "geometry/sphere.h"
 
 void render(Camera const* camera) {
-    uint32_t image_width = camera->film->width;
-    uint32_t image_height = camera->film->height;
-    for (uint32_t j = 0; j < image_height; ++j) {
+    uint32_t image_width{ camera->film->width };
+    uint32_t image_height{ camera->film->height };
+    for (uint32_t j{ 0 }; j < image_height; ++j) {
         printf("\rScanlines remaining: %u ", image_height - j - 1);
         fflush(stdin);
 
-        for (uint32_t i = 0; i < image_width; ++i) {
-            Ray ray = camera_generate_ray(camera, i, j);
-            Color3f color = radiance(&ray);
+        for (uint32_t i{ 0 }; i < image_width; ++i) {
+            Ray ray{ camera_generate_ray(camera, i, j) };
+            Color3f color{ radiance(&ray) };
             camera_set_pixel(camera, i, j, color);
         }
     }
@@ -46,17 +45,17 @@ void render(Camera const* camera) {
 }
 
 Color3f radiance(Ray const* ray) {
-    assert(ray != NULL);
+    assert(ray != nullptr);
 
-    Sphere s = { (Point3f){ 0.0, 0.0, -1.0 }, (Float)0.5 };
+    Sphere s { Point3f{ 0.0, 0.0, -1.0 }, (Float)0.5 };
     Interaction interaction;
     if (sphere_hit(&s, ray, 0.0, INF, &interaction)) {
         // Visualize the normal of the sphere.
-        return vector3_scalar_mul(vector3_add(interaction.normal, (Vector3f){ 1.0, 1.0, 1.0 }), (Float)0.5);
+        return vector3_scalar_mul(vector3_add(interaction.normal, Vector3f{ 1.0, 1.0, 1.0 }), (Float)0.5);
     }
 
     // The background sky.
-    Vector3f unit_dir = vector3_unit(ray->direction);
-    Float t = (Float)0.5 * (unit_dir.y + (Float)1.0);
-    return vector3_lerp((Color3f){ 1.0, 1.0, 1.0 }, (Color3f){ 0.5, 0.7, 1.0 }, t);
+    Vector3f unit_dir{ vector3_unit(ray->direction) };
+    Float t{ (Float)0.5 * (unit_dir.y + (Float)1.0) };
+    return vector3_lerp(Color3f{ 1.0, 1.0, 1.0 }, Color3f{ 0.5, 0.7, 1.0 }, t);
 }

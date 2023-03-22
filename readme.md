@@ -46,6 +46,11 @@ Please refer to [Project Configuration of CS100 Recitaion](doc/Project Configura
 3. Seperation of camera and film.
 4. File input and output.
 
+### Week 7
+
+1. Switch `C` to `C++`.
+2. Brace initialization.
+
 ## References
 
 1. [Ray Tracing in One Weekend](https://raytracing.github.io/)

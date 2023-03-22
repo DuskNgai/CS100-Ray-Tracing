@@ -24,36 +24,36 @@
 
 Vector3f vector3_add(Vector3f u, Vector3f v) {
     Vector3f res = {
-        .x = u.x + v.x,
-        .y = u.y + v.y,
-        .z = u.z + v.z
+        u.x + v.x,
+        u.y + v.y,
+        u.z + v.z
     };
     return res;
 }
 
 Vector3f vector3_sub(Vector3f u, Vector3f v) {
     Vector3f res = {
-        .x = u.x - v.x,
-        .y = u.y - v.y,
-        .z = u.z - v.z
+        u.x - v.x,
+        u.y - v.y,
+        u.z - v.z
     };
     return res;
 }
 
 Vector3f vector3_neg(Vector3f u) {
     Vector3f res = {
-        .x = -u.x,
-        .y = -u.y,
-        .z = -u.z
+        -u.x,
+        -u.y,
+        -u.z
     };
     return res;
 }
 
 Vector3f vector3_scalar_mul(Vector3f u, Float a) {
     Vector3f res = {
-        .x = u.x * a,
-        .y = u.y * a,
-        .z = u.z * a
+        u.x * a,
+        u.y * a,
+        u.z * a
     };
     return res;
 }
@@ -68,15 +68,15 @@ Float vector3_dot(Vector3f u, Vector3f v) {
 
 Vector3f vector3_cross(Vector3f u, Vector3f v) {
     Vector3f res = {
-        .x = u.y * v.z - u.z * v.y,
-        .y = u.z * v.x - u.x * v.z,
-        .z = u.x * v.y - u.y * v.x
+        u.y * v.z - u.z * v.y,
+        u.z * v.x - u.x * v.z,
+        u.x * v.y - u.y * v.x
     };
     return res;
 }
 
 Float vector3_norm(Vector3f u) {
-    return sqrt(vector3_square_norm(u));
+    return std::sqrt(vector3_square_norm(u));
 }
 
 Float vector3_square_norm(Vector3f u) {

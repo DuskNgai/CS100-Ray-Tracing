@@ -22,29 +22,29 @@
 
 #include "geometry/sphere.h"
 
-#include <assert.h>
-#include <stddef.h>
+#include <cassert>
+#include <cstddef>
 
 bool sphere_hit(Sphere const* sphere, Ray const* ray, Float t_min, Float t_max, Interaction* interaction) {
-    assert(sphere != NULL);
-    assert(ray != NULL);
+    assert(sphere != nullptr);
+    assert(ray != nullptr);
 
-    Vector3f oc = vector3_sub(ray->origin, sphere->center);
+    Vector3f oc{ vector3_sub(ray->origin, sphere->center) };
 
     // Convert to a quadratic equation.
-    Float a = vector3_square_norm(ray->direction);
-    Float b_half = vector3_dot(oc, ray->direction);
-    Float c = vector3_square_norm(oc) - sphere->radius * sphere->radius;
-    Float discriminant = b_half * b_half - a * c;
+    Float a{ vector3_square_norm(ray->direction) };
+    Float b_half{ vector3_dot(oc, ray->direction) };
+    Float c{ vector3_square_norm(oc) - sphere->radius * sphere->radius };
+    Float discriminant{ b_half * b_half - a * c };
 
     if (discriminant < 0) {
         return false;
     }
 
     // Find and check the root.
-    Float t = (-b_half - sqrt(discriminant)) / a;
+    Float t{ (-b_half - std::sqrt(discriminant)) / a };
     if (t < t_min || t > t_max) {
-        t = (-b_half + sqrt(discriminant)) / a;
+        t = (-b_half + std::sqrt(discriminant)) / a;
         if (t < t_min || t > t_max) {
             return false;
         }

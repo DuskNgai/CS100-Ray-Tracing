@@ -23,5 +23,5 @@
 #include "math-utils.h"
 
 Float deg_to_rad(Float deg) {
-    return deg * PI / (Float)180.0;
+    return deg * PI<Float> / (Float)180.0;
 }

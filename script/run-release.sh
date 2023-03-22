@@ -23,7 +23,7 @@ mkdir -p "$bin_dir_name"
 # Create a directory that contains the result files.
 result_dir_name="../result"
 mkdir -p "$result_dir_name"
-result_image_name"$result_dir_name/image.ppm"
+result_image_name="$result_dir_name/image.ppm"
 
 info "[script] Compiling..."
 run gcc "../src/"*.c "../src/geometry/"*.c \

@@ -23,7 +23,7 @@
 #ifndef _CS100_RAY_TRACING_FILM_H_
 #define _CS100_RAY_TRACING_FILM_H_
 
-#include <stdint.h>
+#include <cstdint>
 
 #include "vector3.h"
 

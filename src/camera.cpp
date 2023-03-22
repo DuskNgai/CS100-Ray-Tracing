@@ -22,14 +22,14 @@
 
 #include "camera.h"
 
-#include <assert.h>
-#include <stdlib.h>
+#include <cassert>
+#include <cstdlib>
 
 #include "math-utils.h"
 
 Camera* camera_create(Point3f look_from, Point3f look_to, Vector3f ref_up, Float y_field_of_view, Float focal_length, Float aspect_ratio) {
-    Camera* camera = (Camera*)malloc(sizeof(Camera));
-    assert(camera != NULL);
+    Camera* camera{ (Camera*)malloc(sizeof(Camera)) };
+    assert(camera != nullptr);
 
     camera->look_from = look_from;
     camera->look_to = look_to;
@@ -45,41 +45,41 @@ Camera* camera_create(Point3f look_from, Point3f look_to, Vector3f ref_up, Float
     camera->look_up = vector3_cross(camera->look_right, camera->look_front);
 
     // There vectors help for shooting a camera ray.
-    camera->vertical = vector3_scalar_mul(camera->look_up, tan(deg_to_rad(camera->y_field_of_view / (Float)2.0)) * camera->focal_length);
+    camera->vertical = vector3_scalar_mul(camera->look_up, std::tan(deg_to_rad(camera->y_field_of_view / (Float)2.0)) * camera->focal_length);
     camera->horizontal = vector3_scalar_mul(camera->look_right, vector3_norm(camera->vertical) * camera->aspect_ratio);
 
     return camera;
 }
 
 void camera_destroy(Camera* camera) {
-    assert(camera != NULL);
+    assert(camera != nullptr);
 
     free(camera);
 }
 
 void camera_set_film(Camera* camera, Film* film) {
-    assert(camera != NULL);
-    assert(film != NULL);
+    assert(camera != nullptr);
+    assert(film != nullptr);
 
     camera->film = film;
 }
 
 void camera_set_pixel(Camera const* camera, uint32_t i, uint32_t j, Color3f color) {
-    assert(camera->film != NULL);
+    assert(camera->film != nullptr);
 
     film_set_pixel(camera->film, i, j, color);
 }
 
 Ray camera_generate_ray(Camera const* camera, uint32_t i, uint32_t j) {
-    assert(camera->film != NULL);
+    assert(camera->film != nullptr);
 
     // That is, instead of shooting ray to the corner of the pixel (i, j),
     // we shoot ray to the center of the pixel (i + 0.5, j + 0.5);
-    Float u = (2.0 * ((Float)i + 0.5) / (Float)camera->film->width) - 1.0;
-    Float v = (2.0 * ((Float)j + 0.5) / (Float)camera->film->height) - 1.0;
+    Float u{ ((Float)2.0 * ((Float)i + (Float)0.5) / (Float)camera->film->width) - (Float)1.0 };
+    Float v{ ((Float)2.0 * ((Float)j + (Float)0.5) / (Float)camera->film->height) - (Float)1.0 };
 
-    Point3f origin = camera->look_from;
-    Vector3f direction = vector3_add(vector3_add(vector3_scalar_mul(camera->horizontal, u), vector3_scalar_mul(camera->vertical, v)), vector3_scalar_mul(camera->look_front, camera->focal_length));
+    Point3f origin{ camera->look_from };
+    Vector3f direction{ vector3_add(vector3_add(vector3_scalar_mul(camera->horizontal, u), vector3_scalar_mul(camera->vertical, v)), vector3_scalar_mul(camera->look_front, camera->focal_length)) };
 
-    return (Ray){ origin, direction };
+    return { origin, direction };
 }

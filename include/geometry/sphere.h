@@ -23,8 +23,6 @@
 #ifndef _CS100_RAY_TRACING_SPHERE_H_
 #define _CS100_RAY_TRACING_SPHERE_H_
 
-#include <stdbool.h>
-
 #include "geometry/interaction.h"
 #include "ray.h"
 

@@ -23,13 +23,13 @@ mkdir -p "$bin_dir_name"
 # Create a directory that contains the result files.
 result_dir_name="../result"
 mkdir -p "$result_dir_name"
-result_image_name"$result_dir_name/image.ppm"
+result_image_name="$result_dir_name/image.ppm"
 
 info "[script] Compiling..."
-run gcc "../src/"*.c "../src/geometry/"*.c \
+run g++ "../src/"*.cpp "../src/geometry/"*.cpp \
     -o "../linux-build/Debug/CS100-Ray-Tracing"  \
     -I "../include"                              \
-    -g -std=c17 -Wall -Wextra -Wpedantic -Werror \
+    -g -std=c++17 -Wall -Wextra -Wpedantic -Werror \
     -lm
 
 info "[script] Generating .ppm..."

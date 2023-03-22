@@ -43,8 +43,8 @@ $result_image_name = "$($result_dir_name)/image.ppm"
 
 $build_executable_name = "CS100-Ray-Tracing.exe"
 info "[script] Compiling..."
-gcc (Get-ChildItem ..\src\*.c) (Get-ChildItem ..\src\geometry\*.c) -o "$($bin_dir_name)/$($build_executable_name)" -I $include_dir_name -g -std=c17 -Wall -Wextra -Wpedantic -Werror -lm
-handle_error "gcc"
+g++ (Get-ChildItem ..\src\*.cpp) (Get-ChildItem ..\src\geometry\*.cpp) -o "$($bin_dir_name)/$($build_executable_name)" -I $include_dir_name -g -std=c++17 -Wall -Wextra -Wpedantic -Werror -lm
+handle_error "g++"
 
 info "[script] Generating .ppm..."
 &"$($bin_dir_name)/$($build_executable_name)" 960 540 $result_image_name
