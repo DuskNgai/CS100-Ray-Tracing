@@ -36,8 +36,8 @@ struct Arguments {
     uint32_t image_height;
     uint32_t spp;
     uint32_t ray_tracing_depth;
-    std::filesystem::path output_file_path;
-    std::filesystem::path config_file_path;
+    std::filesystem::path output_path;
+    std::filesystem::path config_path;
 };
 
 /// @brief Parse the arguments from command line.

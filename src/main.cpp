@@ -42,7 +42,7 @@ int main(int argc, char** argv) {
         "The image size is %" PRIu32 " x %" PRIu32 " pixels, with %" PRIu32 " spp, depth of each ray is %" PRIu32 ".\n",
         args.image_width, args.image_height, args.spp, args.ray_tracing_depth);
 
-    nlohmann::json config = nlohmann::json::parse(std::ifstream{ args.config_file_path });
+    nlohmann::json config = nlohmann::json::parse(std::ifstream{ args.config_path });
 
     // Create the camera.
     auto camera{ Camera::create(config.at("Camera")) };
@@ -60,7 +60,7 @@ int main(int argc, char** argv) {
     std::printf("Elapsed time: %" PRIi64 " ms.\n", timer.get_elapsed_time());
 
     // Output the image.
-    camera->get_film().save(args.output_file_path);
+    camera->get_film().save(args.output_path);
     std::printf("Image saving done!\n");
 
     return 0;

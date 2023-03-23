@@ -27,7 +27,7 @@
 CS100_RAY_TRACING_NAMESPACE_BEGIN
 
 Arguments parse_args(int argc, char** argv) {
-    args::ArgumentParser parser{"A simple ray tracing for CS100 recitation class."};
+    args::ArgumentParser parser{ "A simple ray tracing for CS100 recitation class." };
 
     args::HelpFlag help{ parser, "help", "Display this help menu.", { 'h', "help" } };
 
@@ -38,8 +38,8 @@ Arguments parse_args(int argc, char** argv) {
     args::ValueFlag<uint32_t> depth_flag{ defaulted, "RAY_TRACE_DEPTH", "The depth to tracing a ray, default to 50.", { "depth", "ray-tracing-depth" }, 50 };
 
     args::Group required{ parser, "This group of arguments is all required from command line.", args::Group::Validators::All };
-    args::ValueFlag<std::string> output_file_path_flag{ required, "OUTPUT_FILE_PATH", "Path to the output image file.", { "output-file-path" } };
-    args::ValueFlag<std::string> config_file_path_flag{ required, "CONFIG_FILE_PATH", "Path to the config file.", { "config-file-path" } };
+    args::ValueFlag<std::string> output_path_flag{ required, "OUTPUT_PATH", "Path to the output image file.", { "output-path" } };
+    args::ValueFlag<std::string> config_path_flag{ required, "CONFIG_PATH", "Path to the config file.", { "config-path" } };
 
 
     try {
@@ -60,15 +60,18 @@ Arguments parse_args(int argc, char** argv) {
         std::exit(-2);
     }
 
-    std::filesystem::path output_file_path{ args::get(output_file_path_flag) };
-    if (not std::filesystem::exists(output_file_path.parent_path())) {
-        std::printf("[Error] The directory of the output file path %s does not exist, process terminate.\n", output_file_path.string().c_str());
+    std::filesystem::path output_path{ args::get(output_path_flag) };
+    if (output_path.parent_path().empty()) {
+        output_path = std::filesystem::current_path() / output_path;
+    }
+    if (not std::filesystem::exists(output_path.parent_path())) {
+        std::printf("[Error] The directory of the output file path %s does not exist, process terminate.\n", output_path.string().c_str());
         std::exit(-3);
     }
 
-    std::filesystem::path config_file_path{ args::get(config_file_path_flag) };
-    if (not std::filesystem::exists(config_file_path)) {
-        std::printf("[Error] The config file path %s does not exist, process terminate.\n", config_file_path.string().c_str());
+    std::filesystem::path config_path{ args::get(config_path_flag) };
+    if (not std::filesystem::exists(config_path)) {
+        std::printf("[Error] The config file path %s does not exist, process terminate.\n", config_path.string().c_str());
         std::exit(-3);
     }
 
@@ -77,8 +80,8 @@ Arguments parse_args(int argc, char** argv) {
         args::get(height_flag),
         args::get(spp_flag),
         args::get(depth_flag),
-        output_file_path,
-        config_file_path,
+        output_path,
+        config_path,
     };
 }
 
