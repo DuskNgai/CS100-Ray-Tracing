@@ -77,8 +77,8 @@ Ray Camera::generate_ray(uint32_t i, uint32_t j, RandomNumberGenerator& rng) con
     return { origin, direction };
 }
 
-std::shared_ptr<Camera> Camera::create(nlohmann::json const& config) {
-    return std::make_shared<Camera>(
+std::unique_ptr<Camera> Camera::create(nlohmann::json const& config) {
+    return std::make_unique<Camera>(
         from_json(config.at("look_from")),
         from_json(config.at("look_to")),
         from_json(config.at("ref_up")),

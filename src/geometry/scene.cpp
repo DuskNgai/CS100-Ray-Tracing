@@ -57,14 +57,14 @@ bool Scene::hit(Ray const& ray, Float t_min, Float t_max, Interaction* interacti
     return hit_anything;
 }
 
-std::shared_ptr<Scene> Scene::create(nlohmann::json const& config) {
+std::unique_ptr<Scene> Scene::create(nlohmann::json const& config) {
     decltype(Scene::objects) objects;
 
     for (auto const& c : config) {
         objects.push_back(Geometry::create(c));
     }
 
-    return std::make_shared<Scene>(objects);
+    return std::make_unique<Scene>(objects);
 }
 
 CS100_RAY_TRACING_NAMESPACE_END

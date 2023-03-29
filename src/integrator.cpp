@@ -33,7 +33,7 @@ Integrator::Integrator(uint32_t spp, uint32_t ray_tracing_depth)
     : spp{ spp }
     , ray_tracing_depth{ ray_tracing_depth } {}
 
-void Integrator::render(std::shared_ptr<Scene> const& scene, std::shared_ptr<Camera> const& camera) {
+void Integrator::render(std::unique_ptr<Scene> const& scene, std::unique_ptr<Camera> const& camera) {
     std::atomic<uint32_t> scanline_finished{ 0 };
 
     auto single_thread_render_func = [&]() {
@@ -71,7 +71,7 @@ void Integrator::render(std::shared_ptr<Scene> const& scene, std::shared_ptr<Cam
     std::printf("\nRendering Done!\n");
 }
 
-Color3f Integrator::radiance(std::shared_ptr<Scene> const& scene, Ray const& ray, RandomNumberGenerator& rng, uint32_t current_depth) {
+Color3f Integrator::radiance(std::unique_ptr<Scene> const& scene, Ray const& ray, RandomNumberGenerator& rng, uint32_t current_depth) {
     if (current_depth > this->ray_tracing_depth) {
         return Color3f::Zero();
     }

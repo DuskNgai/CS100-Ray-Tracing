@@ -92,7 +92,7 @@ public:
 
 public:
     /// @brief Create a camera based on given configuration.
-    static std::shared_ptr<Camera> create(nlohmann::json const& config);
+    static std::unique_ptr<Camera> create(nlohmann::json const& config);
 };
 
 CS100_RAY_TRACING_NAMESPACE_END

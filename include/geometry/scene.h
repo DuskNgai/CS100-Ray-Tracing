@@ -50,7 +50,7 @@ public:
 
 public:
     /// @brief Create a scene object based on given configuration.
-    static std::shared_ptr<Scene> create(nlohmann::json const& config);
+    static std::unique_ptr<Scene> create(nlohmann::json const& config);
 };
 
 CS100_RAY_TRACING_NAMESPACE_END
