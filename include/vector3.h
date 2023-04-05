@@ -26,9 +26,9 @@
 #include "math-utils.h"
 
 /// @brief A 3D vector.
-typedef struct Vector3f {
+struct Vector3f {
     Float x, y, z;
-} Vector3f;
+};
 
 // Operations on Vector3f.
 
@@ -67,7 +67,7 @@ Vector3f vector3_unit(Vector3f u);
 /// @brief u * (1 - t) + v * t = (v - u) * t + u.
 Vector3f vector3_lerp(Vector3f u, Vector3f v, Float t);
 
-typedef Vector3f Color3f;
-typedef Vector3f Point3f;
+using Color3f = Vector3f;
+using Point3f = Vector3f;
 
 #endif // !_CS100_RAY_TRACING_VECTOR3_H_

@@ -51,6 +51,18 @@ Please refer to [Project Configuration of CS100 Recitaion](doc/Project Configura
 1. Switch `C` to `C++`.
 2. Brace initialization.
 
+### Week 8
+
+1. Add `std` to `C++` library functions.
+2. Using `new` and `delete` to allocate and deallocate memory.
+3. Using `reference` to pass arguments.
+
+### Week 9
+
+1. Modify to use `std::vector` instead of `malloc` and `free`.
+2. Modify to use `std::string` instead of `char*`.
+3. Modify to `C++` class style.
+
 ## References
 
 1. [Ray Tracing in One Weekend](https://raytracing.github.io/)

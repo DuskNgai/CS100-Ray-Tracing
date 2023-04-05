@@ -34,41 +34,41 @@ int main(int argc, char** argv) {
     // Parse the command line arguments.
     // TODO: using third library to parse command line arguments.
     if (argc != 4) {
-        fprintf(stderr, "[Error] Invalid command line arguments.\n");
-        fprintf(stderr, "Usage: %s <image_width> <image_height> <image_path>", argv[0]);
+        std::fprintf(stderr, "[Error] Invalid command line arguments.\n");
+        std::fprintf(stderr, "Usage: %s <image_width> <image_height> <image_path>", argv[0]);
         return 1;
     }
 
     // TODO: Fix exception safe in C++.
-    uint32_t image_width{ strtoul(argv[1], nullptr, 10) };
-    uint32_t image_height{ strtoul(argv[2], nullptr, 10) };
+    uint32_t image_width{ std::strtoul(argv[1], nullptr, 10) };
+    uint32_t image_height{ std::strtoul(argv[2], nullptr, 10) };
     char const* image_path{ argv[3] };
 
     if (image_width > 2048 || image_height > 2048) {
-        fprintf(stderr, "[Error] Image size too large, process terminate\n.");
+        std::fprintf(stderr, "[Error] Image size too large, process terminate\n.");
         return 1;
     }
 
-    printf("The image size is %" PRIu32 " x %" PRIu32 " pixels.\n", image_width, image_height);
+    std::printf("The image size is %" PRIu32 " x %" PRIu32 " pixels.\n", image_width, image_height);
 
     // Create a film and a camera.
-    Film* film{ film_create(image_width, image_height) };
-    Camera* camera{ camera_create(
+    Film* film{ new Film{ image_width, image_height } };
+    Camera* camera{ new Camera{
         Point3f{ 0.0f, 0.0f, 0.0f },
         Point3f{ 0.0f, 0.0f, -1.0f },
         Vector3f{ 0.0f, 1.0f, 0.0f },
-        (Float)90.0,
-        (Float)1.0,
-        film_get_aspect_ratio(film)) };
-    camera_set_film(camera, film);
+        90.0_f,
+        1.0_f,
+        film->get_aspect_ratio()} };
+    camera->set_film(film);
 
     // Render the image.
     render(camera);
 
-    film_save(camera->film, image_path);
-    printf("Image saving done!\n");
+    camera->get_film().save(image_path);
+    std::printf("Image saving done!\n");
 
-    film_destroy(film);
-    camera_destroy(camera);
+    delete camera;
+    delete film;
     return 0;
 }

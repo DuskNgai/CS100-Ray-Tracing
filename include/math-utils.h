@@ -28,6 +28,8 @@
 
 typedef float Float;
 
+Float inline constexpr operator""_f(long double x) { return static_cast<Float>(x); }
+
 Float constexpr INF = std::numeric_limits<Float>::infinity();
 template <typename FloatingPoint>
 FloatingPoint PI{ static_cast<FloatingPoint>(3.141592653589793238462643383279) };

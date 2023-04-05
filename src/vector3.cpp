@@ -59,7 +59,7 @@ Vector3f vector3_scalar_mul(Vector3f u, Float a) {
 }
 
 Vector3f vector3_scalar_div(Vector3f u, Float a) {
-    return vector3_scalar_mul(u, (Float)1.0 / a);
+    return vector3_scalar_mul(u, 1.0_f / a);
 }
 
 Float vector3_dot(Vector3f u, Vector3f v) {

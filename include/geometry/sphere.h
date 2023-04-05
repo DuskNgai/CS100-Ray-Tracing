@@ -27,18 +27,18 @@
 #include "ray.h"
 
 /// @brief The definition of a sphere.
-typedef struct Sphere {
+struct Sphere {
     Point3f center;
     Float radius;
-} Sphere;
 
-/// @brief Test if a ray intersects with a sphere.
-/// @param sphere The sphere object.
-/// @param ray The ray.
-/// @param t_min The minimum t value.
-/// @param t_max The maximum t value.
-/// @param interaction The interaction record.
-/// @return True if the ray intersects with the sphere.
-bool sphere_hit(Sphere const* sphere, Ray const* ray, Float t_min, Float t_max, Interaction* interaction);
+    /// @brief Test if a ray intersects with a sphere.
+    /// @param ray The ray.
+    /// @param t_min The minimum t value.
+    /// @param t_max The maximum t value.
+    /// @param interaction The interaction record.
+    /// @return True if the ray intersects with the sphere.
+    bool hit(Ray const& ray, Float t_min, Float t_max, Interaction* interaction);
+};
+
 
 #endif // !_CS100_RAY_TRACING_SPHERE_H_

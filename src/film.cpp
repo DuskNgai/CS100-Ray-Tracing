@@ -28,68 +28,46 @@
 #include <cstdlib>
 #include <cstdio>
 
-Film* film_create(uint32_t width, uint32_t height) {
-    Film* film{ (Film*)malloc(sizeof(Film)) };
-    assert(film != nullptr);
+Film::Film(uint32_t width, uint32_t height)
+    : width{ width }
+    , height{ height }
+    , pixels(width * height) {}
 
-    film->width = width;
-    film->height = height;
-    film->pixels = (Color3f*)malloc(sizeof(Color3f) * width * height);
-    return film;
+Float Film::get_aspect_ratio() {
+    return static_cast<Float>(this->width) / static_cast<Float>(this->height);
 }
 
-void film_destroy(Film* film) {
-    assert(film != nullptr);
+uint32_t Film::get_width() const { return this->width; }
+uint32_t Film::get_height() const { return this->height; }
 
-    free(film->pixels);
-    free(film);
+Color3f Film::get_pixel(uint32_t i, uint32_t j) const {
+    return this->pixels[this->get_pixel_index(i, j)];
 }
 
-Float film_get_aspect_ratio(Film const* film) {
-    assert(film != nullptr);
-
-    return (Float)film->width / (Float)film->height;
+void Film::set_pixel(uint32_t i, uint32_t j, Color3f const& color) {
+    this->pixels[this->get_pixel_index(i, j)] = color;
 }
 
-// `static` function for only being used in this `.c` file.
-// That is, you can not access this function outside of this file.
-static uint32_t film_get_pixel_index(Film const* film, uint32_t i, uint32_t j) {
-    assert(film != nullptr);
-
-    return j * film->width + i;
-}
-
-Color3f film_get_pixel(Film const* film, uint32_t i, uint32_t j) {
-    assert(film != nullptr);
-
-    return film->pixels[film_get_pixel_index(film, i, j)];
-}
-
-void film_set_pixel(Film const* film, uint32_t i, uint32_t j, Color3f color) {
-    assert(film != nullptr);
-
-    film->pixels[film_get_pixel_index(film, i, j)] = color;
-}
-
-void film_save(Film const* film, char const* file_name) {
-    assert(film != nullptr);
-    assert(file_name != nullptr);
-
+void Film::save(std::string const& file_name) const {
     // TODO: using third library to output an image.
-    FILE* fp{ fopen(file_name, "w") };
+    FILE* fp{ std::fopen(file_name.c_str(), "w") };
     assert(fp != nullptr);
 
-    fprintf(fp, "P3\n%" PRIu32 " %" PRIu32 "\n255\n", film->width, film->height);
-    for (uint32_t j{ 0 }; j < film->height; ++j) {
-        for (uint32_t i{ 0 }; i < film->width; ++i) {
-            Color3f color{ film_get_pixel(film, i, j) };
-            uint8_t r{ (uint8_t)(color.x * 255.0) };
-            uint8_t g{ (uint8_t)(color.y * 255.0) };
-            uint8_t b{ (uint8_t)(color.z * 255.0) };
+    std::fprintf(fp, "P3\n%" PRIu32 " %" PRIu32 "\n255\n", this->width, this->height);
+    for (uint32_t j{ 0 }; j < this->height; ++j) {
+        for (uint32_t i{ 0 }; i < this->width; ++i) {
+            Color3f color{ this->get_pixel(i, j) };
+            uint8_t r{ (uint8_t)(color.x * 255.0_f) };
+            uint8_t g{ (uint8_t)(color.y * 255.0_f) };
+            uint8_t b{ (uint8_t)(color.z * 255.0_f) };
 
-            fprintf(fp, "%" PRIu8 " %" PRIu8 " %" PRIu8 "\n", r, g, b);
+            std::fprintf(fp, "%" PRIu8 " %" PRIu8 " %" PRIu8 "\n", r, g, b);
         }
     }
 
-    fclose(fp);
+    std::fclose(fp);
+}
+
+uint32_t Film::get_pixel_index(uint32_t i, uint32_t j) const {
+    return j * this->width + i;
 }

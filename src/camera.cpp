@@ -27,59 +27,41 @@
 
 #include "math-utils.h"
 
-Camera* camera_create(Point3f look_from, Point3f look_to, Vector3f ref_up, Float y_field_of_view, Float focal_length, Float aspect_ratio) {
-    Camera* camera{ (Camera*)malloc(sizeof(Camera)) };
-    assert(camera != nullptr);
+Camera::Camera(Point3f look_from, Point3f look_to, Vector3f ref_up, Float y_field_of_view, Float focal_length, Float aspect_ratio)
+    : look_from{ look_from }
+    , look_to{ look_to }
+    , ref_up{ ref_up }
+    , y_field_of_view{ y_field_of_view }
+    , focal_length{ focal_length }
+    , aspect_ratio{ aspect_ratio }
+    , look_front{ vector3_unit(vector3_sub(look_to, look_from)) }
+    , look_right{ vector3_unit(vector3_cross(look_front, ref_up)) }
+    , look_up{ vector3_cross(look_right, look_front) }
+    , vertical{ vector3_scalar_mul(look_up, std::tan(deg_to_rad(y_field_of_view / 2.0_f)) * focal_length) }
+    , horizontal{ vector3_scalar_mul(look_right, vector3_norm(vertical) * aspect_ratio) } {}
 
-    camera->look_from = look_from;
-    camera->look_to = look_to;
-    camera->ref_up = ref_up;
+Film const& Camera::get_film() const { return *this->film; }
 
-    camera->y_field_of_view = y_field_of_view;
-    camera->focal_length = focal_length;
-    camera->aspect_ratio = aspect_ratio;
-
-    // These vectors are properties that defines the position and the rotation of a camera.
-    camera->look_front = vector3_unit(vector3_sub(camera->look_to, camera->look_from));
-    camera->look_right = vector3_unit(vector3_cross(camera->look_front, camera->ref_up));
-    camera->look_up = vector3_cross(camera->look_right, camera->look_front);
-
-    // There vectors help for shooting a camera ray.
-    camera->vertical = vector3_scalar_mul(camera->look_up, std::tan(deg_to_rad(camera->y_field_of_view / (Float)2.0)) * camera->focal_length);
-    camera->horizontal = vector3_scalar_mul(camera->look_right, vector3_norm(camera->vertical) * camera->aspect_ratio);
-
-    return camera;
-}
-
-void camera_destroy(Camera* camera) {
-    assert(camera != nullptr);
-
-    free(camera);
-}
-
-void camera_set_film(Camera* camera, Film* film) {
-    assert(camera != nullptr);
+void Camera::set_film(Film* film) {
     assert(film != nullptr);
 
-    camera->film = film;
+    this->film = film;
 }
 
-void camera_set_pixel(Camera const* camera, uint32_t i, uint32_t j, Color3f color) {
-    assert(camera->film != nullptr);
-
-    film_set_pixel(camera->film, i, j, color);
+void Camera::set_pixel(uint32_t i, uint32_t j, Color3f const& color) const {
+    this->film->set_pixel(i, j, color);
 }
 
-Ray camera_generate_ray(Camera const* camera, uint32_t i, uint32_t j) {
-    assert(camera->film != nullptr);
+Ray Camera::generate_ray(uint32_t i, uint32_t j) const {
+    assert(this->film != nullptr);
 
     // That is, instead of shooting ray to the corner of the pixel (i, j),
     // we shoot ray to the center of the pixel (i + 0.5, j + 0.5);
-    Float u{ ((Float)2.0 * ((Float)i + (Float)0.5) / (Float)camera->film->width) - (Float)1.0 };
-    Float v{ ((Float)2.0 * ((Float)j + (Float)0.5) / (Float)camera->film->height) - (Float)1.0 };
+    Float u{ (2.0_f * (static_cast<Float>(i) + 0.5_f) / static_cast<Float>(this->film->get_width())) - 1.0_f };
+    Float v{ (2.0_f * (static_cast<Float>(j) + 0.5_f) / static_cast<Float>(this->film->get_height())) - 1.0_f };
 
-    Point3f origin{ camera->look_from };
-    Vector3f direction{ vector3_add(vector3_add(vector3_scalar_mul(camera->horizontal, u), vector3_scalar_mul(camera->vertical, v)), vector3_scalar_mul(camera->look_front, camera->focal_length)) };
+    Point3f origin{ this->look_from };
+    Vector3f direction{ vector3_add(vector3_add(vector3_scalar_mul(this->horizontal, u), vector3_scalar_mul(this->vertical, v)), vector3_scalar_mul(this->look_front, this->focal_length)) };
 
     return { origin, direction };
 }
