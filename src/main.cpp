@@ -31,7 +31,7 @@
 #include "integrator.h"
 #include "material/material.h"
 #include "utils/arg-parser.h"
-#include "utils/timer.h"
+#include "utils/scope-timer.h"
 
 using namespace CS100;
 
@@ -54,7 +54,7 @@ int main(int argc, char** argv) {
     // Render the image.
     Integrator integrator{ args.spp, args.ray_tracing_depth };
     {
-        Timer timer;
+        ScopeTimer timer;
         integrator.render(scene, camera);
     }
 

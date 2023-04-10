@@ -20,8 +20,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _CS100_RAY_TRACING_UTILS_TIMER_H_
-#define _CS100_RAY_TRACING_UTILS_TIMER_H_
+#ifndef _CS100_RAY_TRACING_UTILS_SCOPE_TIMER_H_
+#define _CS100_RAY_TRACING_UTILS_SCOPE_TIMER_H_
 
 #include <chrono>
 #include <iostream>
@@ -32,18 +32,18 @@ CS100_RAY_TRACING_NAMESPACE_BEGIN
 
 /// @tparam The elapsed time in milliseconds.
 template <typename duration_t = std::chrono::milliseconds>
-class Timer {
+class ScopeTimer {
 private:
     std::chrono::time_point<std::chrono::steady_clock> start_time{};
 
 public:
-    Timer()
+    ScopeTimer()
         : start_time(std::chrono::steady_clock::now()) {}
-    Timer(Timer const&) = delete;
-    Timer(Timer&&) = delete;
-    Timer& operator=(Timer const&) = delete;
-    Timer& operator=(Timer&&) = delete;
-    ~Timer() {
+    ScopeTimer(ScopeTimer const&) = delete;
+    ScopeTimer(ScopeTimer&&) = delete;
+    ScopeTimer& operator=(ScopeTimer const&) = delete;
+    ScopeTimer& operator=(ScopeTimer&&) = delete;
+    ~ScopeTimer() {
         auto end_time = std::chrono::steady_clock::now();
         auto elapsed_time = std::chrono::duration_cast<duration_t>(end_time - start_time);
         std::cout << "Elapsed time: " << elapsed_time.count() << " ms" << std::endl;
@@ -52,4 +52,4 @@ public:
 
 CS100_RAY_TRACING_NAMESPACE_END
 
-#endif // !_CS100_RAY_TRACING_UTILS_TIMER_H_
+#endif // !_CS100_RAY_TRACING_UTILS_SCOPE_TIMER_H_
