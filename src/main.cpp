@@ -52,12 +52,11 @@ int main(int argc, char** argv) {
     auto scene{ Scene::create(config.at("Scene")) };
 
     // Render the image.
-    Timer timer;
-    timer.start();
     Integrator integrator{ args.spp, args.ray_tracing_depth };
-    integrator.render(scene, camera);
-    timer.stop();
-    std::printf("Elapsed time: %" PRIi64 " ms.\n", timer.get_elapsed_time());
+    {
+        Timer timer;
+        integrator.render(scene, camera);
+    }
 
     // Output the image.
     camera->get_film().save(args.output_path);

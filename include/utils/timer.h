@@ -24,33 +24,29 @@
 #define _CS100_RAY_TRACING_UTILS_TIMER_H_
 
 #include <chrono>
+#include <iostream>
 
 #include "common.h"
 
 CS100_RAY_TRACING_NAMESPACE_BEGIN
 
+/// @tparam The elapsed time in milliseconds.
+template <typename duration_t = std::chrono::milliseconds>
 class Timer {
 private:
     std::chrono::time_point<std::chrono::steady_clock> start_time{};
-    std::chrono::time_point<std::chrono::steady_clock> end_time{};
 
 public:
-    Timer() = default;
+    Timer()
+        : start_time(std::chrono::steady_clock::now()) {}
     Timer(Timer const&) = delete;
     Timer(Timer&&) = delete;
     Timer& operator=(Timer const&) = delete;
     Timer& operator=(Timer&&) = delete;
-    ~Timer() = default;
-
-    void start();
-
-    void stop();
-
-    /// @brief A template member function for representing time in various formats.
-    /// @return The elapsed time in milliseconds.
-    template <typename duration_t = std::chrono::milliseconds>
-    int64_t get_elapsed_time() const {
-        return std::chrono::duration_cast<duration_t, int64_t>(this->end_time - this->start_time).count();
+    ~Timer() {
+        auto end_time = std::chrono::steady_clock::now();
+        auto elapsed_time = std::chrono::duration_cast<duration_t>(end_time - start_time);
+        std::cout << "Elapsed time: " << elapsed_time.count() << " ms" << std::endl;
     }
 };
 
